@@ -19,7 +19,3 @@ ignored = [
     "__ptExceptionPreamble",
     "__ptException"
 ]
-
-[[patches.function_sizes]]
-name = "romMain"
-size = 0x50

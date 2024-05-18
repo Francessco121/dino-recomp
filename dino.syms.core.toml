@@ -1100,5 +1100,5 @@ functions = [
     { name = "__rmonRCPrunning", vram = 0x800896b0, size = 0x24 },
     { name = "__rmonIdleRCP", vram = 0x800896d4, size = 0x44 },
     { name = "__rmonStepRCP", vram = 0x80089718, size = 0x14 },
-    { name = "__rmonRunRCP", vram = 0x8008972c, size = 0x998c },
+    { name = "__rmonRunRCP", vram = 0x8008972c, size = 0x24 },
 ]
