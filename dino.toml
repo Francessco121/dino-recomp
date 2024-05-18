@@ -1,0 +1,25 @@
+# Config file for Dinosaur Planet Recompilation.
+
+[input]
+entrypoint = 0x80000400
+# Paths are relative to the location of this config file.
+output_func_path = "RecompiledFuncs"
+rom_file_path = "baserom.z64"
+symbols_file_path = "dino.syms.core.toml"
+
+[patches]
+stubs = [
+
+]
+
+ignored = [
+    # handling this function manually
+    "func_8001B4F0",
+    # exceptasm stuff
+    "__ptExceptionPreamble",
+    "__ptException"
+]
+
+[[patches.function_sizes]]
+name = "romMain"
+size = 0x50
