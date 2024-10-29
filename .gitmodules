@@ -1,0 +1,4 @@
+[submodule "lib/N64Recomp"]
+	path = lib/N64Recomp
+	url = git@github.com:Francessco121/N64Recomp.git
+	branch = dinosaur-planet-support

@@ -13,9 +13,6 @@ stubs = [
 ]
 
 ignored = [
-    # handling this function manually
-    "func_8001B4F0",
-    # exceptasm stuff
-    "__ptExceptionPreamble",
-    "__ptException"
+    # TODO: handling this function manually (these are all supposed to be one function)
+    "func_8001B4F0", "func_8001B6F0", "func_8001BC00", "func_8001BCF0", "func_8001BF70"
 ]
