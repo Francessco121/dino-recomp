@@ -6,6 +6,7 @@ entrypoint = 0x80000400
 output_func_path = "RecompiledFuncs"
 rom_file_path = "baserom.z64"
 symbols_file_path = "dino.syms.toml"
+relocatable_sections_path = "dino.dlls.txt"
 
 [patches]
 stubs = [
