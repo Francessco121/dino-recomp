@@ -1758,6 +1758,7 @@ functions = [
     { name = "__rmonStepRCP", vram = 0x80089718, size = 0x14 },
     { name = "__rmonRunRCP", vram = 0x8008972C, size = 0x24 },
 ]
+
 [[section]]
 name = ".dll1"
 rom = 0x383184C
@@ -31289,4 +31290,3 @@ functions = [
     { name = "dll_796_func_1D4", vram = 0x814AB210, size = 0x14 },
     { name = "dll_796_func_1E8", vram = 0x814AB224, size = 0x20 },
 ]
-
