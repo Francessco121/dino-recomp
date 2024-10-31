@@ -13,14 +13,9 @@ stubs = [
 
 ]
 
-## Commit some sins to get func_8001B4F0 to recompile...
+## Commit some sins to get 0x8001B4F0-0x8001C8D4 to recompile...
 # $ra is saved in $t9 because functions called before it don't correctly save $ra to the stack,
 # this is not relevant since we just want to recognize this as a return statement, so override it
-[[patches.instruction]]
-vram = 0x8001ba28
-func = "func_8001B4F0"
-value = 0x03e00008  # jr $t9 -> jr $ra
-
 [[patches.instruction]]
 vram = 0x8001ba28
 func = "func_8001B6F0"
@@ -30,10 +25,5 @@ value = 0x03e00008  # jr $t9 -> jr $ra
 # branch. Just convert it to a jump to that one branch so recomp can reason about it.
 [[patches.instruction]]
 vram = 0x8001c8b0
-func = "func_8001B4F0"
-value = 0x0800722e # jr $s1 -> j 0x8001c8b8
-
-[[patches.instruction]]
-vram = 0x8001c8b0
-func = "func_8001C5A0"
+func = "func_8001C8A0"
 value = 0x0800722e # jr $s1 -> j 0x8001c8b8
