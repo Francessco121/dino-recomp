@@ -35,10 +35,5 @@ value = 0x0800722e # jr $s1 -> j 0x8001c8b8
 
 [[patches.instruction]]
 vram = 0x8001c8b0
-func = "func_8001BF70"
-value = 0x0800722e # jr $s1 -> j 0x8001c8b8
-
-[[patches.instruction]]
-vram = 0x8001c8b0
 func = "func_8001C5A0"
 value = 0x0800722e # jr $s1 -> j 0x8001c8b8
