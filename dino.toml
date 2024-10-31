@@ -13,7 +13,32 @@ stubs = [
 
 ]
 
-ignored = [
-    # TODO: handling this function manually (these are all supposed to be one function)
-    "func_8001B4F0", "func_8001B6F0", "func_8001BC00", "func_8001BCF0", "func_8001BF70"
-]
+## Commit some sins to get func_8001B4F0 to recompile...
+# $ra is saved in $t9 because functions called before it don't correctly save $ra to the stack,
+# this is not relevant since we just want to recognize this as a return statement, so override it
+[[patches.instruction]]
+vram = 0x8001ba28
+func = "func_8001B4F0"
+value = 0x03e00008  # jr $t9 -> jr $ra
+
+[[patches.instruction]]
+vram = 0x8001ba28
+func = "func_8001B6F0"
+value = 0x03e00008  # jr $t9 -> jr $ra
+
+# There's a function pointer table at 0x80090444 that's never written to and only has one valid
+# branch. Just convert it to a jump to that one branch so recomp can reason about it.
+[[patches.instruction]]
+vram = 0x8001c8b0
+func = "func_8001B4F0"
+value = 0x0800722e # jr $s1 -> j 0x8001c8b8
+
+[[patches.instruction]]
+vram = 0x8001c8b0
+func = "func_8001BF70"
+value = 0x0800722e # jr $s1 -> j 0x8001c8b8
+
+[[patches.instruction]]
+vram = 0x8001c8b0
+func = "func_8001C5A0"
+value = 0x0800722e # jr $s1 -> j 0x8001c8b8
