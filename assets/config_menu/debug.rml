@@ -1,0 +1,15 @@
+<template name="config-menu__debug">
+    <head>
+    </head>
+    <body>
+        <form class="config__form">
+            <div class="config__wrapper">
+                <div class="config-debug">
+                    <div class="config-debug__scroll">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </body>
+</template>
+    

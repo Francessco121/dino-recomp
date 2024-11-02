@@ -13,6 +13,23 @@ stubs = [
 
 ]
 
+ignored = [
+    "__osMakeMotorData",
+    # unused problematic funcs
+    "func_80011588",
+    "func_80011490",
+    "NOTosContSetch",
+    "set_osPIHandle_Addr_to_0xa800000",
+    "some_dma_func",
+    "osEPi_WriteRead",
+    "func_8005EE8C",
+    "func_8005EFA8",
+    "func_8005F1A0",
+    "func_8005EE20",
+    "func_8005F0D4",
+    "func_8005F2A4"
+]
+
 ## Commit some sins to get 0x8001B4F0-0x8001C8D4 to recompile...
 # $ra is saved in $t9 because functions called before it don't correctly save $ra to the stack,
 # this is not relevant since we just want to recognize this as a return statement, so override it
