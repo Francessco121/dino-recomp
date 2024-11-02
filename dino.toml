@@ -10,7 +10,8 @@ relocatable_sections_path = "dino.dlls.txt"
 
 [patches]
 stubs = [
-
+    "test_write",
+    "check_dongle"
 ]
 
 ignored = [
