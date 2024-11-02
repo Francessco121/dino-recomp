@@ -48,12 +48,11 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/lib/N64ModernRuntime)
 # RecompiledFuncs - Library containing the primary recompiler output
 add_library(RecompiledFuncs STATIC)
 
-# TODO: these flags dont work on MSVC
 target_compile_options(RecompiledFuncs PRIVATE
     # -Wno-unused-but-set-variable
-    #-fno-strict-aliasing
-    #-Wno-unused-variable
-    #-Wno-implicit-function-declaration
+    -fno-strict-aliasing
+    -Wno-unused-variable
+    -Wno-implicit-function-declaration
 )
 
 target_include_directories(RecompiledFuncs PRIVATE
@@ -106,7 +105,6 @@ target_include_directories(DinoRecomp PRIVATE
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-# TODO: more flags that dont work on msvc
 if(CMAKE_SIZEOF_VOID_P EQUAL 8 AND CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|amd64|AMD64")
     target_compile_options(DinoRecomp PRIVATE
         -march=nehalem
