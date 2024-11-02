@@ -19,3 +19,6 @@
 [submodule "lib/RmlUi"]
 	path = lib/RmlUi
 	url = https://github.com/mikke89/RmlUi.git
+[submodule "lib/dinosaur-planet"]
+	path = lib/dinosaur-planet
+	url = https://github.com/zestydevy/dinosaur-planet.git

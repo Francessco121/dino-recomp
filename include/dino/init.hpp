@@ -27,4 +27,12 @@ namespace dino::init {
     // threads
 
     std::string get_game_thread_name(const OSThread* t);
+
+    // overlays
+
+    void register_overlays();
+
+    // patches
+
+    void register_patches();
 }

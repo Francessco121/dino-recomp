@@ -28,8 +28,6 @@
 #include "dino_sdl.hpp"
 #include "recomp_ui.h"
 
-#include "../RecompiledFuncs/recomp_overlays.inl"
-
 extern "C" void recomp_entrypoint(uint8_t * rdram, recomp_context * ctx);
 gpr get_entrypoint_address();
 
@@ -44,23 +42,6 @@ std::vector<recomp::GameEntry> supported_games = {
         .entrypoint = recomp_entrypoint,
     },
 };
-
-void stub() {}
-
-void register_overlays() {
-    recomp::overlays::overlay_section_table_data_t sections {
-        .code_sections = section_table,
-        .num_code_sections = ARRLEN(section_table),
-        .total_num_sections = num_sections,
-    };
-
-    recomp::overlays::overlays_by_index_t overlays {
-        .table = overlay_sections_by_index,
-        .len = ARRLEN(overlay_sections_by_index),
-    };
-
-    recomp::overlays::register_overlays(sections, overlays);
-}
 
 int main(int argc, char** argv) {
 #ifdef _WIN32
@@ -101,7 +82,8 @@ int main(int argc, char** argv) {
         recomp::register_game(game);
     }
 
-    register_overlays();
+    dino::init::register_overlays();
+    dino::init::register_patches();
 
     recomp::register_config_path(dino::config::get_app_folder_path());
     dino::config::load_config();
