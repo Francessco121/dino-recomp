@@ -40,6 +40,7 @@ std::vector<recomp::GameEntry> supported_games = {
         .is_enabled = true,
         .entrypoint_address = get_entrypoint_address(),
         .entrypoint = recomp_entrypoint,
+        .save_type = recomp::SaveType::Flashram,
     },
 };
 

@@ -11,7 +11,7 @@ relocatable_sections_path = "dino.dlls.txt"
 [patches]
 stubs = [
     "test_write",
-    "check_dongle"
+    "check_dongle",
 ]
 
 ignored = [
@@ -30,6 +30,34 @@ ignored = [
     "func_8005F0D4",
     "func_8005F2A4"
 ]
+
+[[patches.hook]]
+func = "dll_31_func_4DC"
+text = "osFlashInit_recomp(rdram, ctx); return;"
+
+[[patches.hook]]
+func = "dll_31_func_640"
+text = "osFlashReadId_recomp(rdram, ctx); return;"
+
+[[patches.hook]]
+func = "dll_31_func_820"
+text = "osFlashClearStatus_recomp(rdram, ctx); return;"
+
+[[patches.hook]]
+func = "dll_31_func_88C"
+text = "osFlashSectorErase_recomp(rdram, ctx); return;"
+
+[[patches.hook]]
+func = "dll_31_func_9A4"
+text = "osFlashWriteBuffer_recomp(rdram, ctx); return;"
+
+[[patches.hook]]
+func = "dll_31_func_A50"
+text = "osFlashWriteArray_recomp(rdram, ctx); return;"
+
+[[patches.hook]]
+func = "dll_31_func_B48"
+text = "osFlashReadArray_recomp(rdram, ctx); return;"
 
 ## Commit some sins to get 0x8001B4F0-0x8001C8D4 to recompile...
 # $ra is saved in $t9 because functions called before it don't correctly save $ra to the stack,
