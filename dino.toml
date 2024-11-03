@@ -90,7 +90,13 @@ text = "ctx->r25 = recomp_osAiGetLength();"
 [[patches.instruction]]
 vram = 0x80011CC0
 func = "func_80011C70"
-value = 0x00000000
+value = 0x00000000 # lw t9,0x4(t8) -> nop
+
+# Patch out ROM read
+[[patches.instruction]]
+vram = 0x80001300
+func = "func_80001220"
+value = 0x00004825 # lw t1,0x578(t9) -> or t1,zero,zero
 
 ## Commit some sins to get 0x8001B4F0-0x8001C8D4 to recompile...
 # $ra is saved in $t9 because functions called before it don't correctly save $ra to the stack,
