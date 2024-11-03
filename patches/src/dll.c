@@ -1,15 +1,15 @@
-#include "patches.h"
-#include "patch_helpers.h"
-#include "recomp_funcs.h"
-#include "sys/dll.h"
-#include "sys/fs.h"
-#include "sys/memory.h"
-#include "common.h"
+// #include "patches.h"
+// #include "patch_helpers.h"
+// #include "recomp_funcs.h"
+// #include "sys/dll.h"
+// #include "sys/fs.h"
+// #include "sys/memory.h"
+// #include "common.h"
 
-#define MAX_LOADED_DLLS 128
+//#define MAX_LOADED_DLLS 128
 
 // extern DLLFile * dll_load_from_tab(u16 id, s32 * sizeOut);
-extern void dll_relocate(DLLFile* dll);
+//extern void dll_relocate(DLLFile* dll);
 
 // RECOMP_PATCH u32* dll_load(u16 id, u16 exportCount, s32 arg2)
 // {
@@ -82,38 +82,38 @@ extern void dll_relocate(DLLFile* dll);
 //     return result;
 // }
 
-RECOMP_PATCH DLLFile * dll_load_from_tab(u16 id, s32 * sizeOut)
-{
-    DLLFile * dll;
-    s32 offset;
-    s32 dllSize; // t0
-    s32 bssSize;
+// RECOMP_PATCH DLLFile * dll_load_from_tab(u16 id, s32 * sizeOut)
+// {
+//     DLLFile * dll;
+//     s32 offset;
+//     s32 dllSize; // t0
+//     s32 bssSize;
 
-    id++;
-    offset = ((DLLTab*)((u8*)gFile_DLLS_TAB + id * 2 * 4u))->entries[0].offset;
-    dllSize = ((DLLTab*)((u8*)gFile_DLLS_TAB + id * 2 * 4u))->entries[1].offset - offset;
-    bssSize = ((DLLTab*)((u8*)gFile_DLLS_TAB + id * 2 * 4u))->entries[0].bssSize;
+//     id++;
+//     offset = ((DLLTab*)((u8*)gFile_DLLS_TAB + id * 2 * 4u))->entries[0].offset;
+//     dllSize = ((DLLTab*)((u8*)gFile_DLLS_TAB + id * 2 * 4u))->entries[1].offset - offset;
+//     bssSize = ((DLLTab*)((u8*)gFile_DLLS_TAB + id * 2 * 4u))->entries[0].bssSize;
 
-    dll = malloc((u32)(dllSize + bssSize), ALLOC_TAG_DLL_COL, NULL);
-    if (dll != NULL) {
-        read_file_region(DLLS_BIN, dll, offset, dllSize);
-    }
+//     dll = malloc((u32)(dllSize + bssSize), ALLOC_TAG_DLL_COL, NULL);
+//     if (dll != NULL) {
+//         read_file_region(DLLS_BIN, dll, offset, dllSize);
+//     }
 
-    if (dll != NULL)
-    {
-        if (bssSize != 0) {
-            bzero((u32)dll + dllSize, bssSize);
-        }
+//     if (dll != NULL)
+//     {
+//         if (bssSize != 0) {
+//             bzero((u32)dll + dllSize, bssSize);
+//         }
 
-        dll_relocate(dll);
-        osInvalICache(dll, 0x4000);
-        osInvalDCache(dll, 0x4000);
+//         dll_relocate(dll);
+//         osInvalICache(dll, 0x4000);
+//         osInvalDCache(dll, 0x4000);
 
-        *sizeOut = dllSize + bssSize;
-    }
+//         *sizeOut = dllSize + bssSize;
+//     }
 
-    // @recomp Load DLL
-    recomp_load_overlay_by_id(id - 2, (void*)((u8*)dll + dll->code));
+//     // @recomp Load DLL
+//     recomp_load_overlay_by_id(id - 2, (void*)((u8*)dll + dll->code));
 
-    return dll;
-}
+//     return dll;
+// }
