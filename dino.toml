@@ -43,6 +43,15 @@ before_vram = 0x8000c44c
 func = "dll_load_from_tab"
 text = "if (ctx->r16 != 0) load_overlay_by_id(dllId - 1, ctx->r16 + MEM_W(0, ctx->r16));"
 
+[[patches.hook]]
+before_vram = 0x8000C2B4
+func = "func_8000C258"
+text = "gpr dllListIdx = ctx->r2;"
+[[patches.hook]]
+before_vram = 0x8000C340
+func = "func_8000C258"
+text = "unload_overlay_by_id(MEM_W(dllListIdx * 0x10, MEM_W(0, 0xFFFFFFFF800A7D10)) - 1);"
+
 # DLL 31 contains the osFlash functions, redirect them to the recomp versions
 [[patches.hook]]
 func = "dll_31_func_4DC"
