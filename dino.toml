@@ -16,6 +16,9 @@ stubs = [
 
 ignored = [
     "__osMakeMotorData",
+    # replaced with custom recomp implementations
+    "dummied_print_func",
+    "proutSyncPrintf",
     # unused problematic funcs
     "func_80011588",
     "func_80011490",
@@ -68,6 +71,26 @@ text = "osFlashWriteArray_recomp(rdram, ctx); return;"
 [[patches.hook]]
 func = "dll_31_func_B48"
 text = "osFlashReadArray_recomp(rdram, ctx); return;"
+
+# replace PI_STATUS check with yield
+[[patches.hook]]
+before_vram = 0x800012d8
+func = "func_80001220"
+text = "yield_self(rdram);"
+[[patches.instruction]]
+vram = 0x800012d8
+func = "func_80001220"
+value = 0x00001025 # lw v0,0x0(v1) -> or v0,zero,zero
+
+# osAiGetLength got inlined
+[[patches.hook]]
+before_vram = 0x80011cc0
+func = "func_80011C70"
+text = "ctx->r25 = recomp_osAiGetLength();"
+[[patches.instruction]]
+vram = 0x80011CC0
+func = "func_80011C70"
+value = 0x00000000
 
 ## Commit some sins to get 0x8001B4F0-0x8001C8D4 to recompile...
 # $ra is saved in $t9 because functions called before it don't correctly save $ra to the stack,
