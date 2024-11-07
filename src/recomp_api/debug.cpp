@@ -1,24 +1,5 @@
-#include <cassert>
-#include <cstring>
-#include <cstdio>
-#include <string>
-
 #include "ultramodern/ultramodern.hpp"
 #include "librecomp/recomp.h"
-
-uint32_t spStatus = 0;
-
-extern "C" void __osSpSetStatus_recomp(uint8_t* rdram, recomp_context* ctx) {
-    spStatus = ctx->r4;
-}
-
-extern "C" void __osSpGetStatus_recomp(uint8_t* rdram, recomp_context* ctx) {
-    ctx->r2 = spStatus;
-}
-
-extern "C" uint32_t recomp_osAiGetLength() {
-    return ultramodern::get_remaining_audio_bytes();
-}
 
 static gpr get_print_arg_val(recomp_context* ctx, int arg) {
     switch (arg) {
@@ -203,7 +184,6 @@ void print_camera(int indent, uint8_t* rdram, gpr cameraAddr) {
     print_srt(indent + 1, rdram, srtAddr);
 }
 
-//recomp_print_vec3f(rdram, ctx->r18 - 0xc);
 extern "C" void recomp_print_vec3f(uint8_t* rdram, gpr vec3Addr) {
     printf("vec3f(0x%zx) =\n", vec3Addr);
     print_vec3f(1, rdram, vec3Addr);
@@ -229,19 +209,4 @@ extern "C" void recomp_print_actor(uint8_t* rdram, gpr actorAddr) {
 extern "C" void recomp_print_camera(uint8_t* rdram, gpr cameraAddr) {
     printf("camera(0x%zx) =\n", cameraAddr);
     print_camera(1, rdram, cameraAddr);
-}
-
-thread_local bool func_8001B4F0_returned = false;
-
-extern "C" void recomp_on_func_8001B4F0_entry() {
-    func_8001B4F0_returned = false;
-}
-
-extern "C" bool recomp_did_func_8001B4F0_return() {
-    return func_8001B4F0_returned;
-}
-
-extern "C" void recomp_on_func_8001B4F0_ret() {
-    assert(func_8001B4F0_returned == false);
-    func_8001B4F0_returned = true;
 }
