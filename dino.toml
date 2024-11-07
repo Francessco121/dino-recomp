@@ -36,9 +36,9 @@ ignored = [
 
 # Hook DLL loading/unloading up to N64ModernRuntime's overlay system
 [[patches.hook]]
-before_vram = 0x8000BF84
+before_vram = 0x8000BF18
 func = "dll_load"
-text = "gpr dllId = ctx->r25;"
+text = "gpr dllId = ctx->r7;"
 [[patches.hook]]
 before_vram = 0x8000C028
 func = "dll_load"
