@@ -108,6 +108,12 @@ vram = 0x80001300
 func = "func_80001220"
 value = 0x00004825 # lw t1,0x578(t9) -> or t1,zero,zero
 
+# Skip security dongle check
+[[patches.hook]]
+before_vram = 0x81012500
+func = "dll_3_func_60AC"
+text = "goto L_8101254C;"
+
 ## Commit some sins to get 0x8001B4F0-0x8001C8D4 to recompile...
 # $ra is saved in $t9 because functions called before it don't correctly save $ra to the stack,
 # this is not relevant since we just want to recognize this as a return statement, so override it
