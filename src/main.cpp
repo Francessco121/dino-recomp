@@ -34,6 +34,7 @@ gpr get_entrypoint_address();
 void dino_thread_create_callback(uint8_t * rdram, recomp_context * ctx) {
     // Dinosaur Planet modifies osCreateThread to enable MIPS3 float mode
     ctx->mips3_float_mode = true;
+    ctx->f_odd = &ctx->f1.u32l;
 }
 
 // array of supported GameEntry objects
@@ -42,10 +43,10 @@ std::vector<recomp::GameEntry> supported_games = {
         .rom_hash = 0xB231A00966BE1430,
         .internal_name = "DINO PLANET",
         .game_id = u8"baserom",
+        .save_type = recomp::SaveType::Flashram,
         .is_enabled = true,
         .entrypoint_address = get_entrypoint_address(),
         .entrypoint = recomp_entrypoint,
-        .save_type = recomp::SaveType::Flashram,
         .thread_create_callback = dino_thread_create_callback,
     },
 };
