@@ -68,6 +68,17 @@ static void handle_print_arg(uint8_t* rdram, recomp_context* ctx, std::vector<ch
             }
             break;
         }
+        case 'f':
+        {
+            int written = sprintf_s(buf, "%f", argVal);
+            for (int i = 0; i < (width - written); i++) {
+                printBuffer->push_back(padChar);
+            }
+            for (int i = 0; i < written; i++) {
+                printBuffer->push_back(buf[i]);
+            }
+            break;
+        }
         case 's':
         {
             char c;
@@ -82,7 +93,7 @@ static void handle_print_arg(uint8_t* rdram, recomp_context* ctx, std::vector<ch
     }
 }
 
-extern "C" void dummied_print_func(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void recomp_dummied_print_func(uint8_t* rdram, recomp_context* ctx) {
     std::vector<char> printBuffer;
 
     char c = '\0';
@@ -107,7 +118,7 @@ extern "C" void dummied_print_func(uint8_t* rdram, recomp_context* ctx) {
     ctx->r2 = 0;
 }
 
-extern "C" void proutSyncPrintf(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void recomp_proutSyncPrintf(uint8_t* rdram, recomp_context* ctx) {
     std::vector<char> printBuffer;
 
     gpr buf = ctx->r5;

@@ -16,9 +16,6 @@ stubs = [
 
 ignored = [
     "__osMakeMotorData",
-    # replaced with custom recomp implementations
-    "dummied_print_func",
-    "proutSyncPrintf",
     # unused problematic funcs
     "func_80011588",
     "func_80011490",
@@ -33,6 +30,14 @@ ignored = [
     "func_8005F0D4",
     "func_8005F2A4"
 ]
+
+# Hijack debug functions
+[[patches.hook]]
+func = "proutSyncPrintf"
+text = "recomp_proutSyncPrintf(rdram, ctx); return;"
+[[patches.hook]]
+func = "dummied_print_func"
+text = "recomp_dummied_print_func(rdram, ctx); return;"
 
 # Hook DLL loading/unloading up to N64ModernRuntime's overlay system
 [[patches.hook]]
@@ -108,11 +113,15 @@ vram = 0x80001300
 func = "func_80001220"
 value = 0x00004825 # lw t1,0x578(t9) -> or t1,zero,zero
 
-# Skip security dongle check
+# Skip security dongle checks
 [[patches.hook]]
 before_vram = 0x81012500
 func = "dll_3_func_60AC"
 text = "goto L_8101254C;"
+[[patches.hook]]
+before_vram = 0x811777d4
+func = "dll_210_func_A3FC"
+text = "goto L_81177828;"
 
 ## Commit some sins to get 0x8001B4F0-0x8001C8D4 to recompile...
 # $ra is saved in $t9 because functions called before it don't correctly save $ra to the stack,
