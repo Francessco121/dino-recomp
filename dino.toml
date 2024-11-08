@@ -48,6 +48,14 @@ text = "gpr dllId = ctx->r7;"
 before_vram = 0x8000C028
 func = "dll_load"
 text = "recomp_on_dll_load(dllId, ctx->r2 + MEM_W(0, ctx->r2));"
+[[patches.hook]]
+before_vram = 0x8000bfbc
+func = "dll_load"
+text = "recomp_on_dll_load_too_few_exports(dllId, ctx->r15, ctx->r24);"
+[[patches.hook]]
+before_vram = 0x8000c014
+func = "dll_load"
+text = "recomp_on_dll_load_too_many_dlls(dllId);"
 
 [[patches.hook]]
 before_vram = 0x8000C2B4
