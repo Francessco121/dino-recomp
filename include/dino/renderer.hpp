@@ -23,7 +23,6 @@ namespace dino::renderer {
         void shutdown() override;
         uint32_t get_display_framerate() const override;
         float get_resolution_scale() const override;
-        void load_shader_cache(std::span<const char> cache_binary) override;
 
     protected:
         std::unique_ptr<RT64::Application> app;
