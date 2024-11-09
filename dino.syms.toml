@@ -121,7 +121,7 @@ functions = [
     { name = "func_80004DFC", vram = 0x80004DFC, size = 0x94 },
     { name = "func_80004E90", vram = 0x80004E90, size = 0x100 },
     { name = "func_80004F90", vram = 0x80004F90, size = 0xD0 },
-    { name = "func_80005060", vram = 0x80005060, size = 0x24 },
+    { name = "linear_interp", vram = 0x80005060, size = 0x24 },
     { name = "func_80005084", vram = 0x80005084, size = 0x10 },
     { name = "func_80005094", vram = 0x80005094, size = 0x1A8 },
     { name = "func_8000523C", vram = 0x8000523C, size = 0x120 },
@@ -4158,20 +4158,20 @@ relocs = [
 ]
 
 functions = [
-    { name = "dll_31_func_0", vram = 0x81083028, size = 0x60 },
-    { name = "dll_31_func_60", vram = 0x81083088, size = 0xC },
+    { name = "dll_31_ctor", vram = 0x81083028, size = 0x60 },
+    { name = "dll_31_dtor", vram = 0x81083088, size = 0xC },
     { name = "dll_31_func_6C", vram = 0x81083094, size = 0x1B8 },
     { name = "dll_31_func_224", vram = 0x8108324C, size = 0x1E0 },
     { name = "dll_31_func_404", vram = 0x8108342C, size = 0xD8 },
-    { name = "dll_31_func_4DC", vram = 0x81083504, size = 0x15C },
+    { name = "dll_31_osFlashInit", vram = 0x81083504, size = 0x15C },
     { name = "dll_31_func_638", vram = 0x81083660, size = 0x8 },
-    { name = "dll_31_func_640", vram = 0x81083668, size = 0xCC },
-    { name = "dll_31_func_70C", vram = 0x81083734, size = 0x114 },
-    { name = "dll_31_func_820", vram = 0x81083848, size = 0x6C },
-    { name = "dll_31_func_88C", vram = 0x810838B4, size = 0x118 },
-    { name = "dll_31_func_9A4", vram = 0x810839CC, size = 0xAC },
-    { name = "dll_31_func_A50", vram = 0x81083A78, size = 0xF8 },
-    { name = "dll_31_func_B48", vram = 0x81083B70, size = 0xE0 },
+    { name = "dll_31_osFlashReadStatus", vram = 0x81083668, size = 0xCC },
+    { name = "dll_31_osFlashReadId", vram = 0x81083734, size = 0x114 },
+    { name = "dll_31_osFlashClearStatus", vram = 0x81083848, size = 0x6C },
+    { name = "dll_31_osFlashSectorErase", vram = 0x810838B4, size = 0x118 },
+    { name = "dll_31_osFlashWriteBuffer", vram = 0x810839CC, size = 0xAC },
+    { name = "dll_31_osFlashWriteArray", vram = 0x81083A78, size = 0xF8 },
+    { name = "dll_31_osFlashReadArray", vram = 0x81083B70, size = 0xE0 },
 ]
 
 [[section]]
@@ -5736,8 +5736,8 @@ relocs = [
 ]
 
 functions = [
-    { name = "dll_83_func_0", vram = 0x810E5028, size = 0xC },
-    { name = "dll_83_func_C", vram = 0x810E5034, size = 0xC },
+    { name = "dll_83_ctor", vram = 0x810E5028, size = 0xC },
+    { name = "dll_83_dtor", vram = 0x810E5034, size = 0xC },
     { name = "dll_83_func_18", vram = 0x810E5040, size = 0x8C },
     { name = "dll_83_func_A4", vram = 0x810E50CC, size = 0x8C },
 ]
@@ -10000,16 +10000,16 @@ relocs = [
 ]
 
 functions = [
-    { name = "dll_223_func_0", vram = 0x811B803C, size = 0xC },
-    { name = "dll_223_func_C", vram = 0x811B8048, size = 0xC },
-    { name = "dll_223_func_18", vram = 0x811B8054, size = 0x34 },
-    { name = "dll_223_func_4C", vram = 0x811B8088, size = 0x168 },
-    { name = "dll_223_func_1B4", vram = 0x811B81F0, size = 0x4C },
-    { name = "dll_223_func_200", vram = 0x811B823C, size = 0xC },
-    { name = "dll_223_func_20C", vram = 0x811B8248, size = 0x60 },
-    { name = "dll_223_func_26C", vram = 0x811B82A8, size = 0x10 },
-    { name = "dll_223_func_27C", vram = 0x811B82B8, size = 0x10 },
-    { name = "dll_223_func_28C", vram = 0x811B82C8, size = 0x14 },
+    { name = "dll_223_dll_cannon_claw_ctor", vram = 0x811B803C, size = 0xC },
+    { name = "dll_223_dll_cannon_claw_dtor", vram = 0x811B8048, size = 0xC },
+    { name = "dll_223_dll_cannon_claw_func_18", vram = 0x811B8054, size = 0x34 },
+    { name = "dll_223_dll_cannon_claw_func_4C", vram = 0x811B8088, size = 0x168 },
+    { name = "dll_223_dll_cannon_claw_func_1B4", vram = 0x811B81F0, size = 0x4C },
+    { name = "dll_223_dll_cannon_claw_func_200", vram = 0x811B823C, size = 0xC },
+    { name = "dll_223_dll_cannon_claw_func_20C", vram = 0x811B8248, size = 0x60 },
+    { name = "dll_223_dll_cannon_claw_func_26C", vram = 0x811B82A8, size = 0x10 },
+    { name = "dll_223_dll_cannon_claw_func_27C", vram = 0x811B82B8, size = 0x10 },
+    { name = "dll_223_dll_cannon_claw_func_28C", vram = 0x811B82C8, size = 0x14 },
 ]
 
 [[section]]

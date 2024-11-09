@@ -68,31 +68,31 @@ text = "recomp_on_dll_unload(MEM_W(dllListIdx * 0x10, MEM_W(0, 0xFFFFFFFF800A7D1
 
 # DLL 31 contains the osFlash functions, redirect them to the recomp versions
 [[patches.hook]]
-func = "dll_31_func_4DC"
+func = "dll_31_osFlashInit"
 text = "osFlashInit_recomp(rdram, ctx); return;"
 
 [[patches.hook]]
-func = "dll_31_func_640"
+func = "dll_31_osFlashReadId"
 text = "osFlashReadId_recomp(rdram, ctx); return;"
 
 [[patches.hook]]
-func = "dll_31_func_820"
+func = "dll_31_osFlashClearStatus"
 text = "osFlashClearStatus_recomp(rdram, ctx); return;"
 
 [[patches.hook]]
-func = "dll_31_func_88C"
+func = "dll_31_osFlashSectorErase"
 text = "osFlashSectorErase_recomp(rdram, ctx); return;"
 
 [[patches.hook]]
-func = "dll_31_func_9A4"
+func = "dll_31_osFlashWriteBuffer"
 text = "osFlashWriteBuffer_recomp(rdram, ctx); return;"
 
 [[patches.hook]]
-func = "dll_31_func_A50"
+func = "dll_31_osFlashWriteArray"
 text = "osFlashWriteArray_recomp(rdram, ctx); return;"
 
 [[patches.hook]]
-func = "dll_31_func_B48"
+func = "dll_31_osFlashReadArray"
 text = "osFlashReadArray_recomp(rdram, ctx); return;"
 
 # replace PI_STATUS check with yield
