@@ -1,0 +1,19 @@
+text_offset = 0x8A350
+text_size = 0xF80
+text_address = 0x04001080
+rom_file_path = "baserom.patched.z64"
+output_file_path = "rsp/aspMain.cpp"
+output_function_name = "aspMain"
+extra_indirect_branch_targets = [
+    0x1ae8, 0x143c, 0x1240, 0x1d84, 0x126c, 
+    0x1b20, 0x12a8, 0x1214, 0x141c, 0x1310, 
+    0x13cc, 0x12e4, 0x1fb0, 0x1358, 0x16ec, 
+    0x1408,
+]
+
+[[overlay_slots]]
+offset = 0x1B8
+overlays = [
+    { offset = 0x1B8, size = 0xDC8 },
+    { offset = 0xF80, size = 0x9BC },
+]

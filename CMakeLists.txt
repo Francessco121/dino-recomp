@@ -140,6 +140,7 @@ add_dependencies(DinoRecomp DownloadGameControllerDB)
 file(GLOB SOURCES ${CMAKE_SOURCE_DIR}/src/*.cpp)
 file(GLOB SOURCES_RECURSIVE ${CMAKE_SOURCE_DIR}/src/**/*.cpp)
 set (SOURCES_EXTRA
+    ${CMAKE_SOURCE_DIR}/rsp/aspMain.cpp
     ${CMAKE_SOURCE_DIR}/lib/RmlUi/Backends/RmlUi_Platform_SDL.cpp
 )
 

@@ -124,8 +124,6 @@ extern "C" void recomp_proutSyncPrintf(uint8_t* rdram, recomp_context* ctx) {
     gpr buf = ctx->r5;
     size_t size = ctx->r6;
 
-    printf("proutSyncPrintf called");
-
     for (int i = 0; i < size; i++) {
         printBuffer.push_back(MEM_BU(i, buf));
     }
