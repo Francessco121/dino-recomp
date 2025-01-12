@@ -146,6 +146,8 @@ int main(int argc, char** argv) {
         .get_game_thread_name = dino::init::get_game_thread_name,
     };
 
+    dino::init::register_mods();
+
     recomp::start(
         project_version,
         {},

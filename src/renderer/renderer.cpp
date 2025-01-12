@@ -11,6 +11,13 @@
 
 #include "dino/renderer.hpp"
 #include "recomp_ui.h"
+#include "concurrentqueue.h"
+
+// Helper class for variant visiting.
+template<class... Ts>
+struct overloaded : Ts... { using Ts::operator()...; };
+template<class... Ts>
+overloaded(Ts...) -> overloaded<Ts...>;
 
 static RT64::UserConfiguration::Antialiasing device_max_msaa = RT64::UserConfiguration::Antialiasing::None;
 static bool sample_positions_supported = false;
@@ -18,6 +25,18 @@ static bool high_precision_fb_enabled = false;
 
 static uint8_t DMEM[0x1000];
 static uint8_t IMEM[0x1000];
+
+struct TexturePackEnableAction {
+    std::filesystem::path path;
+};
+
+struct TexturePackDisableAction {
+    std::filesystem::path path;
+};
+
+using TexturePackAction = std::variant<TexturePackEnableAction, TexturePackDisableAction>;
+
+static moodycamel::ConcurrentQueue<TexturePackAction> texture_pack_action_queue;
 
 unsigned int MI_INTR_REG = 0;
 
@@ -284,6 +303,32 @@ dino::renderer::RT64Context::RT64Context(uint8_t* rdram, ultramodern::renderer::
 dino::renderer::RT64Context::~RT64Context() = default;
 
 void dino::renderer::RT64Context::send_dl(const OSTask* task) {
+    bool packs_disabled = false;
+    TexturePackAction cur_action;
+    while (texture_pack_action_queue.try_dequeue(cur_action)) {
+        std::visit(overloaded{
+            [&](TexturePackDisableAction& to_disable) {
+                enabled_texture_packs.erase(to_disable.path);
+                packs_disabled = true;
+            },
+            [&](TexturePackEnableAction& to_enable) {
+                enabled_texture_packs.insert(to_enable.path);
+                // Load the pack now if no packs have been disabled.
+                if (!packs_disabled) {
+                    app->textureCache->loadReplacementDirectory(to_enable.path);
+                }
+            }
+        }, cur_action);
+    }
+
+    // If any packs were disabled, unload all packs and load all the active ones.
+    if (packs_disabled) {
+        app->textureCache->clearReplacementDirectories();
+        for (const std::filesystem::path& cur_pack_path : enabled_texture_packs) {
+            app->textureCache->loadReplacementDirectory(cur_pack_path);
+        }
+    }
+
     app->state->rsp->reset();
     app->interpreter->loadUCodeGBI(task->t.ucode & 0x3FFFFFF, task->t.ucode_data & 0x3FFFFFF, true);
     app->processDisplayLists(app->core.RDRAM, task->t.data_ptr & 0x3FFFFFF, 0, true);
@@ -363,4 +408,12 @@ bool dino::renderer::RT64SamplePositionsSupported() {
 
 bool dino::renderer::RT64HighPrecisionFBEnabled() {
     return high_precision_fb_enabled;
+}
+
+void dino::renderer::enable_texture_pack(const recomp::mods::ModHandle& mod) {
+    texture_pack_action_queue.enqueue(TexturePackEnableAction{mod.manifest.mod_root_path});
+}
+
+void dino::renderer::disable_texture_pack(const recomp::mods::ModHandle& mod) {
+    texture_pack_action_queue.enqueue(TexturePackDisableAction{mod.manifest.mod_root_path});
 }

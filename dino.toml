@@ -37,14 +37,6 @@ before_vram = 0x80013af0
 func = "game_tick"
 text = "game_tick_hook(rdram, ctx);"
 
-# Hijack debug functions
-[[patches.hook]]
-func = "proutSyncPrintf"
-text = "recomp_proutSyncPrintf(rdram, ctx); return;"
-[[patches.hook]]
-func = "dummied_print_func"
-text = "recomp_dummied_print_func(rdram, ctx); return;"
-
 # Hook DLL loading/unloading up to N64ModernRuntime's overlay system
 [[patches.hook]]
 before_vram = 0x8000BF18

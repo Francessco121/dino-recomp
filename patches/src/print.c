@@ -1,20 +1,36 @@
-// #include "stdarg.h"
+#include "stdarg.h"
 
-// #include "patches.h"
-// #include "recomp_funcs.h"
+#include "patches.h"
+#include "recomp_funcs.h"
 
-// void* proutSyncPrintf(void* dst, const char* fmt, size_t size) {
-//     recomp_puts(fmt, size);
-//     return (void*)1;
-// }
+extern int _Printf(void*, s32, const char* fmt, ...);
 
-// int recomp_printf(const char* fmt, ...) {
-//     va_list args;
-//     va_start(args, fmt);
+// Hook up game printf to recomp logging
+RECOMP_PATCH void* proutSyncPrintf(void* dst, const char* fmt, s32 size) {
+    recomp_puts(fmt, size);
+    return (void*)1;
+}
 
-//     int ret = _Printf(&proutSyncPrintf, NULL, fmt, args);
+RECOMP_EXPORT int recomp_printf(const char* fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
 
-//     va_end(args);
+    int ret = _Printf(&proutSyncPrintf, NULL, fmt, args);
 
-//     return ret;
-// }
+    va_end(args);
+
+    return ret;
+}
+
+// Hook up unused print function
+RECOMP_PATCH s32 dummied_print_func(const char* fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+
+    recomp_printf(fmt, args);
+    recomp_printf("\n");
+
+    va_end(args);
+
+    return 0;
+}

@@ -35,4 +35,8 @@ namespace dino::init {
     // patches
 
     void register_patches();
+
+    // mods
+
+    void register_mods();
 }

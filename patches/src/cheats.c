@@ -5,9 +5,9 @@
 
 void func_8004D1D4(s32 warpIndex, s32 param2);
 
-void game_tick_hook() {
+void handle_warp_cheat() {
     s32 pendingWarp = recomp_get_pending_warp();
     if (pendingWarp != -1) {
         func_8004D1D4(pendingWarp, 1);
     }
-}
+} 
