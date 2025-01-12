@@ -1,5 +1,6 @@
 #include <memory>
 #include <cstring>
+#include <variant>
 
 #define HLSL_CPU
 #include "hle/rt64_application.h"
@@ -180,11 +181,8 @@ dino::renderer::RT64Context::RT64Context(uint8_t* rdram, ultramodern::renderer::
     RT64::Application::Core appCore{};
 #if defined(_WIN32)
     appCore.window = window_handle.window;
-#elif defined(__ANDROID__)
-    assert(false && "Unimplemented");
-#elif defined(__linux__)
-    appCore.window.display = window_handle.display;
-    appCore.window.window = window_handle.window;
+#elif defined(__linux__) || defined(__ANDROID__)
+    appCore.window = window_handle;
 #elif defined(__APPLE__)
     appCore.window.window = window_handle.window;
     appCore.window.view = window_handle.view;

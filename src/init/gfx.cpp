@@ -15,19 +15,23 @@ ultramodern::gfx_callbacks_t::gfx_data_t dino::init::create_gfx() {
     SDL_SetHint(SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH, "1");
     SDL_SetHint(SDL_HINT_JOYSTICK_ALLOW_BACKGROUND_EVENTS, "1");
 
-#if defined(__linux__)
-    SDL_SetHint(SDL_HINT_VIDEODRIVER, "x11");
-#endif
-
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) > 0) {
         exit_error("Failed to initialize SDL2: %s\n", SDL_GetError());
     }
+
+    fprintf(stdout, "SDL Video Driver: %s\n", SDL_GetCurrentVideoDriver());
 
     return {};
 }
 
 ultramodern::renderer::WindowHandle dino::init::create_window(ultramodern::gfx_callbacks_t::gfx_data_t) {
-    window = SDL_CreateWindow("Dinosaur Planet: Recompiled", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1600, 960, SDL_WINDOW_RESIZABLE );
+    uint32_t flags = SDL_WINDOW_RESIZABLE;
+
+#if defined(RT64_SDL_WINDOW_VULKAN)
+    flags |= SDL_WINDOW_VULKAN;
+#endif
+
+    window = SDL_CreateWindow("Dinosaur Planet: Recompiled", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1600, 960, flags );
 #if defined(__linux__)
     SetImageAsIcon("icons/512.png",window);
     if (ultramodern::renderer::get_graphics_config().wm_option == ultramodern::renderer::WindowMode::Fullscreen) { // TODO: Remove once RT64 gets native fullscreen support on Linux
@@ -47,14 +51,8 @@ ultramodern::renderer::WindowHandle dino::init::create_window(ultramodern::gfx_c
 
 #if defined(_WIN32)
     return ultramodern::renderer::WindowHandle{ wmInfo.info.win.window, GetCurrentThreadId() };
-#elif defined(__ANDROID__)
-    static_assert(false && "Unimplemented");
-#elif defined(__linux__)
-    if (wmInfo.subsystem != SDL_SYSWM_X11) {
-        exit_error("Unsupported SDL2 video driver \"%s\". Only X11 is supported on Linux.\n", SDL_GetCurrentVideoDriver());
-    }
-
-    return ultramodern::renderer::WindowHandle{ wmInfo.info.x11.display, wmInfo.info.x11.window };
+#elif defined(__linux__) || defined(__ANDROID__)
+    return ultramodern::renderer::WindowHandle{ window };
 #else
     static_assert(false && "Unimplemented");
 #endif

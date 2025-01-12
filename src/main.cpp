@@ -28,6 +28,8 @@
 #include "dino_sdl.hpp"
 #include "recomp_ui.h"
 
+const std::string version_string = "1.0.0";
+
 extern "C" void recomp_entrypoint(uint8_t * rdram, recomp_context * ctx);
 gpr get_entrypoint_address();
 
@@ -43,6 +45,7 @@ std::vector<recomp::GameEntry> supported_games = {
         .rom_hash = 0xB231A00966BE1430,
         .internal_name = "DINO PLANET",
         .game_id = u8"baserom",
+        .mod_game_id = "dino-planet",
         .save_type = recomp::SaveType::Flashram,
         .is_enabled = true,
         .entrypoint_address = get_entrypoint_address(),
@@ -52,6 +55,12 @@ std::vector<recomp::GameEntry> supported_games = {
 };
 
 int main(int argc, char** argv) {
+    recomp::Version project_version{};
+    if (!recomp::Version::from_string(version_string, project_version)) {
+        ultramodern::error_handling::message_box(("Invalid version string: " + version_string).c_str());
+        return EXIT_FAILURE;
+    }
+
 #ifdef _WIN32
     // Set up console output to accept UTF-8 on windows
     SetConsoleOutputCP(CP_UTF8);
@@ -85,6 +94,8 @@ int main(int argc, char** argv) {
         fprintf(stderr, "Failed to load controller mappings: %s\n", SDL_GetError());
     }
 
+    recomp::register_config_path(dino::config::get_app_folder_path());
+    
     // Register supported games
     for (const auto& game : supported_games) {
         recomp::register_game(game);
@@ -93,7 +104,6 @@ int main(int argc, char** argv) {
     dino::init::register_overlays();
     dino::init::register_patches();
 
-    recomp::register_config_path(dino::config::get_app_folder_path());
     dino::config::load_config();
 
     recomp::rsp::callbacks_t rsp_callbacks{
@@ -137,7 +147,7 @@ int main(int argc, char** argv) {
     };
 
     recomp::start(
-        recomp::Version{},
+        project_version,
         {},
         rsp_callbacks,
         renderer_callbacks,

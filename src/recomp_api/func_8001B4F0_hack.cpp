@@ -1,5 +1,5 @@
 #include "ultramodern/ultramodern.hpp"
-#include "librecomp/recomp.h"
+#include "recomp.h"
 
 // With the way func_8001B4F0 is recompiled, we need to track whether the function
 // already ran it's return routine and prevent it from being ran more than once.

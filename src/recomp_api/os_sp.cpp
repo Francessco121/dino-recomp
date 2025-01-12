@@ -1,5 +1,5 @@
 #include "ultramodern/ultramodern.hpp"
-#include "librecomp/recomp.h"
+#include "recomp.h"
 
 // TODO: is this necessary?
 uint32_t spStatus = 0;

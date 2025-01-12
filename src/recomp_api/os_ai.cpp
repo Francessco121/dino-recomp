@@ -1,5 +1,5 @@
 #include "ultramodern/ultramodern.hpp"
-#include "librecomp/recomp.h"
+#include "recomp.h"
 
 // osAiGetLength got inlined, we replace it with a call to this
 extern "C" uint32_t recomp_osAiGetLength() {

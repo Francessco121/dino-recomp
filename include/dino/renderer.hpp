@@ -8,7 +8,7 @@ namespace RT64 {
 }
 
 namespace dino::renderer {
-    class RT64Context : public ultramodern::renderer::RendererContext {
+    class RT64Context final : public ultramodern::renderer::RendererContext {
     public:
         ~RT64Context() override;
         RT64Context(uint8_t *rdram, ultramodern::renderer::WindowHandle window_handle, bool developer_mode);

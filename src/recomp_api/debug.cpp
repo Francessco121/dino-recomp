@@ -1,5 +1,5 @@
 #include "ultramodern/ultramodern.hpp"
-#include "librecomp/recomp.h"
+#include "recomp.h"
 
 static gpr get_print_arg_val(recomp_context* ctx, int arg) {
     switch (arg) {

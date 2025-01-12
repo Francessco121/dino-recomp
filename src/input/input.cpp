@@ -2,7 +2,7 @@
 #include <mutex>
 
 #include "ultramodern/ultramodern.hpp"
-#include "librecomp/recomp.h"
+#include "recomp.h"
 
 #include "dino/input.hpp"
 #include "dino/config.hpp"

@@ -1,5 +1,5 @@
 #include "ultramodern/ultramodern.hpp"
-#include "librecomp/recomp.h"
+#include "recomp.h"
 #include "librecomp/helpers.hpp"
 
 #include "dino/game.hpp"

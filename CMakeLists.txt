@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_SIMULATE_ID STREQUAL "MSVC")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-everything /W4")
+#    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-everything /W4")
 endif()
 
 # Opt out of constexpr mutex constructor on windows to prevent vcredist issues
@@ -27,6 +27,7 @@ if (WIN32)
 endif()
 
 set(RT64_STATIC TRUE)
+set(RT64_SDL_WINDOW_VULKAN TRUE)
 add_subdirectory(${CMAKE_SOURCE_DIR}/lib/rt64 ${CMAKE_BINARY_DIR}/rt64)
 
 # set(BUILD_SHARED_LIBS_SAVED "${BUILD_SHARED_LIBS}")
@@ -56,6 +57,8 @@ target_include_directories(RecompiledFuncs PRIVATE
     ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/lib/N64ModernRuntime/ultramodern/include
     ${CMAKE_SOURCE_DIR}/lib/N64ModernRuntime/librecomp/include
+    #${CMAKE_SOURCE_DIR}/lib/N64ModernRuntime/N64Recomp/include
+    ${CMAKE_SOURCE_DIR}/N64Recomp/N64Recomp/include
 )
 
 file(GLOB FUNC_C_SOURCES ${CMAKE_SOURCE_DIR}/RecompiledFuncs/*.c)
@@ -77,6 +80,8 @@ target_include_directories(PatchesLib PRIVATE
     ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/lib/N64ModernRuntime/ultramodern/include
     ${CMAKE_SOURCE_DIR}/lib/N64ModernRuntime/librecomp/include
+    #${CMAKE_SOURCE_DIR}/lib/N64ModernRuntime/N64Recomp/include
+    ${CMAKE_SOURCE_DIR}/N64Recomp/N64Recomp/include
 )
 
 target_sources(PatchesLib PRIVATE
@@ -95,12 +100,8 @@ if(NOT DEFINED PATCHES_LD)
     set(PATCHES_LD ld.lld)
 endif()
 
-if(NOT DEFINED PATCHES_OBJCOPY)
-    set(PATCHES_OBJCOPY llvm-objcopy)
-endif()
-
 add_custom_target(PatchesBin
-    COMMAND ${CMAKE_COMMAND} -E env CC=${PATCHES_C_COMPILER} LD=${PATCHES_LD} OBJCOPY=${PATCHES_OBJCOPY} make
+    COMMAND ${CMAKE_COMMAND} -E env CC=${PATCHES_C_COMPILER} LD=${PATCHES_LD} make
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/patches
     BYPRODUCTS ${CMAKE_SOURCE_DIR}/patches/patches.elf
 )
@@ -146,6 +147,8 @@ set (SOURCES_EXTRA
 
 target_include_directories(DinoRecomp PRIVATE
     ${CMAKE_SOURCE_DIR}/include
+    #${CMAKE_SOURCE_DIR}/lib/N64ModernRuntime/N64Recomp/include
+    ${CMAKE_SOURCE_DIR}/N64Recomp/N64Recomp/include
     ${CMAKE_SOURCE_DIR}/lib/concurrentqueue
     ${CMAKE_SOURCE_DIR}/lib/GamepadMotionHelpers
     ${CMAKE_SOURCE_DIR}/lib/RmlUi/Include
@@ -174,6 +177,11 @@ else()
         -fno-strict-aliasing
         -fms-extensions
     )
+endif()
+
+if (MSVC)
+    # Disable identical code folding, since this breaks mod function patching as multiple functions can get merged into one.
+    target_link_options(DinoRecomp PRIVATE /OPT:NOICF)
 endif()
 
 if (WIN32)
@@ -221,6 +229,8 @@ endif()
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     find_package(SDL2 REQUIRED)
     find_package(X11 REQUIRED)
+
+    add_compile_definitions("RT64_SDL_WINDOW_VULKAN")
 
     # Generate icon_bytes.c from the app icon PNG.
     #add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/icon_bytes.c ${CMAKE_CURRENT_BINARY_DIR}/icon_bytes.h

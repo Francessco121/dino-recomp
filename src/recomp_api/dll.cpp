@@ -1,7 +1,7 @@
 #include <map>
 
 #include "ultramodern/ultramodern.hpp"
-#include "librecomp/recomp.h"
+#include "recomp.h"
 
 static std::map<int, const char*> dllNames = {
     { 0x01, "cmdmenu" },
