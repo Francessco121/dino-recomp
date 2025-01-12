@@ -9,3 +9,4 @@ dll_relocate_recomp = 0x8F000010;
 osInvalICache_recomp = 0x8F000014;
 osInvalDCache_recomp = 0x8F000018;
 recomp_load_overlay_by_id = 0x8F00001C;
+recomp_get_pending_warp = 0x8F000020;

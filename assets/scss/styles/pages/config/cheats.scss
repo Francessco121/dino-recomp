@@ -1,0 +1,86 @@
+.config-cheats {
+  /*select {
+    margin-left: 16px;
+    padding: 6px;
+
+    border-width: 1px;
+    border-color: #fff;
+    //border-style: solid;
+    border-radius: 4px;
+    background-color: #333;
+
+    min-width: 200px;
+
+    vertical-align: middle;
+
+    &:hover {
+      background-color: #222;
+    }
+  }*/
+
+  button {
+    display: block;
+  }
+
+  select {
+    @extend %body;
+    @extend %nav-all;
+    @include trans-colors-border;
+    @include border($color-white-a50);
+    display: block;
+    position: relative;
+    box-sizing: border-box;
+    padding: 0;
+    flex: 1 1 100%;
+    width: auto;
+    height: space(48);
+    border-radius: $border-radius-md;
+    background-color: $color-white-a5;
+    cursor: pointer;
+
+    align-items: center;
+    justify-content: flex-start;
+    padding: space(14);
+
+    &:hover, &:focus {
+        @include border($color-white-a80);
+        background-color: $color-white-a20;
+    }
+
+    selectvalue {
+        display: inline;
+        margin: auto 0;
+        height: auto;
+    }
+
+    selectbox {
+        @include border($color-white-a80);
+        background-color: $color-background-3;
+        padding: space(4) 0;
+        margin-top: space(2);
+        border-radius: $border-radius-md;
+        
+        option {
+            @extend %nav-all;
+            @include trans-colors;
+            padding: space(8) space(12);
+            background-color: $color-transparent;
+            color: $color-text-dim;
+            font-weight: 400;
+
+            &:hover, &:focus {
+                background-color: $color-white-a20;
+            }
+
+            &:hover:not(:checked) {
+                cursor: pointer;
+            }
+
+            &:checked {
+                color: $color-white;
+                background-color: $color-white-a5;
+            }
+        }
+    }
+  }
+}
