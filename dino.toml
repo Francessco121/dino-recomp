@@ -31,6 +31,12 @@ ignored = [
     "func_8005F2A4"
 ]
 
+# Hook game_tick
+[[patches.hook]]
+before_vram = 0x80013af0
+func = "game_tick"
+text = "game_tick_hook(rdram, ctx);"
+
 # Hijack debug functions
 [[patches.hook]]
 func = "proutSyncPrintf"
