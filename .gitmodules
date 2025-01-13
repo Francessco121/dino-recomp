@@ -22,3 +22,7 @@
 [submodule "lib/dinosaur-planet"]
 	path = lib/dinosaur-planet
 	url = https://github.com/zestydevy/dinosaur-planet.git
+[submodule "lib/dino-recomp-syms"]
+	path = lib/dino-recomp-syms
+	url = https://github.com/Francessco121/dino-recomp-syms.git
+	branch = main
