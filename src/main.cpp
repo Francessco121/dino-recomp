@@ -54,7 +54,21 @@ std::vector<recomp::GameEntry> supported_games = {
     },
 };
 
+struct CliArgs {
+    bool skip_launcher = false;
+};
+
 int main(int argc, char** argv) {
+    // Parse CLI args
+    CliArgs cli_args;
+    for (int i = 1; i < argc; i++) {
+        char *arg = argv[i];
+        if (strcmp(arg, "--skip-launcher") == 0) {
+            cli_args.skip_launcher = true;
+        }
+    }
+
+    // Load project version
     recomp::Version project_version{};
     if (!recomp::Version::from_string(version_string, project_version)) {
         ultramodern::error_handling::message_box(("Invalid version string: " + version_string).c_str());
@@ -147,6 +161,11 @@ int main(int argc, char** argv) {
     };
 
     dino::init::register_mods();
+
+    if (cli_args.skip_launcher) {
+        recomp::start_game(supported_games[0].game_id);
+        recompui::set_current_menu(recompui::Menu::None);
+    }
 
     recomp::start(
         project_version,

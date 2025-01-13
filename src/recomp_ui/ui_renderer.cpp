@@ -1489,9 +1489,6 @@ void recompui::set_render_hooks() {
 
 void recompui::set_current_menu(Menu menu) {
     open_menu.store(menu);
-    if (menu == recompui::Menu::None) {
-        ui_context->rml.system_interface->SetMouseCursor("arrow");
-    }
 }
 
 void recompui::set_config_submenu(recompui::ConfigSubmenu submenu) {
