@@ -12,7 +12,7 @@ extra_indirect_branch_targets = [
 ]
 
 [[overlay_slots]]
-offset = 0x1B8
+text_address = 0x4001238
 overlays = [
     { offset = 0x1B8, size = 0xDC8 },
     { offset = 0xF80, size = 0x9BC },
