@@ -35,8 +35,8 @@ gpr get_entrypoint_address();
 
 void dino_thread_create_callback(uint8_t * rdram, recomp_context * ctx) {
     // Dinosaur Planet modifies osCreateThread to enable MIPS3 float mode
-    ctx->mips3_float_mode = true;
-    ctx->f_odd = &ctx->f1.u32l;
+    const uint32_t SR_FR = 0x04000000;
+    cop0_status_write(ctx, SR_FR);
 }
 
 // array of supported GameEntry objects
