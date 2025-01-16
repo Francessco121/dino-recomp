@@ -15,5 +15,5 @@ extra_indirect_branch_targets = [
 text_address = 0x4001238
 overlays = [
     { offset = 0x1B8, size = 0xDC8 },
-    { offset = 0xF80, size = 0x9BC },
+    { offset = 0xF80, size = 0x9C0 },
 ]
