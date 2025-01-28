@@ -57,40 +57,40 @@ text = "recomp_on_dll_load_too_many_dlls(dllId);"
 
 [[patches.hook]]
 before_vram = 0x8000C2B4
-func = "func_8000C258"
+func = "dll_unload"
 text = "gpr dllListIdx = ctx->r2;"
 [[patches.hook]]
 before_vram = 0x8000C340
-func = "func_8000C258"
+func = "dll_unload"
 text = "recomp_on_dll_unload(MEM_W(dllListIdx * 0x10, MEM_W(0, 0xFFFFFFFF800A7D10)));"
 
 # DLL 31 contains the osFlash functions, redirect them to the recomp versions
 [[patches.hook]]
-func = "dll_31_osFlashInit"
+func = "__dll31_osFlashInit"
 text = "osFlashInit_recomp(rdram, ctx); return;"
 
 [[patches.hook]]
-func = "dll_31_osFlashReadId"
+func = "__dll31_osFlashReadId"
 text = "osFlashReadId_recomp(rdram, ctx); return;"
 
 [[patches.hook]]
-func = "dll_31_osFlashClearStatus"
+func = "__dll31_osFlashClearStatus"
 text = "osFlashClearStatus_recomp(rdram, ctx); return;"
 
 [[patches.hook]]
-func = "dll_31_osFlashSectorErase"
+func = "__dll31_osFlashSectorErase"
 text = "osFlashSectorErase_recomp(rdram, ctx); return;"
 
 [[patches.hook]]
-func = "dll_31_osFlashWriteBuffer"
+func = "__dll31_osFlashWriteBuffer"
 text = "osFlashWriteBuffer_recomp(rdram, ctx); return;"
 
 [[patches.hook]]
-func = "dll_31_osFlashWriteArray"
+func = "__dll31_osFlashWriteArray"
 text = "osFlashWriteArray_recomp(rdram, ctx); return;"
 
 [[patches.hook]]
-func = "dll_31_osFlashReadArray"
+func = "__dll31_osFlashReadArray"
 text = "osFlashReadArray_recomp(rdram, ctx); return;"
 
 # replace PI_STATUS check with yield
@@ -122,11 +122,11 @@ value = 0x00004825 # lw t1,0x578(t9) -> or t1,zero,zero
 # Skip security dongle checks
 [[patches.hook]]
 before_vram = 0x81012500
-func = "dll_3_func_60AC"
+func = "__dll3_func_60AC"
 text = "goto L_8101254C;"
 [[patches.hook]]
 before_vram = 0x811777d4
-func = "dll_210_func_A3FC"
+func = "__dll210_func_A3FC"
 text = "goto L_81177828;"
 
 ## Commit some sins to get 0x8001B4F0-0x8001C8D4 to recompile...
