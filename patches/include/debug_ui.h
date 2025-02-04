@@ -1,6 +1,7 @@
 #pragma once
 
 #include "patch_helpers.h"
+#include "stdarg.h"
 
 DECLARE_FUNC(void, recomp_dbgui_ui_frame_begin);
 DECLARE_FUNC(void, recomp_dbgui_ui_frame_end);

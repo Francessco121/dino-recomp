@@ -12,6 +12,7 @@ CPPFLAGS := -nostdinc -D_LANGUAGE_C -DMIPS -I include -I dummy_headers -I ../lib
 LDFLAGS  := -nostdlib -T patches.ld -T syms.ld -Map $(BUILD_DIR)/patches.map --unresolved-symbols=ignore-all --emit-relocs
 
 C_SRCS := $(wildcard src/*.c)
+C_SRCS += $(wildcard src/builtin_dbgui/*.c)
 C_OBJS := $(C_SRCS:%.c=$(BUILD_DIR)/%.o)
 C_DEPS := $(C_SRCS:%.c=$(BUILD_DIR)/%.d)
 
