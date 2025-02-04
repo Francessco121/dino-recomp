@@ -4,3 +4,4 @@
 *.bin
 ./funcs.h
 patches.map
+build/

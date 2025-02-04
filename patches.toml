@@ -2,7 +2,7 @@
 
 [input]
 # Paths are relative to the location of this config file.
-elf_path = "patches/patches.elf"
+elf_path = "patches/build/patches.elf"
 output_func_path = "RecompiledPatches"
 single_file_output = true
 # Allow absolute symbols to be used as jump targets.
@@ -11,7 +11,7 @@ use_absolute_symbols = true
 func_reference_syms_file = "lib/dino-recomp-syms/dino.syms.toml"
 data_reference_syms_files = [ "lib/dino-recomp-syms/dino.datasyms.toml" ]
 # Tell the recompiler to write the output binary. Doing this instead of using objcopy allows the recompiler to patch MIPS32 relocs.
-output_binary_path = "patches/patches.bin"
+output_binary_path = "patches/build/patches.bin"
 # Do not emit warnings for unpaired LO16 values, as clang produces many of them.
 unpaired_lo16_warnings = false
 # Allow exporting functions and events for mods to use. 

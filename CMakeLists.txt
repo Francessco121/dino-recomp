@@ -103,24 +103,24 @@ endif()
 add_custom_target(PatchesBin
     COMMAND ${CMAKE_COMMAND} -E env CC=${PATCHES_C_COMPILER} LD=${PATCHES_LD} make
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/patches
-    BYPRODUCTS ${CMAKE_SOURCE_DIR}/patches/patches.elf
+    BYPRODUCTS ${CMAKE_SOURCE_DIR}/patches/build/patches.elf
 )
 
 # Generate patches_bin.c from patches.bin
 add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/RecompiledPatches/patches_bin.c
-    COMMAND file_to_c ${CMAKE_SOURCE_DIR}/patches/patches.bin dp_patches_bin ${CMAKE_SOURCE_DIR}/RecompiledPatches/patches_bin.c ${CMAKE_SOURCE_DIR}/RecompiledPatches/patches_bin.h 
-    DEPENDS ${CMAKE_SOURCE_DIR}/patches/patches.bin
+    COMMAND file_to_c ${CMAKE_SOURCE_DIR}/patches/build/patches.bin dp_patches_bin ${CMAKE_SOURCE_DIR}/RecompiledPatches/patches_bin.c ${CMAKE_SOURCE_DIR}/RecompiledPatches/patches_bin.h 
+    DEPENDS ${CMAKE_SOURCE_DIR}/patches/build/patches.bin
 )
 
 # Recompile patches elf into patches.c and patches.bin
 add_custom_command(OUTPUT
-                       ${CMAKE_SOURCE_DIR}/patches/patches.bin
+                       ${CMAKE_SOURCE_DIR}/patches/build/patches.bin
                        ${CMAKE_SOURCE_DIR}/RecompiledPatches/patches.c
                        ${CMAKE_SOURCE_DIR}/RecompiledPatches/recomp_overlays.inl
                        ${CMAKE_SOURCE_DIR}/RecompiledPatches/funcs.h
                    COMMAND ./N64Recomp.exe patches.toml
                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-                   DEPENDS ${CMAKE_SOURCE_DIR}/patches/patches.elf
+                   DEPENDS ${CMAKE_SOURCE_DIR}/patches/build/patches.elf
 )
 
 # Download controller db file for controller support via SDL2
