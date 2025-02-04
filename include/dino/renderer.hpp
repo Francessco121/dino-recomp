@@ -6,6 +6,7 @@
 #include "common/rt64_user_configuration.h"
 #include "ultramodern/renderer_context.hpp"
 #include "librecomp/mods.hpp"
+#include "rt64_render_hooks.h"
 
 namespace RT64 {
     struct Application;
@@ -41,4 +42,6 @@ namespace dino::renderer {
 
     void enable_texture_pack(const recomp::mods::ModHandle& mod);
     void disable_texture_pack(const recomp::mods::ModHandle& mod);
+
+    void add_hook(RT64::RenderHookInit *init, RT64::RenderHookDraw *draw, RT64::RenderHookDeinit *deinit);
 }

@@ -1,6 +1,8 @@
 #ifndef __PATCHES_H__
 #define __PATCHES_H__
 
+#include "stdarg.h"
+
 #define RECOMP_EXPORT __attribute__((section(".recomp_export")))
 #define RECOMP_PATCH __attribute__((section(".recomp_patch")))
 #define RECOMP_FORCE_PATCH __attribute__((section(".recomp_force_patch")))
@@ -34,6 +36,7 @@
 #define sinf __sinf_recomp
 #define cosf __cosf_recomp
 #define bzero bzero_recomp
+#define bcopy bcopy_recomp
 #define gRandFloat sRandFloat
 #include "rt64_extended_gbi.h"
 
@@ -74,5 +77,7 @@
     extern u8 identifier[]
 
 int recomp_printf(const char* fmt, ...);
+int sprintf(char *s, const char *fmt, ...);
+int vsprintf(char *s, const char *fmt, va_list args);
 
 #endif

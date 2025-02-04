@@ -9,6 +9,7 @@
 #include "ultramodern/ultramodern.hpp"
 #include "ultramodern/config.hpp"
 
+#include "dino/debug_ui.hpp"
 #include "dino/renderer.hpp"
 #include "recomp_ui.h"
 #include "concurrentqueue.h"
@@ -195,6 +196,7 @@ ultramodern::renderer::SetupResult map_setup_result(RT64::Application::SetupResu
 dino::renderer::RT64Context::RT64Context(uint8_t* rdram, ultramodern::renderer::WindowHandle window_handle, bool debug) {
     static unsigned char dummy_rom_header[0x40];
     recompui::set_render_hooks();
+    debug_ui::set_render_hooks();
 
     // Set up the RT64 application core fields.
     RT64::Application::Core appCore{};

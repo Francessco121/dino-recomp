@@ -13,6 +13,7 @@
 
 #include "recomp_ui.h"
 #include "dino/input.hpp"
+#include "dino/renderer.hpp"
 #include "librecomp/game.hpp"
 #include "dino/config.hpp"
 #include "ui_rml_hacks.hpp"
@@ -1484,7 +1485,7 @@ void deinit_hook() {
 }
 
 void recompui::set_render_hooks() {
-    RT64::SetRenderHooks(init_hook, draw_hook, deinit_hook);
+    dino::renderer::add_hook(init_hook, draw_hook, deinit_hook);
 }
 
 void recompui::set_current_menu(Menu menu) {
