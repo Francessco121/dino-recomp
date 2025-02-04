@@ -15,7 +15,6 @@ Rml::DataModelHandle general_model_handle;
 Rml::DataModelHandle controls_model_handle;
 Rml::DataModelHandle graphics_model_handle;
 Rml::DataModelHandle sound_options_model_handle;
-Rml::DataModelHandle cheats_model_handle;
 
 recompui::PromptContext prompt_context;
 
@@ -476,12 +475,6 @@ struct DebugContext {
 		
 	}
 };
-
-struct CheatsContext {
-	int32_t warp_location;
-};
-
-CheatsContext cheats_context;
 
 void recompui::update_rml_display_refresh_rate() {
 	static uint32_t lastRate = 0;
@@ -951,21 +944,6 @@ public:
 		debug_context.model_handle = constructor.GetModelHandle();
 	}
 
-	void make_cheats_bindings(Rml::Context* context) {
-		Rml::DataModelConstructor constructor = context->CreateDataModel("cheats_model");
-		if (!constructor) {
-			throw std::runtime_error("Failed to make RmlUi data model for the cheats menu");
-		}
-		
-		cheats_model_handle = constructor.GetModelHandle();
-
-		constructor.Bind("warp_location", &cheats_context.warp_location);
-		constructor.BindEventCallback("warp", 
-			[](Rml::DataModelHandle model_handle, Rml::Event& event, const Rml::VariantList& inputs) {
-				dino::game::set_next_warp(cheats_context.warp_location);
-			});
-	}
-
 	void make_prompt_bindings(Rml::Context* context) {
 		Rml::DataModelConstructor constructor = context->CreateDataModel("prompt_model");
 		if (!constructor) {
@@ -993,7 +971,6 @@ public:
 		make_graphics_bindings(context);
 		make_sound_options_bindings(context);
 		make_debug_bindings(context);
-		make_cheats_bindings(context);
 		make_prompt_bindings(context);
 	}
 };

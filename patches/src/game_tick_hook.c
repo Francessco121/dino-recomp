@@ -1,5 +1,4 @@
 #include "patches.h"
-#include "cheats.h"
 #include "debug_ui.h"
 #include "builtin_dbgui.h"
 
@@ -9,8 +8,6 @@ RECOMP_DECLARE_EVENT(recomp_on_dbgui());
 static void dbgui();
 
 void game_tick_hook() {
-    handle_warp_cheat();
-
     recomp_on_game_tick();
 
     dbgui();
