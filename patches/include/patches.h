@@ -77,6 +77,7 @@
     extern u8 identifier[]
 
 int recomp_printf(const char* fmt, ...);
+int recomp_vprintf(const char* fmt, va_list args);
 int sprintf(char *s, const char *fmt, ...);
 int vsprintf(char *s, const char *fmt, va_list args);
 

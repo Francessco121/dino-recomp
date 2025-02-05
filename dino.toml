@@ -31,6 +31,12 @@ ignored = [
     "func_8005F2A4"
 ]
 
+# Hook game_init
+[[patches.hook]]
+before_vram = 0x800137a4
+func = "game_init"
+text = "game_init_hook(rdram, ctx);"
+
 # Hook game_tick
 [[patches.hook]]
 before_vram = 0x80013af0

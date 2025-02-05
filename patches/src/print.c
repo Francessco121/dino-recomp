@@ -22,6 +22,10 @@ RECOMP_EXPORT int recomp_printf(const char* fmt, ...) {
     return ret;
 }
 
+RECOMP_EXPORT int recomp_vprintf(const char* fmt, va_list args) {
+    return _Printf(&proutSyncPrintf, NULL, fmt, args);
+}
+
 // Hook up unused print function
 RECOMP_PATCH s32 dummied_print_func(const char* fmt, ...) {
     va_list args;
