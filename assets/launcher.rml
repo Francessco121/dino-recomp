@@ -16,8 +16,7 @@
 			<div class="launcher">
 				<div class="launcher__vertical-split">
 					<div class="launcher__title-quadrant">
-						<div><h3>Dinosaur Planet: Recompiled</h3></div>
-						<div><h1>dino time baby</h1></div>
+						<div><h1>Dinosaur Planet: Recompiled</h1></div>
 					</div>
 					<div class="launcher__content-quadrant"></div>
 				</div>
@@ -31,11 +30,11 @@
 						</button>
 					</div>
 					<div class="launcher__content-quadrant">
-						<button data-if="!mm_rom_valid" onclick="select_rom" class="menu-list-item menu-list-item--right" autofocus>
+						<button data-if="!rom_valid" onclick="select_rom" class="menu-list-item menu-list-item--right" autofocus>
 							<div class="menu-list-item__bullet">•</div>
 							<div class="menu-list-item__label">Select ROM</div>
 						</button>
-						<button data-if="mm_rom_valid" onclick="start_game" class="menu-list-item menu-list-item--right" autofocus>
+						<button data-if="rom_valid" onclick="start_game" class="menu-list-item menu-list-item--right" autofocus>
 							<div class="menu-list-item__bullet">•</div>
 							<div class="menu-list-item__label">Start game</div>
 						</button>

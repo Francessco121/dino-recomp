@@ -28,7 +28,7 @@
 #include "dino_sdl.hpp"
 #include "recomp_ui.h"
 
-const std::string version_string = "1.0.0";
+const std::string version_string = "0.1.0";
 
 extern "C" void recomp_entrypoint(uint8_t * rdram, recomp_context * ctx);
 gpr get_entrypoint_address();
@@ -44,7 +44,7 @@ std::vector<recomp::GameEntry> supported_games = {
     {
         .rom_hash = 0xB231A00966BE1430,
         .internal_name = "DINO PLANET",
-        .game_id = u8"baserom",
+        .game_id = u8"dino",
         .mod_game_id = "dino-planet",
         .save_type = recomp::SaveType::Flashram,
         .is_enabled = true,

@@ -320,7 +320,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div
+                                    <!-- <div
                                         class="input-viz input-viz__R"
                                         visual-input="R"
                                     >
@@ -347,7 +347,7 @@
                                                 <div>{{cur_binding}}</div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>

@@ -17,20 +17,20 @@ namespace dino::input {
     // First parameter is the enum name, second parameter is the bit field for the input (or 0 if there is no associated one), third is the readable name.
     // TODO: rename for dino
     #define DEFINE_N64_BUTTON_INPUTS() \
-        DEFINE_INPUT(A, 0x8000, "Action") \
-        DEFINE_INPUT(B, 0x4000, "Attack/Cancel") \
-        DEFINE_INPUT(Z, 0x2000, "Target") \
+        DEFINE_INPUT(A, 0x8000, "Action/Attack") \
+        DEFINE_INPUT(B, 0x4000, "Cancel") \
+        DEFINE_INPUT(Z, 0x2000, "Target/Aim") \
         DEFINE_INPUT(START, 0x1000, "Start") \
-        DEFINE_INPUT(L, 0x0020, "Toggle map") \
-        DEFINE_INPUT(R, 0x0010, "Shield") \
-        DEFINE_INPUT(C_UP, 0x0008, "Look/Fairy") \
-        DEFINE_INPUT(C_LEFT, 0x0002, "Item 1") \
-        DEFINE_INPUT(C_DOWN, 0x0004, "Item 2") \
-        DEFINE_INPUT(C_RIGHT, 0x0001, "Item 3") \
-        DEFINE_INPUT(DPAD_UP, 0x0800, "Special Item 1") \
-        DEFINE_INPUT(DPAD_RIGHT, 0x0100, "Special Item 2") \
-        DEFINE_INPUT(DPAD_DOWN, 0x0400, "Special Item 3") \
-        DEFINE_INPUT(DPAD_LEFT, 0x0200, "Special Item 4")
+        DEFINE_INPUT(L, 0x0020, "L Button") \
+        DEFINE_INPUT(R, 0x0010, "R Button") \
+        DEFINE_INPUT(C_UP, 0x0008, "Look") \
+        DEFINE_INPUT(C_LEFT, 0x0002, "Spells") \
+        DEFINE_INPUT(C_DOWN, 0x0004, "Sidekick") \
+        DEFINE_INPUT(C_RIGHT, 0x0001, "Bag") \
+        DEFINE_INPUT(DPAD_UP, 0x0800, "DPad Up") \
+        DEFINE_INPUT(DPAD_RIGHT, 0x0100, "DPad Right") \
+        DEFINE_INPUT(DPAD_DOWN, 0x0400, "DPad Down") \
+        DEFINE_INPUT(DPAD_LEFT, 0x0200, "DPad Left")
 
     #define DEFINE_N64_AXIS_INPUTS() \
         DEFINE_INPUT(Y_AXIS_POS, 0, "Up") \

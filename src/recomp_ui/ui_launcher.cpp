@@ -9,7 +9,7 @@
 static std::string version_string;
 
 Rml::DataModelHandle model_handle;
-bool mm_rom_valid = false;
+bool rom_valid = false;
 
 extern std::vector<recomp::GameEntry> supported_games;
 
@@ -26,8 +26,8 @@ void select_rom() {
 		recomp::RomValidationError rom_error = recomp::select_rom(path, supported_games[0].game_id);
         switch (rom_error) {
             case recomp::RomValidationError::Good:
-                mm_rom_valid = true;
-                model_handle.DirtyVariable("mm_rom_valid");
+                rom_valid = true;
+                model_handle.DirtyVariable("rom_valid");
                 break;
             case recomp::RomValidationError::FailedToOpen:
                 recompui::message_box("Failed to open ROM file.");
@@ -43,7 +43,7 @@ void select_rom() {
                 break;
             case recomp::RomValidationError::IncorrectVersion:
                 recompui::message_box(
-                        "This ROM is the correct game, but the wrong version.\nThis project requires the NTSC-U N64 version of the game.");
+                        "This ROM is the correct game, but the wrong version.\nThis project requires the unmodified beta ROM.");
                 break;
             case recomp::RomValidationError::OtherError:
                 recompui::message_box("An unknown error has occurred.");
@@ -55,7 +55,7 @@ void select_rom() {
 class LauncherMenu : public recompui::MenuController {
 public:
     LauncherMenu() {
-		mm_rom_valid = recomp::is_rom_valid(supported_games[0].game_id);
+		rom_valid = recomp::is_rom_valid(supported_games[0].game_id);
     }
 	~LauncherMenu() override {
 
@@ -71,8 +71,8 @@ public:
 		);
 		recompui::register_event(listener, "rom_selected",
 			[](const std::string& param, Rml::Event& event) {
-				mm_rom_valid = true;
-				model_handle.DirtyVariable("mm_rom_valid");
+				rom_valid = true;
+				model_handle.DirtyVariable("rom_valid");
 			}
 		);
 		recompui::register_event(listener, "start_game",
@@ -102,7 +102,7 @@ public:
 	void make_bindings(Rml::Context* context) override {
 		Rml::DataModelConstructor constructor = context->CreateDataModel("launcher_model");
 
-		constructor.Bind("mm_rom_valid", &mm_rom_valid);
+		constructor.Bind("rom_valid", &rom_valid);
 
 		version_string = recomp::get_project_version().to_string();
 		constructor.Bind("version_number", &version_string);

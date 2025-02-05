@@ -439,7 +439,6 @@ bool save_sound_config(const std::filesystem::path& path) {
 
     config_json["main_volume"] = dino::sound::get_main_volume();
     config_json["bgm_volume"] = dino::sound::get_bgm_volume();
-    config_json["low_health_beeps"] = dino::sound::get_low_health_beeps_enabled();
     
     return save_json_with_backups(path, config_json);
 }
@@ -453,7 +452,6 @@ bool load_sound_config(const std::filesystem::path& path) {
     dino::sound::reset_sound_settings();
     call_if_key_exists(dino::sound::set_main_volume, config_json, "main_volume");
     call_if_key_exists(dino::sound::set_bgm_volume, config_json, "bgm_volume");
-    call_if_key_exists(dino::sound::set_low_health_beeps_enabled, config_json, "low_health_beeps");
     return true;
 }
 

@@ -414,11 +414,9 @@ void dino::config::set_analog_camera_invert_mode(dino::config::CameraInvertMode 
 struct SoundOptionsContext {
 	std::atomic<int> main_volume; // Option to control the volume of all sound
 	std::atomic<int> bgm_volume;
-	std::atomic<int> low_health_beeps_enabled; // RmlUi doesn't seem to like "true"/"false" strings for setting variants so an int is used here instead.
 	void reset() {
 		bgm_volume = 100;
 		main_volume = 100;
-		low_health_beeps_enabled = (int)true;
 	}
 	SoundOptionsContext() {
 		reset();
@@ -454,17 +452,6 @@ void dino::sound::set_bgm_volume(int volume) {
 
 int dino::sound::get_bgm_volume() {
     return sound_options_context.bgm_volume.load();
-}
-
-void dino::sound::set_low_health_beeps_enabled(bool enabled) {
-    sound_options_context.low_health_beeps_enabled.store((int)enabled);
-	if (sound_options_model_handle) {
-		sound_options_model_handle.DirtyVariable("low_health_beeps_enabled");
-	}
-}
-
-bool dino::sound::get_low_health_beeps_enabled() {
-    return (bool)sound_options_context.low_health_beeps_enabled.load();
 }
 
 struct DebugContext {
@@ -553,16 +540,6 @@ public:
 			});
 			
 		recompui::register_event(listener, "scene_index_changed",
-			[](const std::string& param, Rml::Event& event) {
-
-			});
-
-		recompui::register_event(listener, "do_warp",
-			[](const std::string& param, Rml::Event& event) {
-				
-			});
-
-		recompui::register_event(listener, "set_time",
 			[](const std::string& param, Rml::Event& event) {
 
 			});
@@ -922,7 +899,6 @@ public:
 
 		bind_atomic(constructor, sound_options_model_handle, "main_volume", &sound_options_context.main_volume);
 		bind_atomic(constructor, sound_options_model_handle, "bgm_volume", &sound_options_context.bgm_volume);
-		bind_atomic(constructor, sound_options_model_handle, "low_health_beeps_enabled", &sound_options_context.low_health_beeps_enabled);
 	}
 
 	void make_debug_bindings(Rml::Context* context) {
