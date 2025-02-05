@@ -5,8 +5,8 @@ entrypoint = 0x80000400
 # Paths are relative to the location of this config file.
 output_func_path = "RecompiledFuncs"
 rom_file_path = "baserom.patched.z64"
-symbols_file_path = "lib/dino-recomp-syms/dino.syms.toml"
-relocatable_sections_path = "lib/dino-recomp-syms/dino.dlls.txt"
+symbols_file_path = "lib/dino-recomp-mod-api/dino.syms.toml"
+relocatable_sections_path = "lib/dino-recomp-mod-api/dino.dlls.txt"
 
 [patches]
 stubs = [

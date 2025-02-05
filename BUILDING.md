@@ -33,7 +33,7 @@ In the setup process you'll need to select the following options and tools for i
 > [!NOTE]
 > You do not necessarily need the Visual Studio UI to build/debug the project but the above installation is still required. More on the different build options below. 
 
-The other tool necessary will be `make` which can be installe via [Chocolatey](https://chocolatey.org/):
+The other tool necessary will be `make` which can be installed via [Chocolatey](https://chocolatey.org/):
 ```bash
 choco install make
 ```
@@ -41,14 +41,14 @@ choco install make
 ## 3. Patching the target ROM
 You will need to patch the ROM (md5: 49f7bb346ade39d1915c22e090ffd748) before running the recompiler.
 
-This can be done by using the `tools/recomp_rom_patcher.py` script found in the [Dinosaur Planet Decompilation repository](https://github.com/zestydevy/dinosaur-planet). You can either clone the repository or use the submodule provided by this repository at `lib/dinosaur-planet`.
+This can be done by using the `tools/recomp_rom_patcher.py` script found in the [Dinosaur Planet Decompilation repository](https://github.com/zestydevy/dinosaur-planet). You can either clone the repository or use the submodule provided by this repository at `lib/dino-recomp-mod-api/dinosaur-planet`.
 
 > [!IMPORTANT]
 > The Python dependency `capstone` must be installed to run this script.
 
 For example, using the decomp submodule, run:
 ```bash
-python3 ./lib/dinosaur-planet/tools/recomp_rom_patcher.py -o baserom.patched.z64 baserom.z64
+python3 ./lib/dino-recomp-mod-api/dinosaur-planet/tools/recomp_rom_patcher.py -o baserom.patched.z64 baserom.z64
 ```
 
 Once done, place the patched ROM in the root of this repository and rename it to `baserom.patched.z64` if necessary.
