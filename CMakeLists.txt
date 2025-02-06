@@ -226,7 +226,7 @@ if (WIN32)
             LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup"
     )
 
-    #target_sources(DinoRecomp PRIVATE ${CMAKE_SOURCE_DIR}/icons/app.rc)
+    target_sources(DinosaurPlanetRecompiled PRIVATE ${CMAKE_SOURCE_DIR}/icons/app.rc)
 endif()
 
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")
@@ -236,11 +236,11 @@ if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     add_compile_definitions("RT64_SDL_WINDOW_VULKAN")
 
     # Generate icon_bytes.c from the app icon PNG.
-    #add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/icon_bytes.c ${CMAKE_CURRENT_BINARY_DIR}/icon_bytes.h
-    #    COMMAND file_to_c ${CMAKE_SOURCE_DIR}/icons/512.png icon_bytes ${CMAKE_CURRENT_BINARY_DIR}/icon_bytes.c ${CMAKE_CURRENT_BINARY_DIR}/icon_bytes.h 
-    #    DEPENDS ${CMAKE_SOURCE_DIR}/icons/512.png
-    #)
-    #target_sources(DinoRecomp PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/icon_bytes.c)
+    add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/icon_bytes.c ${CMAKE_CURRENT_BINARY_DIR}/icon_bytes.h
+       COMMAND file_to_c ${CMAKE_SOURCE_DIR}/icons/32.png icon_bytes ${CMAKE_CURRENT_BINARY_DIR}/icon_bytes.c ${CMAKE_CURRENT_BINARY_DIR}/icon_bytes.h 
+       DEPENDS ${CMAKE_SOURCE_DIR}/icons/32.png
+    )
+    target_sources(DinosaurPlanetRecompiled PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/icon_bytes.c)
 
     message(STATUS "SDL2_FOUND = ${SDL2_FOUND}")
     message(STATUS "SDL2_INCLUDE_DIRS = ${SDL2_INCLUDE_DIRS}")
