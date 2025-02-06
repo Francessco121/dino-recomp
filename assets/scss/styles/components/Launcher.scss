@@ -37,6 +37,15 @@
     }
 }
 
+.launcher-background {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+}
 
 @keyframes slide-mm-bg-over {
 	0% {

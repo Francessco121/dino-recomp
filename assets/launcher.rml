@@ -14,6 +14,7 @@
 	<body>
 		<div id="window" data-model="launcher_model">
 			<div class="launcher">
+				<img class="launcher-background" src="images/background.png" />
 				<div class="launcher__vertical-split">
 					<div class="launcher__title-quadrant">
 						<div><h1>Dinosaur Planet: Recompiled</h1></div>

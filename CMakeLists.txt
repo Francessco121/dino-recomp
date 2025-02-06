@@ -28,6 +28,7 @@ endif()
 
 set(RT64_STATIC TRUE)
 set(RT64_SDL_WINDOW_VULKAN TRUE)
+add_compile_definitions(HLSL_CPU)
 add_subdirectory(${CMAKE_SOURCE_DIR}/lib/rt64 ${CMAKE_BINARY_DIR}/rt64)
 
 # set(BUILD_SHARED_LIBS_SAVED "${BUILD_SHARED_LIBS}")
@@ -118,6 +119,7 @@ add_custom_command(OUTPUT
                        ${CMAKE_SOURCE_DIR}/RecompiledPatches/patches.c
                        ${CMAKE_SOURCE_DIR}/RecompiledPatches/recomp_overlays.inl
                        ${CMAKE_SOURCE_DIR}/RecompiledPatches/funcs.h
+                   # TODO: Look into why modifying patches requires two builds to take
                    COMMAND ./N64Recomp.exe patches.toml
                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
                    DEPENDS ${CMAKE_SOURCE_DIR}/patches/build/patches.elf
@@ -159,6 +161,7 @@ target_include_directories(DinosaurPlanetRecompiled PRIVATE
     ${CMAKE_SOURCE_DIR}/lib/rt64/src/contrib/Vulkan-Headers/include
     ${CMAKE_SOURCE_DIR}/lib/rt64/src/contrib/D3D12MemoryAllocator/include
     ${CMAKE_SOURCE_DIR}/lib/rt64/src/contrib/VulkanMemoryAllocator/include
+    ${CMAKE_SOURCE_DIR}/lib/rt64/src/contrib/stb
     ${CMAKE_SOURCE_DIR}/lib/rt64/src
     ${CMAKE_SOURCE_DIR}/lib/rt64/src/rhi
     ${CMAKE_SOURCE_DIR}/lib/rt64/src/render
