@@ -27,4 +27,6 @@ static void dbgui() {
     }
 
     recomp_dbgui_ui_frame_end();
+
+    builtin_dbgui_game_tick();
 }

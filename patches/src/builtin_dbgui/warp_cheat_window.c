@@ -44,7 +44,7 @@ static struct WarpEntry warpEntries[] = {
     { 57, "57: Warlock Mountain" },
     { 58, "58: Warlock Mountain" },
     { 59, "59: Warlock Mountain" },
-    { 60, "60: CloudRunner Fortress?" },
+    { 60, "60: CloudRunner Fortress Galleon" },
     { 61, "61: Inside Galleon" },
     { 63, "63: Warlock Mountain" },
     { 64, "64: Discovery Falls" },

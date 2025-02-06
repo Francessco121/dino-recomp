@@ -1,8 +1,9 @@
 #include "debug_ui.h"
 #include "builtin_dbgui.h"
 
-static s32 warpCheatOpen = FALSE;
 static s32 dllsOpen = FALSE;
+static s32 warpCheatOpen = FALSE;
+static s32 charCheatOpen = FALSE;
 
 void builtin_dbgui() {
     if (recomp_dbgui_begin_main_menu_bar()) {
@@ -12,6 +13,7 @@ void builtin_dbgui() {
         }
         if (recomp_dbgui_begin_menu("Cheats")) {
             recomp_dbgui_menu_item("Warp", &warpCheatOpen);
+            recomp_dbgui_menu_item("Character", &charCheatOpen);
             recomp_dbgui_end_menu();
         }
         recomp_dbgui_end_main_menu_bar();
@@ -23,4 +25,11 @@ void builtin_dbgui() {
     if (warpCheatOpen) {
         dbgui_warp_cheat_window(&warpCheatOpen);
     }
+    if (charCheatOpen) {
+        dbgui_character_cheat_window(&charCheatOpen);
+    }
+}
+
+void builtin_dbgui_game_tick() {
+    dbgui_character_cheat_game_tick();
 }
