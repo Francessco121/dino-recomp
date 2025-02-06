@@ -69,7 +69,7 @@ This project uses CMake for builds. There's a few ways to run this depending on 
 
 ### Visual Studio (recommended)
 
-Open the repository as a folder with Visual Studio. In the top toolbar, select `DinoRecomp` as the target. You can now simply build and debug like normal.
+Open the repository as a folder with Visual Studio. In the top toolbar, select `DinosaurPlanetRecompiled` as the target. You can now simply build and debug like normal.
 
 Builds will be output to `out/build/x64-[Configuration]`.
 
@@ -81,7 +81,7 @@ The extensions [ms-vscode.cpptools](https://marketplace.visualstudio.com/items?i
 2. (**Windows Only**) Make sure your local CMake Kits contain a kit for "Clang (MSVC CLI)". One of these kits must be used to ensure `clang-cl` on Windows is ran with the correct Visual C++ environment. See https://github.com/microsoft/vscode-cmake-tools/blob/main/docs/kits.md for more information.
 3. In the CMake tab, under Configure, select Clang as the compiler (must be Clang (MSVC CLI) on Windows).
 4. If the CMake extension automatically created a build folder, you may need to delete it and re-configure to ensure Ninja is being used as the generator.
-5. In the CMake tab, under Build (and Debug/Launch), set the build target to `DinoRecomp`.
+5. In the CMake tab, under Build (and Debug/Launch), set the build target to `DinosaurPlanetRecompiled`.
 6. Using the CMake extension, you now should be able to build and debug the project!
 
 If you prefer to debug using a `launch.json` file, see https://github.com/microsoft/vscode-cmake-tools/blob/main/docs/debug-launch.md for information on how to set up a launch configuration for the CMake extension.
@@ -96,14 +96,14 @@ If you prefer the command line you can build the project using CMake:
 
 ```bash
 cmake -S . -B build-cmake -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang -G Ninja -DCMAKE_BUILD_TYPE=Release # or Debug if you want to debug
-cmake --build build-cmake --target DinoRecomp -j$(nproc) --config Release # or Debug
+cmake --build build-cmake --target DinosaurPlanetRecompiled -j$(nproc) --config Release # or Debug
 ```
 
 Builds will be output to `build-cmake`.
 
 ## 6. Success
 
-Voilà! You should now have a `DinoRecomp` executable in the build directory! You will need to run the executable out of the root folder of this project or copy the assets folder to the build folder to run it.
+Voilà! You should now have a `DinosaurPlanetRecompiled` executable in the build directory! You will need to run the executable out of the root folder of this project or copy the assets folder to the build folder to run it.
 
 > [!IMPORTANT]  
 > In the game itself, you should be using a standard ROM, not the patched one.

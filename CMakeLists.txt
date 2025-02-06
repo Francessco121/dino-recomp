@@ -134,8 +134,8 @@ add_custom_target(DownloadGameControllerDB
     DEPENDS ${CMAKE_SOURCE_DIR}/gamecontrollerdb.txt)
 
 # Main executable
-add_executable(DinoRecomp)
-add_dependencies(DinoRecomp DownloadGameControllerDB)
+add_executable(DinosaurPlanetRecompiled)
+add_dependencies(DinosaurPlanetRecompiled DownloadGameControllerDB)
 
 file(GLOB SOURCES ${CMAKE_SOURCE_DIR}/src/*.cpp)
 file(GLOB SOURCES_RECURSIVE ${CMAKE_SOURCE_DIR}/src/**/*.cpp)
@@ -144,7 +144,7 @@ set (SOURCES_EXTRA
     ${CMAKE_SOURCE_DIR}/lib/RmlUi/Backends/RmlUi_Platform_SDL.cpp
 )
 
-target_include_directories(DinoRecomp PRIVATE
+target_include_directories(DinosaurPlanetRecompiled PRIVATE
     ${CMAKE_SOURCE_DIR}/include
     #${CMAKE_SOURCE_DIR}/lib/N64ModernRuntime/N64Recomp/include
     ${CMAKE_SOURCE_DIR}/N64Recomp/N64Recomp/include
@@ -170,13 +170,13 @@ target_include_directories(DinoRecomp PRIVATE
 )
 
 if(CMAKE_SIZEOF_VOID_P EQUAL 8 AND CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|amd64|AMD64")
-    target_compile_options(DinoRecomp PRIVATE
+    target_compile_options(DinosaurPlanetRecompiled PRIVATE
         -march=nehalem
         -fno-strict-aliasing
         -fms-extensions
     )
 else()
-    target_compile_options(DinoRecomp PRIVATE
+    target_compile_options(DinosaurPlanetRecompiled PRIVATE
         -fno-strict-aliasing
         -fms-extensions
     )
@@ -184,7 +184,7 @@ endif()
 
 if (MSVC)
     # Disable identical code folding, since this breaks mod function patching as multiple functions can get merged into one.
-    target_link_options(DinoRecomp PRIVATE /OPT:NOICF)
+    target_link_options(DinosaurPlanetRecompiled PRIVATE /OPT:NOICF)
 endif()
 
 if (WIN32)
@@ -202,23 +202,23 @@ if (WIN32)
         URL https://github.com/libsdl-org/SDL/releases/download/release-${SDL2_VERSION}/SDL2-devel-${SDL2_VERSION}-VC.zip
     )
     FetchContent_MakeAvailable(sdl2)
-    target_include_directories(DinoRecomp PRIVATE
+    target_include_directories(DinosaurPlanetRecompiled PRIVATE
         ${sdl2_SOURCE_DIR}/include
     )
-    target_link_directories(DinoRecomp PRIVATE
+    target_link_directories(DinosaurPlanetRecompiled PRIVATE
         ${sdl2_SOURCE_DIR}/lib/x64
     )
 
     # Copy SDL2 and dxc DLLs to output folder as post build step
-    add_custom_command(TARGET DinoRecomp POST_BUILD
+    add_custom_command(TARGET DinosaurPlanetRecompiled POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "${sdl2_SOURCE_DIR}/lib/x64/SDL2.dll"
             "${CMAKE_SOURCE_DIR}/lib/rt64/src/contrib/dxc/bin/x64/dxil.dll"
             "${CMAKE_SOURCE_DIR}/lib/rt64/src/contrib/dxc/bin/x64/dxcompiler.dll"
-            $<TARGET_FILE_DIR:DinoRecomp>)
+            $<TARGET_FILE_DIR:DinosaurPlanetRecompiled>)
 
     set_target_properties(
-        DinoRecomp
+        DinosaurPlanetRecompiled
         PROPERTIES
             LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE"
             LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup"
@@ -245,15 +245,15 @@ if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     message(STATUS "SDL2_FOUND = ${SDL2_FOUND}")
     message(STATUS "SDL2_INCLUDE_DIRS = ${SDL2_INCLUDE_DIRS}")
 
-    target_include_directories(DinoRecomp PRIVATE ${SDL2_INCLUDE_DIRS})
+    target_include_directories(DinosaurPlanetRecompiled PRIVATE ${SDL2_INCLUDE_DIRS})
 
     message(STATUS "X11_FOUND = ${X11_FOUND}")
     message(STATUS "X11_Xrandr_FOUND = ${X11_Xrandr_FOUND}")
     message(STATUS "X11_INCLUDE_DIR = ${X11_INCLUDE_DIR}")
     message(STATUS "X11_LIBRARIES = ${X11_LIBRARIES}")
 
-    target_include_directories(DinoRecomp PRIVATE ${X11_INCLUDE_DIR} ${X11_Xrandr_INCLUDE_PATH})
-    target_link_libraries(DinoRecomp PRIVATE ${X11_LIBRARIES} ${X11_Xrandr_LIB})
+    target_include_directories(DinosaurPlanetRecompiled PRIVATE ${X11_INCLUDE_DIR} ${X11_Xrandr_INCLUDE_PATH})
+    target_link_libraries(DinosaurPlanetRecompiled PRIVATE ${X11_LIBRARIES} ${X11_Xrandr_LIB})
 
     find_package(Freetype REQUIRED)
 
@@ -262,16 +262,16 @@ if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     message(STATUS "FREETYPE_LIBRARIES = ${FREETYPE_LIBRARIES}")
 
     include_directories(${FREETYPE_LIBRARIES})
-    target_link_libraries(DinoRecomp PRIVATE ${FREETYPE_LIBRARIES})
+    target_link_libraries(DinosaurPlanetRecompiled PRIVATE ${FREETYPE_LIBRARIES})
 
     set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
     set(THREADS_PREFER_PTHREAD_FLAG TRUE)
     find_package(Threads REQUIRED)
 
-    target_link_libraries(DinoRecomp PRIVATE "-latomic -static-libstdc++" ${CMAKE_DL_LIBS} Threads::Threads)
+    target_link_libraries(DinosaurPlanetRecompiled PRIVATE "-latomic -static-libstdc++" ${CMAKE_DL_LIBS} Threads::Threads)
 endif()
 
-target_link_libraries(DinoRecomp PRIVATE
+target_link_libraries(DinosaurPlanetRecompiled PRIVATE
     PatchesLib
     RecompiledFuncs
     SDL2
@@ -314,9 +314,9 @@ else()
     endif()
 endif()
 
-build_vertex_shader(DinoRecomp "shaders/InterfaceVS.hlsl" "shaders/InterfaceVS.hlsl")
-build_pixel_shader(DinoRecomp "shaders/InterfacePS.hlsl" "shaders/InterfacePS.hlsl")
+build_vertex_shader(DinosaurPlanetRecompiled "shaders/InterfaceVS.hlsl" "shaders/InterfaceVS.hlsl")
+build_pixel_shader(DinosaurPlanetRecompiled "shaders/InterfacePS.hlsl" "shaders/InterfacePS.hlsl")
 
-target_sources(DinoRecomp PRIVATE ${SOURCES} ${SOURCES_RECURSIVE} ${SOURCES_EXTRA})
+target_sources(DinosaurPlanetRecompiled PRIVATE ${SOURCES} ${SOURCES_RECURSIVE} ${SOURCES_EXTRA})
 
-set_property(TARGET DinoRecomp PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
+set_property(TARGET DinosaurPlanetRecompiled PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")

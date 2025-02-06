@@ -5,8 +5,8 @@
     {
       "type": "default",
       "project": "CMakeLists.txt",
-      "projectTarget": "DinoRecomp.exe",
-      "name": "DinoRecomp",
+      "projectTarget": "DinosaurPlanetRecompiled.exe",
+      "name": "DinosaurPlanetRecompiled",
       "currentDir": "${workspaceRoot}"
     }
   ]
