@@ -2,6 +2,7 @@
 
 namespace dino::debug_ui {
     bool is_open();
+    void set_is_open(bool open);
 
     void ui_frame_begin();
     void ui_frame_end();

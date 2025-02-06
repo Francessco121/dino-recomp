@@ -3,6 +3,7 @@
 #include "librecomp/helpers.hpp"
 
 #include "dino/debug_ui.hpp"
+#include "dino/config.hpp"
 
 // Strings must be copied out of rdram since their character addresses are effectively
 // reversed in rdram compared to normal ram. The returned pointer MUST be freed by the caller.
@@ -23,6 +24,10 @@ static char *copy_str(PTR(char) str, uint8_t* rdram, recomp_context* ctx) {
 
 extern "C" void recomp_dbgui_is_open(uint8_t* rdram, recomp_context* ctx) {
     _return<s32>(ctx, dino::debug_ui::is_open());
+}
+
+extern "C" void recomp_dbgui_is_enabled(uint8_t* rdram, recomp_context* ctx) {
+    _return<s32>(ctx, dino::config::get_debug_ui_enabled());
 }
 
 extern "C" void recomp_dbgui_ui_frame_begin(uint8_t* rdram, recomp_context* ctx) {

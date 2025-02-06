@@ -1,8 +1,13 @@
 #include "ultramodern/ultramodern.hpp"
 #include "recomp.h"
 #include "librecomp/helpers.hpp"
+#include "dino/config.hpp"
 
 extern "C" void recomp_puts(uint8_t* rdram, recomp_context* ctx) {
+    if (!dino::config::get_debug_stdout_enabled()) {
+        return;
+    }
+
     PTR(char) cur_str = _arg<0, PTR(char)>(rdram, ctx);
     u32 length = _arg<1, u32>(rdram, ctx);
 
@@ -10,6 +15,8 @@ extern "C" void recomp_puts(uint8_t* rdram, recomp_context* ctx) {
         fputc(MEM_B(i, (gpr)cur_str), stdout);
     }
 }
+
+// TODO: probably want to remove these below
 
 float mem_float(uint8_t* rdram, int32_t offset, gpr reg) {
     fpr fp;

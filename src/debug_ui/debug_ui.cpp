@@ -32,6 +32,7 @@
 
 #include "dino/debug_ui.hpp"
 #include "dino/renderer.hpp"
+#include "dino/config.hpp"
 
 struct VulkanContext {
     VkDevice device = VK_NULL_HANDLE;
@@ -93,15 +94,21 @@ bool dino::debug_ui::is_open() {
     return b_is_open;
 }
 
+void dino::debug_ui::set_is_open(bool open) {
+    b_is_open = open;
+}
+
 void dino::debug_ui::ui_frame_begin() {
     if (!b_is_open) {
         // Still process the event queue but don't send any to ImGui
         SDL_Event event{};
         while (event_queue.try_dequeue(event)) {
-            if (event.type == SDL_KEYDOWN && 
-                    event.key.keysym.sym == SDLK_BACKQUOTE &&
-                    !event.key.repeat) {
-                b_is_open = !b_is_open;
+            if (dino::config::get_debug_ui_enabled()) {
+                if (event.type == SDL_KEYDOWN && 
+                        event.key.keysym.sym == SDLK_BACKQUOTE &&
+                        !event.key.repeat) {
+                    b_is_open = !b_is_open;
+                }
             }
         }
     }
@@ -384,6 +391,10 @@ static void rt64_init_hook(RT64::RenderInterface* _interface, RT64::RenderDevice
 }
 
 static void rt64_draw_hook(RT64::RenderCommandList* command_list, RT64::RenderFramebuffer* swap_chain_framebuffer) {
+    if (!dino::config::get_debug_ui_enabled() && b_is_open) {
+        b_is_open = false;
+    }
+
     if (!b_is_open) return;
     
     // TODO: With higher framerate settings, sometimes we end up deadlocked here. This timeout of 1/30th of a second

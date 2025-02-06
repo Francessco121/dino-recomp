@@ -2,6 +2,7 @@
 
 #include "ultramodern/ultramodern.hpp"
 #include "recomp.h"
+#include "dino/config.hpp"
 
 static std::map<int, const char*> dllNames = {
     { 1, "cmdmenu" },
@@ -45,22 +46,26 @@ extern "C" void unload_overlay_by_id(uint32_t id);
 extern "C" void recomp_on_dll_load(uint32_t id, uint32_t ram_addr) {
     load_overlay_by_id(id - 1, ram_addr);
 
-    auto dllNameIt = dllNames.find(id);
-    if (dllNameIt == dllNames.end()) {
-        printf("Loaded DLL %u to address 0x%08X\n", id, ram_addr);
-    } else {
-        printf("Loaded DLL %u \"%s\" to address 0x%08X\n", id, dllNameIt->second, ram_addr);
+    if (dino::config::get_debug_stdout_enabled()) {
+        auto dllNameIt = dllNames.find(id);
+        if (dllNameIt == dllNames.end()) {
+            printf("Loaded DLL %u to address 0x%08X\n", id, ram_addr);
+        } else {
+            printf("Loaded DLL %u \"%s\" to address 0x%08X\n", id, dllNameIt->second, ram_addr);
+        }
     }
 }
 
 extern "C" void recomp_on_dll_unload(uint32_t id) {
     unload_overlay_by_id(id - 1);
 
-    auto dllNameIt = dllNames.find(id);
-    if (dllNameIt == dllNames.end()) {
-        printf("Unloaded DLL %u\n", id);
-    } else {
-        printf("Unloaded DLL %u \"%s\"\n", id, dllNameIt->second);
+    if (dino::config::get_debug_stdout_enabled()) {
+        auto dllNameIt = dllNames.find(id);
+        if (dllNameIt == dllNames.end()) {
+            printf("Unloaded DLL %u\n", id);
+        } else {
+            printf("Unloaded DLL %u \"%s\"\n", id, dllNameIt->second);
+        }
     }
 }
 

@@ -4,6 +4,7 @@
 #include "dino/config.hpp"
 #include "dino/renderer.hpp"
 #include "dino/sound.hpp"
+#include "dino/debug_ui.hpp"
 #include "promptfont.h"
 #include "ultramodern/config.hpp"
 #include "ultramodern/ultramodern.hpp"
@@ -456,11 +457,8 @@ int dino::sound::get_bgm_volume() {
 
 struct DebugContext {
 	Rml::DataModelHandle model_handle;
-	bool debug_enabled = false;
-
-	DebugContext() {
-		
-	}
+	std::atomic<int> debug_ui_enabled = 1;
+	std::atomic<int> debug_stdout_enabled = 0;
 };
 
 void recompui::update_rml_display_refresh_rate() {
@@ -907,17 +905,15 @@ public:
 			throw std::runtime_error("Failed to make RmlUi data model for the debug menu");
 		}
 
+		debug_context.model_handle = constructor.GetModelHandle();
+
 		bind_config_list_events(constructor);
 
-		// Bind the debug mode enabled flag.
-		constructor.Bind("debug_enabled", &debug_context.debug_enabled);
+		bind_atomic(constructor, debug_context.model_handle, "debug_ui_enabled", &debug_context.debug_ui_enabled);
+		bind_atomic(constructor, debug_context.model_handle, "debug_stdout_enabled", &debug_context.debug_stdout_enabled);
 		
 		// Register the array type for string vectors.
 		constructor.RegisterArray<std::vector<std::string>>();
-
-
-
-		debug_context.model_handle = constructor.GetModelHandle();
 	}
 
 	void make_prompt_bindings(Rml::Context* context) {
@@ -955,14 +951,25 @@ std::unique_ptr<recompui::MenuController> recompui::create_config_menu() {
 	return std::make_unique<ConfigMenu>();
 }
 
-bool dino::config::get_debug_mode_enabled() {
-	return debug_context.debug_enabled;
+bool dino::config::get_debug_ui_enabled() {
+	return (bool)debug_context.debug_ui_enabled.load();
 }
 
-void dino::config::set_debug_mode_enabled(bool enabled) {
-	debug_context.debug_enabled = enabled;
+void dino::config::set_debug_ui_enabled(bool enabled) {
+	debug_context.debug_ui_enabled.store((int)enabled);
 	if (debug_context.model_handle) {
-		debug_context.model_handle.DirtyVariable("debug_enabled");
+		debug_context.model_handle.DirtyVariable("debug_ui_enabled");
+	}
+}
+
+bool dino::config::get_debug_stdout_enabled() {
+	return (bool)debug_context.debug_stdout_enabled.load();
+}
+
+void dino::config::set_debug_stdout_enabled(bool enabled) {
+	debug_context.debug_stdout_enabled.store((int)enabled);
+	if (debug_context.model_handle) {
+		debug_context.model_handle.DirtyVariable("debug_stdout_enabled");
 	}
 }
 

@@ -36,3 +36,4 @@ recomp_dbgui_end_child = 0x8F00007C;
 recomp_dbgui_checkbox = 0x8F000080;
 recomp_dbgui_input_int = 0x8F000084;
 recomp_dbgui_input_float = 0x8F000088;
+recomp_dbgui_is_enabled = 0x8F00008C;

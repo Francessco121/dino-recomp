@@ -221,7 +221,8 @@ bool save_general_config(const std::filesystem::path& path) {
     config_json["camera_invert_mode"] = dino::config::get_camera_invert_mode();
     config_json["analog_cam_mode"] = dino::config::get_analog_cam_mode();
     config_json["analog_camera_invert_mode"] = dino::config::get_analog_camera_invert_mode();
-    config_json["debug_mode"] = dino::config::get_debug_mode_enabled();
+    config_json["debug_ui"] = dino::config::get_debug_ui_enabled();
+    config_json["debug_stdout"] = dino::config::get_debug_stdout_enabled();
     
     return save_json_with_backups(path, config_json);
 }
@@ -237,7 +238,8 @@ void set_general_settings_from_json(const nlohmann::json& config_json) {
     dino::config::set_camera_invert_mode(from_or_default(config_json, "camera_invert_mode", dino::config::CameraInvertMode::InvertY));
     dino::config::set_analog_cam_mode(from_or_default(config_json, "analog_cam_mode", dino::config::AnalogCamMode::Off));
     dino::config::set_analog_camera_invert_mode(from_or_default(config_json, "analog_camera_invert_mode", dino::config::CameraInvertMode::InvertNone));
-    dino::config::set_debug_mode_enabled(from_or_default(config_json, "debug_mode", false));
+    dino::config::set_debug_ui_enabled(from_or_default(config_json, "debug_ui", true));
+    dino::config::set_debug_stdout_enabled(from_or_default(config_json, "debug_stdout", false));
 }
 
 bool load_general_config(const std::filesystem::path& path) {

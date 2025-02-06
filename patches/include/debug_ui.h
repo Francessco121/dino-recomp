@@ -15,6 +15,7 @@ DECLARE_FUNC(void, recomp_dbgui_end_combo);
 DECLARE_FUNC(s32, recomp_dbgui_selectable, const char *label, s32 selected);
 DECLARE_FUNC(s32, recomp_dbgui_button, const char *label);
 DECLARE_FUNC(s32, recomp_dbgui_is_open);
+DECLARE_FUNC(s32, recomp_dbgui_is_enabled);
 DECLARE_FUNC(s32, recomp_dbgui_begin_main_menu_bar);
 DECLARE_FUNC(void, recomp_dbgui_end_main_menu_bar);
 DECLARE_FUNC(s32, recomp_dbgui_begin_menu, const char *label);

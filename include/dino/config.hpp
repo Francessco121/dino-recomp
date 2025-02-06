@@ -21,9 +21,6 @@ namespace dino::config {
 
     std::filesystem::path get_app_folder_path();
     
-    bool get_debug_mode_enabled();
-    void set_debug_mode_enabled(bool enabled);
-    
     enum class AutosaveMode {
         On,
         Off,
@@ -88,4 +85,10 @@ namespace dino::config {
     void set_analog_cam_mode(AnalogCamMode mode);
 
     void open_quit_game_prompt();
+
+    bool get_debug_ui_enabled();
+    void set_debug_ui_enabled(bool enabled);
+
+    bool get_debug_stdout_enabled();
+    void set_debug_stdout_enabled(bool enabled);
 }

@@ -95,6 +95,9 @@ RECOMP_EXPORT s32 mod_dbgui_button(const char *label) {
 RECOMP_EXPORT s32 mod_dbgui_is_open() {
     return recomp_dbgui_is_open();
 }
+RECOMP_EXPORT s32 mod_dbgui_is_enabled() {
+    return recomp_dbgui_is_enabled();
+}
 RECOMP_EXPORT s32 mod_dbgui_begin_main_menu_bar() {
     return recomp_dbgui_begin_main_menu_bar();
 }
