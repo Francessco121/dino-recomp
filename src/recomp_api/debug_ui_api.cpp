@@ -1,9 +1,11 @@
 #include "ultramodern/ultramodern.hpp"
 #include "recomp.h"
 #include "librecomp/helpers.hpp"
+#include "librecomp/overlays.hpp"
 
 #include "dino/debug_ui.hpp"
 #include "dino/config.hpp"
+#include "dino/recomp_api.hpp"
 
 // Strings must be copied out of rdram since their character addresses are effectively
 // reversed in rdram compared to normal ram. The returned pointer MUST be freed by the caller.
@@ -274,4 +276,33 @@ extern "C" void recomp_dbgui_input_float(uint8_t* rdram, recomp_context* ctx) {
     free(label);
 
     _return<s32>(ctx, pressed);
+}
+
+#define REGISTER_FUNC(name) recomp::overlays::register_base_export(#name, name)
+
+void dino::recomp_api::register_exports() {
+    REGISTER_FUNC(recomp_dbgui_is_open);
+    REGISTER_FUNC(recomp_dbgui_is_enabled);
+    REGISTER_FUNC(recomp_dbgui_begin);
+    REGISTER_FUNC(recomp_dbgui_end);
+    REGISTER_FUNC(recomp_dbgui_text);
+    REGISTER_FUNC(recomp_dbgui_label_text);
+    REGISTER_FUNC(recomp_dbgui_same_line);
+    REGISTER_FUNC(recomp_dbgui_begin_combo);
+    REGISTER_FUNC(recomp_dbgui_end_combo);
+    REGISTER_FUNC(recomp_dbgui_selectable);
+    REGISTER_FUNC(recomp_dbgui_button);
+    REGISTER_FUNC(recomp_dbgui_begin_main_menu_bar);
+    REGISTER_FUNC(recomp_dbgui_end_main_menu_bar);
+    REGISTER_FUNC(recomp_dbgui_begin_menu);
+    REGISTER_FUNC(recomp_dbgui_end_menu);
+    REGISTER_FUNC(recomp_dbgui_menu_item);
+    REGISTER_FUNC(recomp_dbgui_collapsing_header);
+    REGISTER_FUNC(recomp_dbgui_tree_node);
+    REGISTER_FUNC(recomp_dbgui_tree_pop);
+    REGISTER_FUNC(recomp_dbgui_begin_child);
+    REGISTER_FUNC(recomp_dbgui_end_child);
+    REGISTER_FUNC(recomp_dbgui_checkbox);
+    REGISTER_FUNC(recomp_dbgui_input_int);
+    REGISTER_FUNC(recomp_dbgui_input_float);
 }

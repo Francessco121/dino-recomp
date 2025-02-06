@@ -30,8 +30,5 @@ DECLARE_FUNC(s32, recomp_dbgui_checkbox, const char *label, s32 *value);
 DECLARE_FUNC(s32, recomp_dbgui_input_int, const char *label, s32 *value);
 DECLARE_FUNC(s32, recomp_dbgui_input_float, const char *label, f32 *value);
 
-const char *recomp_vsprintf_helper(const char *fmt, va_list args);
-const char *recomp_sprintf_helper(const char *fmt, ...);
-
 void recomp_dbgui_textf(const char *fmt, ...);
 void recomp_dbgui_label_textf(const char *label, const char *fmt, ...);

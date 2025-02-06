@@ -30,8 +30,6 @@
 #define osContGetQuery osContGetQuery_recomp
 
 #define malloc malloc_recomp
-//#define read_file_region read_file_region_recomp
-//#define dll_relocate dll_relocate_recomp
 
 #define sinf __sinf_recomp
 #define cosf __cosf_recomp
@@ -78,7 +76,11 @@
 
 int recomp_printf(const char* fmt, ...);
 int recomp_vprintf(const char* fmt, va_list args);
+
 int sprintf(char *s, const char *fmt, ...);
 int vsprintf(char *s, const char *fmt, va_list args);
+
+const char *recomp_vsprintf_helper(const char *fmt, va_list args);
+const char *recomp_sprintf_helper(const char *fmt, ...);
 
 #endif

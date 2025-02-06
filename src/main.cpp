@@ -25,6 +25,7 @@
 #include "dino/input.hpp"
 #include "dino/renderer.hpp"
 #include "dino/config.hpp"
+#include "dino/recomp_api.hpp"
 #include "dino_sdl.hpp"
 #include "recomp_ui.h"
 
@@ -114,6 +115,8 @@ int main(int argc, char** argv) {
     for (const auto& game : supported_games) {
         recomp::register_game(game);
     }
+
+    dino::recomp_api::register_exports();
 
     dino::init::register_overlays();
     dino::init::register_patches();

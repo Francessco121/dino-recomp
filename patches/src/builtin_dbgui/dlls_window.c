@@ -1,4 +1,5 @@
 #include "debug_ui.h"
+#include "patches.h"
 #include "sys/dll.h"
 
 void dbgui_dlls_window(s32 *open) {

@@ -161,7 +161,6 @@ target_include_directories(DinosaurPlanetRecompiled PRIVATE
     ${CMAKE_SOURCE_DIR}/lib/rt64/src/contrib/Vulkan-Headers/include
     ${CMAKE_SOURCE_DIR}/lib/rt64/src/contrib/D3D12MemoryAllocator/include
     ${CMAKE_SOURCE_DIR}/lib/rt64/src/contrib/VulkanMemoryAllocator/include
-    ${CMAKE_SOURCE_DIR}/lib/rt64/src/contrib/stb
     ${CMAKE_SOURCE_DIR}/lib/rt64/src
     ${CMAKE_SOURCE_DIR}/lib/rt64/src/rhi
     ${CMAKE_SOURCE_DIR}/lib/rt64/src/render

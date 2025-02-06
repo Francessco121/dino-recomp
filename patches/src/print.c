@@ -66,3 +66,24 @@ RECOMP_EXPORT int vsprintf(char *s, const char *fmt, va_list args) {
 	
     return (ret);
 }
+
+RECOMP_EXPORT const char *recomp_vsprintf_helper(const char *fmt, va_list args) {
+    // 1MB buffer for string formatting... if that's not enough then
+    // you have bigger problems...
+    static char buffer[1024 * 1024];
+    
+    vsprintf(buffer, fmt, args);
+
+    return buffer;
+}
+
+RECOMP_EXPORT const char *recomp_sprintf_helper(const char *fmt, ...) {
+    va_list args;
+	va_start(args, fmt);
+
+    const char *str = recomp_vsprintf_helper(fmt, args);
+
+    va_end(args);
+
+    return str;
+}
