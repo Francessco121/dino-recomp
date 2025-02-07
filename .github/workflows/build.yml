@@ -1,12 +1,6 @@
 name: build
 on:
-  workflow_call:
-    secrets:
-      PRIVATE_REPO_PAT:
-        required: true
-  push:
-    bracnhes:
-      - ci
+  workflow_dispatch:
     secrets:
       PRIVATE_REPO_PAT:
         required: true
