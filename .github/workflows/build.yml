@@ -26,14 +26,9 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.ref }}
           submodules: recursive
-      - name: ccache
-        uses: hendrikmuhs/ccache-action@v1.2
-        with:
-          key: ${{ runner.os }}-dino-re-ccache-${{ matrix.type }}
       - name: Install Windows Dependencies
         run: |
           choco install ninja
-          Remove-Item -Path "C:\ProgramData\Chocolatey\bin\ccache.exe" -Force -ErrorAction SilentlyContinue
       - name: Configure Developer Command Prompt
         uses: ilammy/msvc-dev-cmd@v1
       - name: Checkout baserom
@@ -49,11 +44,10 @@ jobs:
         run: |
           cd N64Recomp
 
-          # enable ccache
           set $env:PATH="$env:USERPROFILE/.cargo/bin;$env:PATH"
           $cpuCores = (Get-CimInstance -ClassName Win32_Processor).NumberOfLogicalProcessors
 
-          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_MAKE_PROGRAM=ninja -G Ninja -S . -B cmake-build
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_MAKE_PROGRAM=ninja -G Ninja -S . -B cmake-build
           cmake --build cmake-build --config Release --target N64RecompCLI -j $cpuCores
           cmake --build cmake-build --config Release --target RSPRecomp -j $cpuCores
 
@@ -66,14 +60,13 @@ jobs:
           ./RSPRecomp.exe aspMain.us.rev1.toml
       - name: Build DinoRecomp
         run: |-
-          # enable ccache
           set $env:PATH="$env:USERPROFILE/.cargo/bin;$env:PATH"
           $cpuCores = (Get-CimInstance -ClassName Win32_Processor).NumberOfLogicalProcessors
 
           # remove LLVM from PATH so it doesn't overshadow the one provided by VS
           $env:PATH = ($env:PATH -split ';' | Where-Object { $_ -ne 'C:\Program Files\LLVM\bin' }) -join ';'
 
-          cmake -DCMAKE_BUILD_TYPE=${{ matrix.type }} -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER=clang-cl -DCMAKE_C_COMPILER=clang-cl -DCMAKE_MAKE_PROGRAM=ninja -G Ninja -S . -B cmake-build -DCMAKE_CXX_FLAGS="-Xclang -fexceptions -Xclang -fcxx-exceptions"
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.type }} -DCMAKE_CXX_COMPILER=clang-cl -DCMAKE_C_COMPILER=clang-cl -DCMAKE_MAKE_PROGRAM=ninja -G Ninja -S . -B cmake-build -DCMAKE_CXX_FLAGS="-Xclang -fexceptions -Xclang -fcxx-exceptions"
           cmake --build cmake-build --config ${{ matrix.type }} --target DinosaurPlanetRecompiled -j $cpuCores
         env:
           SDL2_VERSION: ${{ inputs.SDL2_VERSION }}
