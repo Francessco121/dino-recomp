@@ -4,6 +4,12 @@ on:
     secrets:
       PRIVATE_REPO_PAT:
         required: true
+  push:
+    bracnhes:
+      - ci
+    secrets:
+      PRIVATE_REPO_PAT:
+        required: true
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
