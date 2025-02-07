@@ -57,7 +57,7 @@ jobs:
       - name: Run N64Recomp & RSPRecomp
         run: |
           ./N64Recomp.exe dino.toml
-          ./RSPRecomp.exe aspMain.us.rev1.toml
+          ./RSPRecomp.exe aspMain.toml
       - name: Build DinoRecomp
         run: |-
           set $env:PATH="$env:USERPROFILE/.cargo/bin;$env:PATH"
