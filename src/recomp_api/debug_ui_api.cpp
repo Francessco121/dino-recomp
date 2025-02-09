@@ -1,11 +1,15 @@
+#include <vector>
+
 #include "ultramodern/ultramodern.hpp"
 #include "recomp.h"
 #include "librecomp/helpers.hpp"
 #include "librecomp/overlays.hpp"
+#include "imgui.h"
 
 #include "dino/debug_ui.hpp"
 #include "dino/config.hpp"
 #include "dino/recomp_api.hpp"
+#include "recomp_helpers.hpp"
 
 // Strings must be copied out of rdram since their character addresses are effectively
 // reversed in rdram compared to normal ram. The returned pointer MUST be freed by the caller.
@@ -278,6 +282,207 @@ extern "C" void recomp_dbgui_input_float(uint8_t* rdram, recomp_context* ctx) {
     _return<s32>(ctx, pressed);
 }
 
+static std::vector<char> text_input_buffer{};
+
+extern "C" void recomp_dbgui_input_text(uint8_t* rdram, recomp_context* ctx) {
+    PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
+    PTR(char) buf_ptr = _arg<1, PTR(char)>(rdram, ctx);
+    s32 buf_size = _arg<2, s32>(rdram, ctx);
+
+    char *label = copy_str(label_ptr, rdram, ctx);
+
+    text_input_buffer.resize(buf_size);
+    for (size_t i = 0; i < buf_size; i++) {
+        text_input_buffer.data()[i] = MEM_B(i, (gpr)buf_ptr);
+    }
+
+    bool changed = dino::debug_ui::input_text(label, text_input_buffer.data(), buf_size);
+
+    if (changed) {
+        for (size_t i = 0; i < buf_size; i++) {
+            MEM_B(i, (gpr)buf_ptr) = text_input_buffer.data()[i];
+        }
+    }
+
+    free(label);
+
+    _return<s32>(ctx, changed);
+}
+
+extern "C" void recomp_dbgui_push_str_id(uint8_t* rdram, recomp_context* ctx) {
+    PTR(char) id_ptr = _arg<0, PTR(char)>(rdram, ctx);
+
+    char *id = copy_str(id_ptr, rdram, ctx);
+
+    dino::debug_ui::push_str_id(id);
+
+    free(id);
+}
+
+extern "C" void recomp_dbgui_pop_id(uint8_t* rdram, recomp_context* ctx) {
+    dino::debug_ui::pop_id();
+}
+
+extern "C" void recomp_dbgui_is_item_hovered(uint8_t* rdram, recomp_context* ctx) {
+    bool hovered = dino::debug_ui::is_item_hovered();
+
+    _return<s32>(ctx, hovered);
+}
+
+extern "C" void recomp_dbgui_get_display_size(uint8_t* rdram, recomp_context* ctx) {
+    PTR(float) width_ptr = _arg<0, PTR(float)>(rdram, ctx);
+    PTR(float) height_ptr = _arg<1, PTR(float)>(rdram, ctx);
+
+    ImVec2 size = dino::debug_ui::get_display_size();
+
+    MEM_F32(0x0, width_ptr) = size.x;
+    MEM_F32(0x0, height_ptr) = size.y;
+}
+
+extern "C" void recomp_dbgui_color_float4_to_u32(uint8_t* rdram, recomp_context* ctx) {
+    PTR(float) in_ptr = _arg<0, PTR(float)>(rdram, ctx);
+    
+    ImVec4 in(
+        MEM_F32(0x0, in_ptr),
+        MEM_F32(0x4, in_ptr),
+        MEM_F32(0x8, in_ptr),
+        MEM_F32(0xC, in_ptr)
+    );
+
+    ImU32 color = dino::debug_ui::color_float4_to_u32(in);
+
+    _return<u32>(ctx, color);
+}
+
+extern "C" void recomp_dbgui_foreground_text(uint8_t* rdram, recomp_context* ctx) {
+    PTR(float) pos_ptr = _arg<0, PTR(float)>(rdram, ctx);
+    u32 color = _arg<1, u32>(rdram, ctx);
+    PTR(char) text_ptr = _arg<2, PTR(char)>(rdram, ctx);
+    
+    ImVec2 pos(
+        MEM_F32(0x0, pos_ptr),
+        MEM_F32(0x4, pos_ptr)
+    );
+
+    char *text = copy_str(text_ptr, rdram, ctx);
+
+    dino::debug_ui::foreground_text(pos, color, text);
+
+    free(text);
+}
+
+extern "C" void recomp_dbgui_foreground_line(uint8_t* rdram, recomp_context* ctx) {
+    PTR(void) ptr = _arg<0, PTR(void)>(rdram, ctx);
+    
+    ImVec2 p1(
+        MEM_F32(0x0, ptr),
+        MEM_F32(0x4, ptr)
+    );
+    ImVec2 p2(
+        MEM_F32(0x8, ptr),
+        MEM_F32(0xC, ptr)
+    );
+    ImU32 color = MEM_W(0x10, ptr);
+    float thickness = MEM_F32(0x14, ptr);
+
+    dino::debug_ui::foreground_line(p1, p2, color, thickness);
+}
+
+extern "C" void recomp_dbgui_foreground_circle(uint8_t* rdram, recomp_context* ctx) {
+    PTR(void) ptr = _arg<0, PTR(void)>(rdram, ctx);
+    
+    ImVec2 center(
+        MEM_F32(0x0, ptr),
+        MEM_F32(0x4, ptr)
+    );
+    float radius = MEM_F32(0x8, ptr);
+    ImU32 color = MEM_W(0xC, ptr);
+    s32 num_segments = MEM_W(0x10, ptr);
+    float thickness = MEM_F32(0x14, ptr);
+
+    dino::debug_ui::foreground_circle(center, radius, color, num_segments, thickness);
+}
+
+extern "C" void recomp_dbgui_foreground_circle_filled(uint8_t* rdram, recomp_context* ctx) {
+    PTR(void) ptr = _arg<0, PTR(void)>(rdram, ctx);
+    
+    ImVec2 center(
+        MEM_F32(0x0, ptr),
+        MEM_F32(0x4, ptr)
+    );
+    float radius = MEM_F32(0x8, ptr);
+    ImU32 color = MEM_W(0xC, ptr);
+    s32 num_segments = MEM_W(0x10, ptr);
+
+    dino::debug_ui::foreground_circle_filled(center, radius, color, num_segments);
+}
+
+extern "C" void recomp_dbgui_foreground_ellipse(uint8_t* rdram, recomp_context* ctx) {
+    PTR(void) ptr = _arg<0, PTR(void)>(rdram, ctx);
+    
+    ImVec2 center(
+        MEM_F32(0x0, ptr),
+        MEM_F32(0x4, ptr)
+    );
+    float radius_x = MEM_F32(0x8, ptr);
+    float radius_y = MEM_F32(0xC, ptr);
+    ImU32 color = MEM_W(0x10, ptr);
+    float rotation = MEM_F32(0x14, ptr);
+    s32 num_segments = MEM_W(0x18, ptr);
+    float thickness = MEM_F32(0x1C, ptr);
+
+    dino::debug_ui::foreground_ellipse(center, radius_x, radius_y, color, rotation, num_segments, thickness);
+}
+
+extern "C" void recomp_dbgui_foreground_ellipse_filled(uint8_t* rdram, recomp_context* ctx) {
+    PTR(void) ptr = _arg<0, PTR(void)>(rdram, ctx);
+    
+    ImVec2 center(
+        MEM_F32(0x0, ptr),
+        MEM_F32(0x4, ptr)
+    );
+    float radius_x = MEM_F32(0x8, ptr);
+    float radius_y = MEM_F32(0xC, ptr);
+    ImU32 color = MEM_W(0x10, ptr);
+    float rotation = MEM_F32(0x14, ptr);
+    s32 num_segments = MEM_W(0x18, ptr);
+
+    dino::debug_ui::foreground_ellipse_filled(center, radius_x, radius_y, color, rotation, num_segments);
+}
+
+extern "C" void recomp_dbgui_foreground_rect(uint8_t* rdram, recomp_context* ctx) {
+    PTR(void) ptr = _arg<0, PTR(void)>(rdram, ctx);
+    
+    ImVec2 pmin(
+        MEM_F32(0x0, ptr),
+        MEM_F32(0x4, ptr)
+    );
+    ImVec2 pmax(
+        MEM_F32(0x8, ptr),
+        MEM_F32(0xC, ptr)
+    );
+    ImU32 color = MEM_W(0x10, ptr);
+    float thickness = MEM_F32(0x14, ptr);
+
+    dino::debug_ui::foreground_rect(pmin, pmax, color, thickness);
+}
+
+extern "C" void recomp_dbgui_foreground_rect_filled(uint8_t* rdram, recomp_context* ctx) {
+    PTR(void) ptr = _arg<0, PTR(void)>(rdram, ctx);
+    
+    ImVec2 pmin(
+        MEM_F32(0x0, ptr),
+        MEM_F32(0x4, ptr)
+    );
+    ImVec2 pmax(
+        MEM_F32(0x8, ptr),
+        MEM_F32(0xC, ptr)
+    );
+    ImU32 color = MEM_W(0x10, ptr);
+
+    dino::debug_ui::foreground_rect_filled(pmin, pmax, color);
+}
+
 #define REGISTER_FUNC(name) recomp::overlays::register_base_export(#name, name)
 
 void dino::recomp_api::register_exports() {
@@ -305,4 +510,18 @@ void dino::recomp_api::register_exports() {
     REGISTER_FUNC(recomp_dbgui_checkbox);
     REGISTER_FUNC(recomp_dbgui_input_int);
     REGISTER_FUNC(recomp_dbgui_input_float);
+    REGISTER_FUNC(recomp_dbgui_input_text);
+    REGISTER_FUNC(recomp_dbgui_push_str_id);
+    REGISTER_FUNC(recomp_dbgui_pop_id);
+    REGISTER_FUNC(recomp_dbgui_is_item_hovered);
+    REGISTER_FUNC(recomp_dbgui_get_display_size);
+    REGISTER_FUNC(recomp_dbgui_color_float4_to_u32);
+    REGISTER_FUNC(recomp_dbgui_foreground_text);
+    REGISTER_FUNC(recomp_dbgui_foreground_line);
+    REGISTER_FUNC(recomp_dbgui_foreground_circle);
+    REGISTER_FUNC(recomp_dbgui_foreground_circle_filled);
+    REGISTER_FUNC(recomp_dbgui_foreground_ellipse);
+    REGISTER_FUNC(recomp_dbgui_foreground_ellipse_filled);
+    REGISTER_FUNC(recomp_dbgui_foreground_rect);
+    REGISTER_FUNC(recomp_dbgui_foreground_rect_filled);
 }

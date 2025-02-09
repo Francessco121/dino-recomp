@@ -25,6 +25,12 @@ void dbgui_dlls_window(s32 *open) {
                 if (recomp_dbgui_tree_node(label)) {
                     recomp_dbgui_textf("refCount: %d", dll->refCount);
                     recomp_dbgui_textf("address: %p", file);
+                    if (recomp_dbgui_tree_node(recomp_sprintf_helper("exports (%d):###exports", file->exportCount))) {
+                        for (u32 k = 0; k < (file->exportCount + 1); k++) {
+                            recomp_dbgui_textf("[%d] %p", k, dll->exports[k]);
+                        }
+                        recomp_dbgui_tree_pop();
+                    }
                     recomp_dbgui_tree_pop();
                 }
             }

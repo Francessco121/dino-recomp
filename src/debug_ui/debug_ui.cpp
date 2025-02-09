@@ -12,6 +12,7 @@
 #include "rt64_render_hooks.h"
 #include "rt64_render_interface_builders.h"
 #include "imgui/imgui.h"
+#include "imgui/imgui_internal.h"
 #include "imgui/backends/imgui_impl_sdl2.h"
 #include "ultramodern/renderer_context.hpp"
 #include "concurrentqueue.h"
@@ -98,6 +99,15 @@ void dino::debug_ui::set_is_open(bool open) {
     b_is_open = open;
 }
 
+bool dino::debug_ui::want_capture_keyboard() {
+    // Go directly through our context pointer so we don't have to worry about it being current
+    if (dino_imgui_ctx == nullptr) {
+        return false;
+    }
+
+    return b_is_open && dino_imgui_ctx->IO.WantCaptureKeyboard;
+}
+
 void dino::debug_ui::ui_frame_begin() {
     if (!b_is_open) {
         // Still process the event queue but don't send any to ImGui
@@ -177,7 +187,7 @@ static void assert_is_open() {
     assert((b_is_open || b_in_ui_frame) && "Cannot call debug UI functions while the debug UI is closed.");
 }
 
-bool dino::debug_ui::begin(char *name, bool *open) {
+bool dino::debug_ui::begin(const char *name, bool *open) {
     assert_is_open();
     return ImGui::Begin(name, open);
 }
@@ -187,12 +197,12 @@ void dino::debug_ui::end() {
     ImGui::End();
 }
 
-void dino::debug_ui::text(char *text) {
+void dino::debug_ui::text(const char *text) {
     assert_is_open();
     ImGui::Text("%s", text);
 }
 
-void dino::debug_ui::label_text(char *label, char *text) {
+void dino::debug_ui::label_text(const char *label, char *text) {
     assert_is_open();
     ImGui::LabelText(label, "%s", text);
 }
@@ -202,7 +212,7 @@ void dino::debug_ui::same_line() {
     ImGui::SameLine();
 }
 
-bool dino::debug_ui::begin_combo(char *label, char *preview) {
+bool dino::debug_ui::begin_combo(const char *label, char *preview) {
     assert_is_open();
     return ImGui::BeginCombo(label, preview);
 }
@@ -212,12 +222,12 @@ void dino::debug_ui::end_combo() {
     ImGui::EndCombo();
 }
 
-bool dino::debug_ui::selectable(char *label, bool *selected) {
+bool dino::debug_ui::selectable(const char *label, bool *selected) {
     assert_is_open();
     return ImGui::Selectable(label, selected);
 }
 
-bool dino::debug_ui::button(char *label) {
+bool dino::debug_ui::button(const char *label) {
     assert_is_open();
     return ImGui::Button(label);
 }
@@ -232,7 +242,7 @@ void dino::debug_ui::end_main_menu_bar() {
     ImGui::EndMainMenuBar();
 }
 
-bool dino::debug_ui::begin_menu(char *label) {
+bool dino::debug_ui::begin_menu(const char *label) {
     assert_is_open();
     return ImGui::BeginMenu(label);
 }
@@ -242,17 +252,17 @@ void dino::debug_ui::end_menu() {
     ImGui::EndMenu();
 }
 
-bool dino::debug_ui::menu_item(char *label, bool *selected) {
+bool dino::debug_ui::menu_item(const char *label, bool *selected) {
     assert_is_open();
     return ImGui::MenuItem(label, NULL, selected);
 }
 
-bool dino::debug_ui::collapsing_header(char *label) {
+bool dino::debug_ui::collapsing_header(const char *label) {
     assert_is_open();
     return ImGui::CollapsingHeader(label);
 }
 
-bool dino::debug_ui::tree_node(char *label) {
+bool dino::debug_ui::tree_node(const char *label) {
     assert_is_open();
     return ImGui::TreeNode(label);
 }
@@ -262,7 +272,7 @@ void dino::debug_ui::tree_pop() {
     ImGui::TreePop();
 }
 
-bool dino::debug_ui::begin_child(char *str_id) {
+bool dino::debug_ui::begin_child(const char *str_id) {
     assert_is_open();
     return ImGui::BeginChild(str_id);
 }
@@ -272,19 +282,88 @@ void dino::debug_ui::end_child() {
     ImGui::EndChild();
 }
 
-bool dino::debug_ui::checkbox(char *label, bool *v) {
+bool dino::debug_ui::checkbox(const char *label, bool *v) {
     assert_is_open();
     return ImGui::Checkbox(label, v);
 }
 
-bool dino::debug_ui::input_int(char *label, int *v) {
+bool dino::debug_ui::input_int(const char *label, int *v) {
     assert_is_open();
     return ImGui::InputInt(label, v);
 }
 
-bool dino::debug_ui::input_float(char *label, float *v) {
+bool dino::debug_ui::input_float(const char *label, float *v) {
     assert_is_open();
     return ImGui::InputFloat(label, v);
+}
+
+bool dino::debug_ui::input_text(const char *label, char *buf, int buf_size) {
+    assert_is_open();
+    return ImGui::InputText(label, buf, buf_size);
+}
+
+void dino::debug_ui::push_str_id(const char *id) {
+    assert_is_open();
+    ImGui::PushID(id);
+}
+
+void dino::debug_ui::pop_id() {
+    assert_is_open();
+    ImGui::PopID();
+}
+
+bool dino::debug_ui::is_item_hovered() {
+    assert_is_open();
+    return ImGui::IsItemHovered();
+}
+
+ImVec2 dino::debug_ui::get_display_size() {
+    assert_is_open();
+    return ImGui::GetIO().DisplaySize;
+}
+
+ImU32 dino::debug_ui::color_float4_to_u32(const ImVec4 &in) {
+    return ImGui::ColorConvertFloat4ToU32(in);
+}
+
+void dino::debug_ui::foreground_text(const ImVec2 &pos, ImU32 color, const char *text) {
+    assert_is_open();
+    ImGui::GetForegroundDrawList()->AddText(pos, color, text);
+}
+
+void dino::debug_ui::foreground_line(const ImVec2 &p1, const ImVec2 &p2, ImU32 color, float thickness) {
+    assert_is_open();
+    ImGui::GetForegroundDrawList()->AddLine(p1, p2, color, thickness);
+}
+
+void dino::debug_ui::foreground_circle(const ImVec2 &center, float radius, ImU32 color, int num_segments, float thickness) {
+    assert_is_open();
+    ImGui::GetForegroundDrawList()->AddCircle(center, radius, color, num_segments, thickness);
+}
+
+void dino::debug_ui::foreground_circle_filled(const ImVec2 &center, float radius, ImU32 color, int num_segments) {
+    assert_is_open();
+    ImGui::GetForegroundDrawList()->AddCircleFilled(center, radius, color, num_segments);
+}
+
+void dino::debug_ui::foreground_ellipse(const ImVec2 &center, float radius_x, float radius_y, ImU32 color, float rot, int num_segments, float thickness) {
+    assert_is_open();
+    ImGui::GetForegroundDrawList()->AddEllipse(center, radius_x, radius_y, color, rot, num_segments, thickness);
+}
+
+void dino::debug_ui::foreground_ellipse_filled(const ImVec2 &center, float radius_x, float radius_y, ImU32 color, float rot, int num_segments) {
+    assert_is_open();
+    ImGui::GetForegroundDrawList()->AddEllipseFilled(center, radius_x, radius_y, color, rot, num_segments);
+}
+
+void dino::debug_ui::foreground_rect(const ImVec2 &p_min, const ImVec2 &p_max, ImU32 color, float thickness) {
+    assert_is_open();
+    ImGui::GetForegroundDrawList()->AddRect(p_min, p_max, color, 0, 0, thickness);
+}
+
+void dino::debug_ui::foreground_rect_filled(const ImVec2 &p_min, const ImVec2 &p_max, ImU32 color) {
+    assert_is_open();
+    ImGui::GetForegroundDrawList()->AddRectFilled(p_min, p_max, color);
 }
 
 static int sdl_event_filter(void *userdata, SDL_Event *event) {

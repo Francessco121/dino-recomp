@@ -6,6 +6,7 @@
 
 #include "dino/input.hpp"
 #include "dino/config.hpp"
+#include "dino/debug_ui.hpp"
 #include "dino_sdl.hpp"
 #include "promptfont.h"
 #include "GamepadMotion.hpp"
@@ -106,6 +107,10 @@ bool sdl_event_filter(void* userdata, SDL_Event* event) {
             // Skip repeated events when not in the menu
             if (recompui::get_current_menu() == recompui::Menu::None &&
                 event->key.repeat) {
+                break;
+            }
+
+            if (dino::debug_ui::want_capture_keyboard()) {
                 break;
             }
 
@@ -694,7 +699,7 @@ void dino::input::set_right_analog_suppressed(bool suppressed) {
 
 bool dino::input::game_input_disabled() {
     // Disable input if any menu is open.
-    return recompui::get_current_menu() != recompui::Menu::None;
+    return recompui::get_current_menu() != recompui::Menu::None || dino::debug_ui::want_capture_keyboard();
 }
 
 bool dino::input::all_input_disabled() {
