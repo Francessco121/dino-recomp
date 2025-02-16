@@ -16,11 +16,19 @@ C_SRCS += $(wildcard src/builtin_dbgui/*.c)
 C_OBJS := $(C_SRCS:%.c=$(BUILD_DIR)/%.o)
 C_DEPS := $(C_SRCS:%.c=$(BUILD_DIR)/%.d)
 
+BUILD_DIRS := $(BUILD_DIR) $(BUILD_DIR)/src $(BUILD_DIR)/src/builtin_dbgui
+
 $(BUILD_DIR)/$(TARGET): $(C_OBJS) patches.ld syms.ld
 	$(LD) $(C_OBJS) $(LDFLAGS) -o $@
+    
+$(BUILD_DIRS):
+ifeq ($(OS),Windows_NT)
+	mkdir $(subst /,\,$@)
+else
+	mkdir -p $@
+endif
 
-$(C_OBJS): $(BUILD_DIR)/%.o : %.c
-	mkdir -p ${dir $@}
+$(C_OBJS): $(BUILD_DIR)/%.o : %.c | $(BUILD_DIRS)
 	$(CC) $(CFLAGS) $(CPPFLAGS) $< -MMD -MF $(@:.o=.d) -c -o $@
 
 clean:
