@@ -31,6 +31,11 @@ ignored = [
     "func_8005F2A4"
 ]
 
+renamed = [
+    "acos",
+    "asin"
+]
+
 # Hook game_init
 [[patches.hook]]
 before_vram = 0x800137a4
@@ -134,6 +139,13 @@ text = "goto L_8101254C;"
 before_vram = 0x811777d4
 func = "__dll210_func_A3FC"
 text = "goto L_81177828;"
+
+# Increase audio command list buffer size
+# The game overflows this in a few areas...
+[[patches.hook]]
+before_vram = 0x80011944
+func = "init_audio"
+text = "ctx->r25 = ADD32(0, 0X5000);"
 
 ## Commit some sins to get 0x8001B4F0-0x8001C8D4 to recompile...
 # $ra is saved in $t9 because functions called before it don't correctly save $ra to the stack,
