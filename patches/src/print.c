@@ -11,6 +11,11 @@ RECOMP_PATCH void* proutSyncPrintf(void* dst, const char* buf, s32 size) {
     return (void*)1;
 }
 
+void* proutSyncEPrintf(void* dst, const char* buf, s32 size) {
+    recomp_eputs(buf, size);
+    return (void*)1;
+}
+
 RECOMP_EXPORT int recomp_printf(const char* fmt, ...) {
     va_list args;
     va_start(args, fmt);
@@ -24,6 +29,21 @@ RECOMP_EXPORT int recomp_printf(const char* fmt, ...) {
 
 RECOMP_EXPORT int recomp_vprintf(const char* fmt, va_list args) {
     return _Printf(&proutSyncPrintf, NULL, fmt, args);
+}
+
+RECOMP_EXPORT int recomp_eprintf(const char* fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+
+    int ret = _Printf(&proutSyncEPrintf, NULL, fmt, args);
+
+    va_end(args);
+
+    return ret;
+}
+
+RECOMP_EXPORT int recomp_veprintf(const char* fmt, va_list args) {
+    return _Printf(&proutSyncEPrintf, NULL, fmt, args);
 }
 
 // Hook up unused print function

@@ -48,3 +48,4 @@ recomp_dbgui_foreground_rect = 0x8F00010C;
 recomp_dbgui_foreground_rect_filled = 0x8F000110;
 recomp_dbgui_is_item_hovered = 0x8F000114;
 recomp_dbgui_get_display_size = 0x8F000118;
+recomp_eputs = 0x8F00011C;
