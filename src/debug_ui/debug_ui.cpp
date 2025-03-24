@@ -289,17 +289,52 @@ bool dino::debug_ui::checkbox(const char *label, bool *v) {
 
 bool dino::debug_ui::input_int(const char *label, int *v) {
     assert_is_open();
-    return ImGui::InputInt(label, v);
+    return ImGui::InputInt(label, v, 1, 100, ImGuiInputTextFlags_EnterReturnsTrue);
 }
 
 bool dino::debug_ui::input_float(const char *label, float *v) {
     assert_is_open();
-    return ImGui::InputFloat(label, v);
+    return ImGui::InputFloat(label, v, 0, 0, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
 }
 
 bool dino::debug_ui::input_text(const char *label, char *buf, int buf_size) {
     assert_is_open();
     return ImGui::InputText(label, buf, buf_size);
+}
+
+void dino::debug_ui::set_next_item_width(float width) {
+    assert_is_open();
+    ImGui::SetNextItemWidth(width);
+}
+
+void dino::debug_ui::push_item_width(float width) {
+    assert_is_open();
+    ImGui::PushItemWidth(width);
+}
+
+void dino::debug_ui::pop_item_width() {
+    assert_is_open();
+    ImGui::PopItemWidth();
+}
+
+bool dino::debug_ui::begin_tab_bar(const char *id) {
+    assert_is_open();
+    return ImGui::BeginTabBar(id);
+}
+
+void dino::debug_ui::end_tab_bar() {
+    assert_is_open();
+    ImGui::EndTabBar();
+}
+
+bool dino::debug_ui::begin_tab_item(const char *label, bool *open) {
+    assert_is_open();
+    return ImGui::BeginTabItem(label, open);
+}
+
+void dino::debug_ui::end_tab_item() {
+    assert_is_open();
+    ImGui::EndTabItem();
 }
 
 void dino::debug_ui::push_str_id(const char *id) {

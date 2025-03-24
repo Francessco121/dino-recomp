@@ -267,15 +267,11 @@ extern "C" void recomp_dbgui_input_int(uint8_t* rdram, recomp_context* ctx) {
 
 extern "C" void recomp_dbgui_input_float(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
-    PTR(s32) value_ptr = _arg<1, PTR(s32)>(rdram, ctx);
+    float *value_ptr = _arg<1, float*>(rdram, ctx);
 
     char *label = copy_str(label_ptr, rdram, ctx);
 
-    float value = static_cast<float>(MEM_W(0, (gpr)value_ptr));
-
-    bool pressed = dino::debug_ui::input_float(label, &value);
-
-    MEM_W(0, (gpr)value_ptr) = static_cast<s32>(value);
+    bool pressed = dino::debug_ui::input_float(label, value_ptr);
 
     free(label);
 
@@ -307,6 +303,63 @@ extern "C" void recomp_dbgui_input_text(uint8_t* rdram, recomp_context* ctx) {
     free(label);
 
     _return<s32>(ctx, changed);
+}
+
+extern "C" void recomp_dbgui_set_next_item_width(uint8_t* rdram, recomp_context* ctx) {
+    float width = _arg<0, float>(rdram, ctx);
+
+    dino::debug_ui::set_next_item_width(width);
+}
+
+extern "C" void recomp_dbgui_push_item_width(uint8_t* rdram, recomp_context* ctx) {
+    float width = _arg<0, float>(rdram, ctx);
+
+    dino::debug_ui::push_item_width(width);
+}
+
+extern "C" void recomp_dbgui_pop_item_width(uint8_t* rdram, recomp_context* ctx) {
+    dino::debug_ui::pop_item_width();
+}
+
+extern "C" void recomp_dbgui_begin_tab_bar(uint8_t* rdram, recomp_context* ctx) {
+    PTR(char) id_ptr = _arg<0, PTR(char)>(rdram, ctx);
+
+    char *id = copy_str(id_ptr, rdram, ctx);
+
+    bool active = dino::debug_ui::begin_tab_bar(id);
+
+    free(id);
+
+    _return<s32>(ctx, active);
+}
+
+extern "C" void recomp_dbgui_end_tab_bar(uint8_t* rdram, recomp_context* ctx) {
+    dino::debug_ui::end_tab_bar();
+}
+
+extern "C" void recomp_dbgui_begin_tab_item(uint8_t* rdram, recomp_context* ctx) {
+    PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
+    PTR(s32) open_ptr = _arg<1, PTR(s32)>(rdram, ctx);
+
+    char *label = copy_str(label_ptr, rdram, ctx);
+
+    bool active = false;
+    if ((gpr)open_ptr != 0) {
+        bool open = MEM_W(0, (gpr)open_ptr) != 0;
+        active = dino::debug_ui::begin_tab_item(label, &open);
+
+        MEM_W(0, (gpr)open_ptr) = open;
+    } else {
+        active = dino::debug_ui::begin_tab_item(label, nullptr);
+    }
+
+    free(label);
+
+    _return<s32>(ctx, active);
+}
+
+extern "C" void recomp_dbgui_end_tab_item(uint8_t* rdram, recomp_context* ctx) {
+    dino::debug_ui::end_tab_item();
 }
 
 extern "C" void recomp_dbgui_push_str_id(uint8_t* rdram, recomp_context* ctx) {
@@ -511,6 +564,13 @@ void dino::recomp_api::register_exports() {
     REGISTER_FUNC(recomp_dbgui_input_int);
     REGISTER_FUNC(recomp_dbgui_input_float);
     REGISTER_FUNC(recomp_dbgui_input_text);
+    REGISTER_FUNC(recomp_dbgui_set_next_item_width);
+    REGISTER_FUNC(recomp_dbgui_push_item_width);
+    REGISTER_FUNC(recomp_dbgui_pop_item_width);
+    REGISTER_FUNC(recomp_dbgui_begin_tab_bar);
+    REGISTER_FUNC(recomp_dbgui_end_tab_bar);
+    REGISTER_FUNC(recomp_dbgui_begin_tab_item);
+    REGISTER_FUNC(recomp_dbgui_end_tab_item);
     REGISTER_FUNC(recomp_dbgui_push_str_id);
     REGISTER_FUNC(recomp_dbgui_pop_id);
     REGISTER_FUNC(recomp_dbgui_is_item_hovered);

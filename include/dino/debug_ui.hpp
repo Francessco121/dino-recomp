@@ -45,6 +45,15 @@ namespace dino::debug_ui {
     bool input_float(const char *label, float *v);
     bool input_text(const char *label, char *buf, int buf_size);
 
+    void set_next_item_width(float width);
+    void push_item_width(float width);
+    void pop_item_width();
+
+    bool begin_tab_bar(const char *id);
+    void end_tab_bar();
+    bool begin_tab_item(const char *label, bool *open);
+    void end_tab_item();
+
     void push_str_id(const char *id);
     void pop_id();
 
