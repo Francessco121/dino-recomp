@@ -55,7 +55,7 @@ static struct WarpEntry warpEntries[] = {
     { 78, "78: Warlock Mountain" },
     { 80, "80: Lightfoot Village" },
     { 81, "81: Volcano Force Point" },
-    { 82, "82: i forgor what this is called" },
+    { 82, "82: SwapStone Hollow" },
     { 85, "85: SwapStone Circle" },
     { 86, "86: Shop" },
     { 87, "87: Magic Cave" },
