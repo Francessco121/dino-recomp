@@ -91,4 +91,7 @@ namespace dino::config {
 
     bool get_debug_stdout_enabled();
     void set_debug_stdout_enabled(bool enabled);
+
+    bool get_debug_diprintf_enabled();
+    void set_debug_diprintf_enabled(bool enabled);
 }

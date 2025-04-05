@@ -459,6 +459,7 @@ struct DebugContext {
 	Rml::DataModelHandle model_handle;
 	std::atomic<int> debug_ui_enabled = 1;
 	std::atomic<int> debug_stdout_enabled = 0;
+	std::atomic<int> debug_diprintf_enabled = 0;
 };
 
 void recompui::update_rml_display_refresh_rate() {
@@ -911,6 +912,7 @@ public:
 
 		bind_atomic(constructor, debug_context.model_handle, "debug_ui_enabled", &debug_context.debug_ui_enabled);
 		bind_atomic(constructor, debug_context.model_handle, "debug_stdout_enabled", &debug_context.debug_stdout_enabled);
+		bind_atomic(constructor, debug_context.model_handle, "debug_diprintf_enabled", &debug_context.debug_diprintf_enabled);
 		
 		// Register the array type for string vectors.
 		constructor.RegisterArray<std::vector<std::string>>();
@@ -970,6 +972,17 @@ void dino::config::set_debug_stdout_enabled(bool enabled) {
 	debug_context.debug_stdout_enabled.store((int)enabled);
 	if (debug_context.model_handle) {
 		debug_context.model_handle.DirtyVariable("debug_stdout_enabled");
+	}
+}
+
+bool dino::config::get_debug_diprintf_enabled() {
+	return (bool)debug_context.debug_diprintf_enabled.load();
+}
+
+void dino::config::set_debug_diprintf_enabled(bool enabled) {
+	debug_context.debug_diprintf_enabled.store((int)enabled);
+	if (debug_context.model_handle) {
+		debug_context.model_handle.DirtyVariable("debug_diprintf_enabled");
 	}
 }
 

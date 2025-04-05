@@ -48,7 +48,7 @@
                                 data-checked="debug_stdout_enabled"
                                 value="1"
                                 id="debug_stdout_enabled_on"
-                                style="nav-up: #debug_ui_enabled_on;"
+                                style="nav-up: #debug_ui_enabled_on; nav-down: #debug_diprintf_enabled_on"
                             />
                             <label class="config-option__tab-label" for="debug_stdout_enabled_on">On</label>
 
@@ -60,9 +60,39 @@
                                 data-checked="debug_stdout_enabled"
                                 value="0"
                                 id="debug_stdout_enabled_off"
-                                style="nav-up: #debug_ui_enabled_off;"
+                                style="nav-up: #debug_ui_enabled_off; nav-down: #debug_diprintf_enabled_off"
                             />
                             <label class="config-option__tab-label" for="debug_stdout_enabled_off">Off</label>
+                        </div>
+                    </div>
+
+                    <!-- debug diprintf -->
+                    <div class="config-option" data-event-mouseover="set_cur_config_index(2)" id="conf-general__Debug-Diprintf">
+                        <label class="config-option__title">In-Game Debug Interface</label>
+                        <div class="config-option__list">
+                            <input
+                                type="radio"
+                                data-event-blur="set_cur_config_index(-1)"
+                                data-event-focus="set_cur_config_index(2)"
+                                name="debug_diprintf_enabled"
+                                data-checked="debug_diprintf_enabled"
+                                value="1"
+                                id="debug_diprintf_enabled_on"
+                                style="nav-up: #debug_stdout_enabled_on;"
+                            />
+                            <label class="config-option__tab-label" for="debug_diprintf_enabled_on">On</label>
+
+                            <input
+                                type="radio"
+                                data-event-blur="set_cur_config_index(-1)"
+                                data-event-focus="set_cur_config_index(2)"
+                                name="debug_diprintf_enabled"
+                                data-checked="debug_diprintf_enabled"
+                                value="0"
+                                id="debug_diprintf_enabled_off"
+                                style="nav-up: #debug_stdout_enabled_off;"
+                            />
+                            <label class="config-option__tab-label" for="debug_diprintf_enabled_off">Off</label>
                         </div>
                     </div>
                 </div>
@@ -74,6 +104,10 @@
                     <p data-if="cur_config_index == 1">
                         Whether debug messages from the game should be printed to stdout. 
                         <i>May degrade performance when enabled.</i>
+                    </p>
+                    <p data-if="cur_config_index == 2">
+                        Whether the game's own debug overlay (<b>diPrintf</b>) is enabled. The game uses this to display information onscreen in realtime in a handful of places.
+                        Mods may also use this functionality.
                     </p>
                 </div>
             </div>

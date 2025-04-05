@@ -3,6 +3,11 @@
 #include "patches.h"
 #include "recomp_funcs.h"
 
+#include "sys/print.h"
+#include "PR/sched.h"
+#include "sys/gfx/gx.h"
+#include "sys/gfx/texture.h"
+
 extern int _Printf(void*, void*, const char* fmt, va_list args);
 
 // Hook up game printf to recomp logging
@@ -46,13 +51,63 @@ RECOMP_EXPORT int recomp_veprintf(const char* fmt, va_list args) {
     return _Printf(&proutSyncEPrintf, NULL, fmt, args);
 }
 
-// Hook up unused print function
-RECOMP_PATCH s32 dummied_print_func(const char* fmt, ...) {
+extern char gDebugPrintBufferStart[0x900];
+extern char *gDebugPrintBufferEnd;
+extern s8 D_800931AC;
+extern s8 D_800931B0;
+extern s8 D_800931B4;
+extern s8 D_800931B8;
+extern Texture *gDiTextures[3];
+
+RECOMP_PATCH void diPrintfInit() {
+    // @recomp: Remove code that scales up the rendered diPrintf text when
+    // the resolution is above 320x240. This results in the text being way
+    // too big for some reason.
+    /*
+    u32 fbRes;
+
+    fbRes = get_some_resolution_encoded();
+    if (RESOLUTION_WIDTH(fbRes) > 320) {
+        D_800931AC = 1;
+    }
+    if (RESOLUTION_HEIGHT(fbRes) > 240) {
+        D_800931B0 = 1;
+    }
+    */
+
+    D_800931B4 = 0;
+    D_800931B8 = 0;
+
+    gDiTextures[0] = queue_load_texture_proxy(0);
+    gDiTextures[1] = queue_load_texture_proxy(1);
+    gDiTextures[2] = queue_load_texture_proxy(2);
+
+    gDebugPrintBufferEnd = &gDebugPrintBufferStart[0];
+}
+
+// Patch diPrintf impl back in
+RECOMP_PATCH int diPrintf(const char* fmt, ...) {
     va_list args;
+    int written;
+
+    if (!recomp_get_diprintf_enabled()) {
+        return 0;
+    }
+
     va_start(args, fmt);
 
-    int ret = _Printf(&proutSyncPrintf, NULL, fmt, args);
-    recomp_puts("\n", 1);
+    if ((gDebugPrintBufferEnd - gDebugPrintBufferStart) > 0x800) {
+        recomp_eprintf("*** diPrintf Error *** ---> Out of string space. (Print less text!)\n");
+        return -1;
+    }
+
+    sprintfSetSpacingCodes(TRUE);
+    written = vsprintf(gDebugPrintBufferEnd, fmt, args);
+    sprintfSetSpacingCodes(FALSE);
+
+    if (written > 0) {
+        gDebugPrintBufferEnd = &gDebugPrintBufferEnd[written] + 1;
+    }
 
     va_end(args);
 
@@ -64,7 +119,9 @@ static void *proutSprintf(void *dst, const char *buf, s32 size) {
 	return (void*)((char*)dst + size);
 }
 
-RECOMP_EXPORT int sprintf(char *s, const char *fmt, ...) {
+// The game's code has an sprintf and vsprintf implementation, but it has some special
+// logic in it that may or may not cause issues. We'll provide a "normal" implementation just in case...
+RECOMP_EXPORT int recomp_sprintf(char *s, const char *fmt, ...) {
 	va_list args;
 	va_start(args, fmt);
 	
@@ -78,7 +135,7 @@ RECOMP_EXPORT int sprintf(char *s, const char *fmt, ...) {
     return (ret);
 }
 
-RECOMP_EXPORT int vsprintf(char *s, const char *fmt, va_list args) {
+RECOMP_EXPORT int recomp_vsprintf(char *s, const char *fmt, va_list args) {
     int ret = _Printf(&proutSprintf, (void*)s, fmt, args);
 	if (0 <= ret) {
 		s[ret] = '\0';
@@ -92,7 +149,7 @@ RECOMP_EXPORT const char *recomp_vsprintf_helper(const char *fmt, va_list args) 
     // you have bigger problems...
     static char buffer[1024 * 1024];
     
-    vsprintf(buffer, fmt, args);
+    recomp_vsprintf(buffer, fmt, args);
 
     return buffer;
 }

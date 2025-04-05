@@ -9,7 +9,7 @@ single_file_output = true
 use_absolute_symbols = true
 # Point the recompiler at the symbol files so that it can resolve relocations during recompilation.
 func_reference_syms_file = "lib/dino-recomp-mod-api/dino.syms.toml"
-data_reference_syms_files = [ "lib/dino-recomp-mod-api/dino.datasyms.toml" ]
+data_reference_syms_files = [ "lib/dino-recomp-mod-api/dino.datasyms.toml", "lib/dino-recomp-mod-api/dino.datasyms_manual.toml" ]
 # Tell the recompiler to write the output binary. Doing this instead of using objcopy allows the recompiler to patch MIPS32 relocs.
 output_binary_path = "patches/build/patches.bin"
 # Do not emit warnings for unpaired LO16 values, as clang produces many of them.

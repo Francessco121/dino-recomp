@@ -35,6 +35,8 @@
 #define cosf __cosf_recomp
 #define bzero bzero_recomp
 #define bcopy bcopy_recomp
+#define sprintf sprintf_recomp
+#define vsprintf vsprintf_recomp
 #define gRandFloat sRandFloat
 #include "rt64_extended_gbi.h"
 
@@ -79,8 +81,8 @@ int recomp_vprintf(const char* fmt, va_list args);
 int recomp_eprintf(const char* fmt, ...);
 int recomp_veprintf(const char* fmt, va_list args);
 
-int sprintf(char *s, const char *fmt, ...);
-int vsprintf(char *s, const char *fmt, va_list args);
+int recomp_sprintf(char *s, const char *fmt, ...);
+int recomp_vsprintf(char *s, const char *fmt, va_list args);
 
 const char *recomp_vsprintf_helper(const char *fmt, va_list args);
 const char *recomp_sprintf_helper(const char *fmt, ...);
