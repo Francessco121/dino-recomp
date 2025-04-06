@@ -1,8 +1,10 @@
+#include "hooks.hpp"
+
 #include <vector>
 
 #include "rt64_render_hooks.h"
 
-#include "dino/renderer.hpp"
+namespace dino::renderer {
 
 struct Hook {
     RT64::RenderHookInit *init;
@@ -15,7 +17,7 @@ static std::vector<Hook> hooks = {};
 
 static void set_rt64_hook();
 
-void dino::renderer::add_hook(RT64::RenderHookInit *init, RT64::RenderHookDraw *draw, RT64::RenderHookDeinit *deinit) {
+void add_hook(RT64::RenderHookInit *init, RT64::RenderHookDraw *draw, RT64::RenderHookDeinit *deinit) {
     if (!hook_setup) {
         set_rt64_hook();
     }
@@ -49,4 +51,6 @@ static void set_rt64_hook() {
     hook_setup = true;
 
     RT64::SetRenderHooks(init_hook, draw_hook, deinit_hook);
+}
+
 }

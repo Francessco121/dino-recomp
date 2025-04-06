@@ -3,9 +3,9 @@
 #include <filesystem>
 #include <string_view>
 
-#include "ultramodern/config.hpp"
+#include "json/json.hpp"
 
-#include "dino/input.hpp"
+#include "input/input.hpp"
 
 namespace dino::config {
     constexpr std::u8string_view program_id = u8"DinoPlanetRecompiled";
@@ -83,6 +83,12 @@ namespace dino::config {
 
     AnalogCamMode get_analog_cam_mode();
     void set_analog_cam_mode(AnalogCamMode mode);
+
+    void reset_sound_settings();
+    void set_main_volume(int volume);
+    int get_main_volume();
+    void set_bgm_volume(int volume);
+    int get_bgm_volume();
 
     void open_quit_game_prompt();
 

@@ -1,3 +1,5 @@
+#include "config.hpp"
+
 #include <filesystem>
 #include <fstream>
 #include <iomanip>
@@ -5,10 +7,8 @@
 #include "ultramodern/config.hpp"
 #include "librecomp/files.hpp"
 
-#include "dino/config.hpp"
-#include "dino/input.hpp"
-#include "dino/renderer.hpp"
-#include "dino/sound.hpp"
+#include "input/input.hpp"
+#include "input/controls.hpp"
 
 #if defined(_WIN32)
 #include <Shlobj.h>
@@ -16,6 +16,8 @@
 #include <unistd.h>
 #include <pwd.h>
 #endif
+
+namespace dino::config {
 
 constexpr std::u8string_view general_filename = u8"general.json";
 constexpr std::u8string_view graphics_filename = u8"graphics.json";
@@ -64,7 +66,7 @@ void detect_steam_deck() { is_steam_deck = false; }
 #endif
 
 template <typename T>
-T from_or_default(const json& j, const std::string& key, T default_value) {
+T from_or_default(const nlohmann::json& j, const std::string& key, T default_value) {
     T ret;
     auto find_it = j.find(key);
     if (find_it != j.end()) {
@@ -78,7 +80,7 @@ T from_or_default(const json& j, const std::string& key, T default_value) {
 }
 
 template <typename T>
-void call_if_key_exists(void (*func)(T), const json& j, const std::string& key) {
+void call_if_key_exists(void (*func)(T), const nlohmann::json& j, const std::string& key) {
     auto find_it = j.find(key);
     if (find_it != j.end()) {
         T val;
@@ -87,50 +89,46 @@ void call_if_key_exists(void (*func)(T), const json& j, const std::string& key) 
     }
 }
 
-namespace ultramodern {
-    void to_json(json& j, const renderer::GraphicsConfig& config) {
-        j = json{
-            {"res_option",      config.res_option},
-            {"wm_option",       config.wm_option},
-            {"hr_option",       config.hr_option},
-            {"api_option",      config.api_option},
-            {"ds_option",       config.ds_option},
-            {"ar_option",       config.ar_option},
-            {"msaa_option",     config.msaa_option},
-            {"rr_option",       config.rr_option},
-            {"hpfb_option",     config.hpfb_option},
-            {"rr_manual_value", config.rr_manual_value},
-            {"developer_mode",  config.developer_mode},
-        };
-    }
-
-    void from_json(const json& j, renderer::GraphicsConfig& config) {
-        config.res_option       = from_or_default(j, "res_option",      res_default);
-        config.wm_option        = from_or_default(j, "wm_option",       wm_default());
-        config.hr_option        = from_or_default(j, "hr_option",       hr_default);
-        config.api_option       = from_or_default(j, "api_option",      api_default);
-        config.ds_option        = from_or_default(j, "ds_option",       ds_default);
-        config.ar_option        = from_or_default(j, "ar_option",       ar_default);
-        config.msaa_option      = from_or_default(j, "msaa_option",     msaa_default);
-        config.rr_option        = from_or_default(j, "rr_option",       rr_default);
-        config.hpfb_option      = from_or_default(j, "hpfb_option",     hpfb_default);
-        config.rr_manual_value  = from_or_default(j, "rr_manual_value", rr_manual_default);
-        config.developer_mode   = from_or_default(j, "developer_mode",  developer_mode_default);
-    }
+void graphics_config_to_json(nlohmann::json& j, const ultramodern::renderer::GraphicsConfig& config) {
+    j = nlohmann::json{
+        {"res_option",      config.res_option},
+        {"wm_option",       config.wm_option},
+        {"hr_option",       config.hr_option},
+        {"api_option",      config.api_option},
+        {"ds_option",       config.ds_option},
+        {"ar_option",       config.ar_option},
+        {"msaa_option",     config.msaa_option},
+        {"rr_option",       config.rr_option},
+        {"hpfb_option",     config.hpfb_option},
+        {"rr_manual_value", config.rr_manual_value},
+        {"developer_mode",  config.developer_mode},
+    };
 }
 
-namespace dino::input {
-    void to_json(json& j, const InputField& field) {
-        j = json{ {"input_type", field.input_type}, {"input_id", field.input_id} };
-    }
-
-    void from_json(const json& j, InputField& field) {
-        j.at("input_type").get_to(field.input_type);
-        j.at("input_id").get_to(field.input_id);
-    }
+void graphics_config_from_json(const nlohmann::json& j, ultramodern::renderer::GraphicsConfig& config) {
+    config.res_option       = from_or_default(j, "res_option",      res_default);
+    config.wm_option        = from_or_default(j, "wm_option",       wm_default());
+    config.hr_option        = from_or_default(j, "hr_option",       hr_default);
+    config.api_option       = from_or_default(j, "api_option",      api_default);
+    config.ds_option        = from_or_default(j, "ds_option",       ds_default);
+    config.ar_option        = from_or_default(j, "ar_option",       ar_default);
+    config.msaa_option      = from_or_default(j, "msaa_option",     msaa_default);
+    config.rr_option        = from_or_default(j, "rr_option",       rr_default);
+    config.hpfb_option      = from_or_default(j, "hpfb_option",     hpfb_default);
+    config.rr_manual_value  = from_or_default(j, "rr_manual_value", rr_manual_default);
+    config.developer_mode   = from_or_default(j, "developer_mode",  developer_mode_default);
 }
 
-std::filesystem::path dino::config::get_app_folder_path() {
+void input_field_to_json(nlohmann::json& j, const dino::input::InputField& field) {
+    j = nlohmann::json{ {"input_type", field.input_type}, {"input_id", field.input_id} };
+}
+
+void input_field_from_json(const nlohmann::json& j, dino::input::InputField& field) {
+    j.at("input_type").get_to(field.input_type);
+    j.at("input_id").get_to(field.input_id);
+}
+
+std::filesystem::path get_app_folder_path() {
    // directly check for portable.txt (windows and native linux binary)    
    if (std::filesystem::exists("portable.txt")) {
        return std::filesystem::current_path();
@@ -143,7 +141,7 @@ std::filesystem::path dino::config::get_app_folder_path() {
    PWSTR known_path = NULL;
    HRESULT result = SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, NULL, &known_path);
    if (result == S_OK) {
-       recomp_dir = std::filesystem::path{known_path} / dino::config::program_id;
+       recomp_dir = std::filesystem::path{known_path} / program_id;
    }
 
    CoTaskMemFree(known_path);
@@ -160,7 +158,7 @@ std::filesystem::path dino::config::get_app_folder_path() {
    }
 
    if (homedir != nullptr) {
-       recomp_dir = std::filesystem::path{homedir} / (std::u8string{u8".config/"} + std::u8string{dino::config::program_id});
+       recomp_dir = std::filesystem::path{homedir} / (std::u8string{u8".config/"} + std::u8string{program_id});
    }
 #endif
 
@@ -211,37 +209,37 @@ bool save_json_with_backups(const std::filesystem::path& path, const nlohmann::j
 bool save_general_config(const std::filesystem::path& path) {    
     nlohmann::json config_json{};
 
-    dino::config::to_json(config_json["targeting_mode"], dino::config::get_targeting_mode());
+    dino::config::to_json(config_json["targeting_mode"], get_targeting_mode());
     dino::input::to_json(config_json["background_input_mode"], dino::input::get_background_input_mode());
     config_json["rumble_strength"] = dino::input::get_rumble_strength();
     config_json["gyro_sensitivity"] = dino::input::get_gyro_sensitivity();
     config_json["mouse_sensitivity"] = dino::input::get_mouse_sensitivity();
     config_json["joystick_deadzone"] = dino::input::get_joystick_deadzone();
-    config_json["autosave_mode"] = dino::config::get_autosave_mode();
-    config_json["camera_invert_mode"] = dino::config::get_camera_invert_mode();
-    config_json["analog_cam_mode"] = dino::config::get_analog_cam_mode();
-    config_json["analog_camera_invert_mode"] = dino::config::get_analog_camera_invert_mode();
-    config_json["debug_ui"] = dino::config::get_debug_ui_enabled();
-    config_json["debug_stdout"] = dino::config::get_debug_stdout_enabled();
-    config_json["debug_diprintf"] = dino::config::get_debug_diprintf_enabled();
+    config_json["autosave_mode"] = get_autosave_mode();
+    config_json["camera_invert_mode"] = get_camera_invert_mode();
+    config_json["analog_cam_mode"] = get_analog_cam_mode();
+    config_json["analog_camera_invert_mode"] = get_analog_camera_invert_mode();
+    config_json["debug_ui"] = get_debug_ui_enabled();
+    config_json["debug_stdout"] = get_debug_stdout_enabled();
+    config_json["debug_diprintf"] = get_debug_diprintf_enabled();
     
     return save_json_with_backups(path, config_json);
 }
 
 void set_general_settings_from_json(const nlohmann::json& config_json) {
-    dino::config::set_targeting_mode(from_or_default(config_json, "targeting_mode", dino::config::TargetingMode::Switch));
+    set_targeting_mode(from_or_default(config_json, "targeting_mode", TargetingMode::Switch));
     dino::input::set_background_input_mode(from_or_default(config_json, "background_input_mode", dino::input::BackgroundInputMode::On));
     dino::input::set_rumble_strength(from_or_default(config_json, "rumble_strength", 25));
     dino::input::set_gyro_sensitivity(from_or_default(config_json, "gyro_sensitivity", 50));
     dino::input::set_mouse_sensitivity(from_or_default(config_json, "mouse_sensitivity", is_steam_deck ? 50 : 0));
     dino::input::set_joystick_deadzone(from_or_default(config_json, "joystick_deadzone", 5));
-    dino::config::set_autosave_mode(from_or_default(config_json, "autosave_mode", dino::config::AutosaveMode::On));
-    dino::config::set_camera_invert_mode(from_or_default(config_json, "camera_invert_mode", dino::config::CameraInvertMode::InvertY));
-    dino::config::set_analog_cam_mode(from_or_default(config_json, "analog_cam_mode", dino::config::AnalogCamMode::Off));
-    dino::config::set_analog_camera_invert_mode(from_or_default(config_json, "analog_camera_invert_mode", dino::config::CameraInvertMode::InvertNone));
-    dino::config::set_debug_ui_enabled(from_or_default(config_json, "debug_ui", true));
-    dino::config::set_debug_stdout_enabled(from_or_default(config_json, "debug_stdout", false));
-    dino::config::set_debug_diprintf_enabled(from_or_default(config_json, "debug_diprintf", false));
+    set_autosave_mode(from_or_default(config_json, "autosave_mode", AutosaveMode::On));
+    set_camera_invert_mode(from_or_default(config_json, "camera_invert_mode", CameraInvertMode::InvertY));
+    set_analog_cam_mode(from_or_default(config_json, "analog_cam_mode", AnalogCamMode::Off));
+    set_analog_camera_invert_mode(from_or_default(config_json, "analog_camera_invert_mode", CameraInvertMode::InvertNone));
+    set_debug_ui_enabled(from_or_default(config_json, "debug_ui", true));
+    set_debug_stdout_enabled(from_or_default(config_json, "debug_stdout", false));
+    set_debug_diprintf_enabled(from_or_default(config_json, "debug_diprintf", false));
 }
 
 bool load_general_config(const std::filesystem::path& path) {
@@ -297,20 +295,20 @@ void assign_all_mappings(dino::input::InputDevice device, const dino::input::Def
     assign_mapping_complete(device, dino::input::GameInput::APPLY_MENU, values.apply_menu);
 };
 
-void dino::config::reset_input_bindings() {
+void reset_input_bindings() {
     assign_all_mappings(dino::input::InputDevice::Keyboard, dino::input::default_n64_keyboard_mappings);
     assign_all_mappings(dino::input::InputDevice::Controller, dino::input::default_n64_controller_mappings);
 }
 
-void dino::config::reset_cont_input_bindings() {
+void reset_cont_input_bindings() {
     assign_all_mappings(dino::input::InputDevice::Controller, dino::input::default_n64_controller_mappings);
 }
 
-void dino::config::reset_kb_input_bindings() {
+void reset_kb_input_bindings() {
     assign_all_mappings(dino::input::InputDevice::Keyboard, dino::input::default_n64_keyboard_mappings);
 }
 
-void dino::config::reset_single_input_binding(dino::input::InputDevice device, dino::input::GameInput input) {
+void reset_single_input_binding(dino::input::InputDevice device, dino::input::GameInput input) {
     assign_mapping_complete(
         device,
         input,
@@ -340,7 +338,7 @@ void reset_graphics_options() {
 
 bool save_graphics_config(const std::filesystem::path& path) {
     nlohmann::json config_json{};
-    ultramodern::to_json(config_json, ultramodern::renderer::get_graphics_config());
+    graphics_config_to_json(config_json, ultramodern::renderer::get_graphics_config());
     return save_json_with_backups(path, config_json);
 }
 
@@ -351,7 +349,7 @@ bool load_graphics_config(const std::filesystem::path& path) {
     }
 
     ultramodern::renderer::GraphicsConfig new_config{};
-    ultramodern::from_json(config_json, new_config);
+    graphics_config_from_json(config_json, new_config);
     ultramodern::renderer::set_graphics_config(new_config);
     return true;
 }
@@ -361,7 +359,7 @@ void add_input_bindings(nlohmann::json& out, dino::input::GameInput input, dino:
     nlohmann::json& out_array = out[input_name];
     out_array = nlohmann::json::array();
     for (size_t binding_index = 0; binding_index < dino::input::bindings_per_input; binding_index++) {
-        out_array[binding_index] = dino::input::get_input_binding(input, binding_index, device);
+        input_field_to_json(out_array[binding_index], dino::input::get_input_binding(input, binding_index, device));
     }
 };
 
@@ -414,7 +412,7 @@ bool load_input_device_from_json(const nlohmann::json& config_json, dino::input:
         // Deserialize all the bindings from the json array (up to the max number of bindings per input).
         for (size_t binding_index = 0; binding_index < std::min(dino::input::bindings_per_input, input_json.size()); binding_index++) {
             dino::input::InputField cur_field{};
-            dino::input::from_json(input_json[binding_index], cur_field);
+            input_field_from_json(input_json[binding_index], cur_field);
             dino::input::set_input_binding(cur_input, binding_index, device, cur_field);
         }
     }
@@ -441,8 +439,8 @@ bool load_controls_config(const std::filesystem::path& path) {
 bool save_sound_config(const std::filesystem::path& path) {
     nlohmann::json config_json{};
 
-    config_json["main_volume"] = dino::sound::get_main_volume();
-    config_json["bgm_volume"] = dino::sound::get_bgm_volume();
+    config_json["main_volume"] = dino::config::get_main_volume();
+    config_json["bgm_volume"] = dino::config::get_bgm_volume();
     
     return save_json_with_backups(path, config_json);
 }
@@ -453,16 +451,16 @@ bool load_sound_config(const std::filesystem::path& path) {
         return false;
     }
 
-    dino::sound::reset_sound_settings();
-    call_if_key_exists(dino::sound::set_main_volume, config_json, "main_volume");
-    call_if_key_exists(dino::sound::set_bgm_volume, config_json, "bgm_volume");
+    dino::config::reset_sound_settings();
+    call_if_key_exists(dino::config::set_main_volume, config_json, "main_volume");
+    call_if_key_exists(dino::config::set_bgm_volume, config_json, "bgm_volume");
     return true;
 }
 
-void dino::config::load_config() {
+void load_config() {
     detect_steam_deck();
 
-    std::filesystem::path recomp_dir = dino::config::get_app_folder_path();
+    std::filesystem::path recomp_dir = get_app_folder_path();
     std::filesystem::path general_path = recomp_dir / general_filename;
     std::filesystem::path graphics_path = recomp_dir / graphics_filename;
     std::filesystem::path controls_path = recomp_dir / controls_filename;
@@ -486,18 +484,18 @@ void dino::config::load_config() {
     }
 
     if (!load_controls_config(controls_path)) {
-        dino::config::reset_input_bindings();
+        reset_input_bindings();
         save_controls_config(controls_path);
     }
 
     if (!load_sound_config(sound_path)) {
-        dino::sound::reset_sound_settings();
+        dino::config::reset_sound_settings();
         save_sound_config(sound_path);
     }
 }
 
-void dino::config::save_config() {
-    std::filesystem::path recomp_dir = dino::config::get_app_folder_path();
+void save_config() {
+    std::filesystem::path recomp_dir = get_app_folder_path();
 
     if (recomp_dir.empty()) {
         return;
@@ -511,4 +509,6 @@ void dino::config::save_config() {
     save_graphics_config(recomp_dir / graphics_filename);
     save_controls_config(recomp_dir / controls_filename);
     save_sound_config(recomp_dir / sound_filename);
+}
+
 }

@@ -1,16 +1,17 @@
+#include "input.hpp"
+
 #include <atomic>
 #include <mutex>
 
 #include "ultramodern/ultramodern.hpp"
-#include "recomp.h"
 
-#include "dino/input.hpp"
-#include "dino/config.hpp"
-#include "dino/debug_ui.hpp"
-#include "dino_sdl.hpp"
+#include "config/config.hpp"
+#include "debug_ui/debug_ui.hpp"
 #include "promptfont.h"
 #include "GamepadMotion.hpp"
-#include "recomp_ui.h"
+#include "recomp_ui/recomp_ui.hpp"
+
+#include "controls.hpp"
 
 constexpr float axis_threshold = 0.5f;
 

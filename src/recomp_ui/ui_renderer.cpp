@@ -11,12 +11,14 @@
 #include <SDL2/SDL_video.h>
 #endif
 
-#include "recomp_ui.h"
-#include "dino/input.hpp"
-#include "dino/renderer.hpp"
+#include "recomp_ui.hpp"
+#include "input/input.hpp"
+#include "input/controls.hpp"
+#include "renderer/hooks.hpp"
 #include "librecomp/game.hpp"
-#include "dino/config.hpp"
+#include "config/config.hpp"
 #include "ui_rml_hacks.hpp"
+#include "runtime/gfx.hpp"
 
 #include "concurrentqueue.h"
 
@@ -1095,11 +1097,8 @@ struct UIContext {
 std::unique_ptr<UIContext> ui_context;
 std::mutex ui_context_mutex{};
 
-// TODO make this not be global
-extern SDL_Window* window;
-
 void recompui::get_window_size(int& width, int& height) {
-    SDL_GetWindowSizeInPixels(window, &width, &height);
+    SDL_GetWindowSizeInPixels(dino::runtime::get_window(), &width, &height);
 }
 
 void init_hook(RT64::RenderInterface* interface, RT64::RenderDevice* device) {
@@ -1116,7 +1115,7 @@ void init_hook(RT64::RenderInterface* interface, RT64::RenderDevice* device) {
 
     // Setup RML
     ui_context->rml.system_interface = std::make_unique<SystemInterface_SDL>();
-    ui_context->rml.system_interface->SetWindow(window);
+    ui_context->rml.system_interface->SetWindow(dino::runtime::get_window());
     ui_context->rml.render_interface = std::make_unique<RmlRenderInterface_RT64>(&ui_context->render);
     ui_context->rml.make_event_listeners();
 
@@ -1130,7 +1129,7 @@ void init_hook(RT64::RenderInterface* interface, RT64::RenderDevice* device) {
     recompui::apply_color_hack();
 
     int width, height;
-    SDL_GetWindowSizeInPixels(window, &width, &height);
+    SDL_GetWindowSizeInPixels(dino::runtime::get_window(), &width, &height);
     
     ui_context->rml.context = Rml::CreateContext("main", Rml::Vector2i(width, height));
     ui_context->rml.make_bindings();

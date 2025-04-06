@@ -1,5 +1,5 @@
 #pragma once
 
 namespace dino::recomp_api {
-    void register_exports();
+    void register_debug_ui_exports();
 }

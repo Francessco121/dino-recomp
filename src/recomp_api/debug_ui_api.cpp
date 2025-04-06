@@ -1,15 +1,16 @@
+#include "debug_ui_api.hpp"
+#include "common.hpp"
+
 #include <vector>
 
 #include "ultramodern/ultramodern.hpp"
 #include "recomp.h"
 #include "librecomp/helpers.hpp"
-#include "librecomp/overlays.hpp"
 #include "imgui.h"
 
-#include "dino/debug_ui.hpp"
-#include "dino/config.hpp"
-#include "dino/recomp_api.hpp"
-#include "recomp_helpers.hpp"
+#include "debug_ui/debug_ui.hpp"
+#include "config/config.hpp"
+#include "common/recomp_helpers.hpp"
 
 // Strings must be copied out of rdram since their character addresses are effectively
 // reversed in rdram compared to normal ram. The returned pointer MUST be freed by the caller.
@@ -536,52 +537,52 @@ extern "C" void recomp_dbgui_foreground_rect_filled(uint8_t* rdram, recomp_conte
     dino::debug_ui::foreground_rect_filled(pmin, pmax, color);
 }
 
-#define REGISTER_FUNC(name) recomp::overlays::register_base_export(#name, name)
-
-void dino::recomp_api::register_exports() {
-    REGISTER_FUNC(recomp_dbgui_is_open);
-    REGISTER_FUNC(recomp_dbgui_is_enabled);
-    REGISTER_FUNC(recomp_dbgui_begin);
-    REGISTER_FUNC(recomp_dbgui_end);
-    REGISTER_FUNC(recomp_dbgui_text);
-    REGISTER_FUNC(recomp_dbgui_label_text);
-    REGISTER_FUNC(recomp_dbgui_same_line);
-    REGISTER_FUNC(recomp_dbgui_begin_combo);
-    REGISTER_FUNC(recomp_dbgui_end_combo);
-    REGISTER_FUNC(recomp_dbgui_selectable);
-    REGISTER_FUNC(recomp_dbgui_button);
-    REGISTER_FUNC(recomp_dbgui_begin_main_menu_bar);
-    REGISTER_FUNC(recomp_dbgui_end_main_menu_bar);
-    REGISTER_FUNC(recomp_dbgui_begin_menu);
-    REGISTER_FUNC(recomp_dbgui_end_menu);
-    REGISTER_FUNC(recomp_dbgui_menu_item);
-    REGISTER_FUNC(recomp_dbgui_collapsing_header);
-    REGISTER_FUNC(recomp_dbgui_tree_node);
-    REGISTER_FUNC(recomp_dbgui_tree_pop);
-    REGISTER_FUNC(recomp_dbgui_begin_child);
-    REGISTER_FUNC(recomp_dbgui_end_child);
-    REGISTER_FUNC(recomp_dbgui_checkbox);
-    REGISTER_FUNC(recomp_dbgui_input_int);
-    REGISTER_FUNC(recomp_dbgui_input_float);
-    REGISTER_FUNC(recomp_dbgui_input_text);
-    REGISTER_FUNC(recomp_dbgui_set_next_item_width);
-    REGISTER_FUNC(recomp_dbgui_push_item_width);
-    REGISTER_FUNC(recomp_dbgui_pop_item_width);
-    REGISTER_FUNC(recomp_dbgui_begin_tab_bar);
-    REGISTER_FUNC(recomp_dbgui_end_tab_bar);
-    REGISTER_FUNC(recomp_dbgui_begin_tab_item);
-    REGISTER_FUNC(recomp_dbgui_end_tab_item);
-    REGISTER_FUNC(recomp_dbgui_push_str_id);
-    REGISTER_FUNC(recomp_dbgui_pop_id);
-    REGISTER_FUNC(recomp_dbgui_is_item_hovered);
-    REGISTER_FUNC(recomp_dbgui_get_display_size);
-    REGISTER_FUNC(recomp_dbgui_color_float4_to_u32);
-    REGISTER_FUNC(recomp_dbgui_foreground_text);
-    REGISTER_FUNC(recomp_dbgui_foreground_line);
-    REGISTER_FUNC(recomp_dbgui_foreground_circle);
-    REGISTER_FUNC(recomp_dbgui_foreground_circle_filled);
-    REGISTER_FUNC(recomp_dbgui_foreground_ellipse);
-    REGISTER_FUNC(recomp_dbgui_foreground_ellipse_filled);
-    REGISTER_FUNC(recomp_dbgui_foreground_rect);
-    REGISTER_FUNC(recomp_dbgui_foreground_rect_filled);
+namespace dino::recomp_api {
+    void register_debug_ui_exports() {
+        REGISTER_EXPORT(recomp_dbgui_is_open);
+        REGISTER_EXPORT(recomp_dbgui_is_enabled);
+        REGISTER_EXPORT(recomp_dbgui_begin);
+        REGISTER_EXPORT(recomp_dbgui_end);
+        REGISTER_EXPORT(recomp_dbgui_text);
+        REGISTER_EXPORT(recomp_dbgui_label_text);
+        REGISTER_EXPORT(recomp_dbgui_same_line);
+        REGISTER_EXPORT(recomp_dbgui_begin_combo);
+        REGISTER_EXPORT(recomp_dbgui_end_combo);
+        REGISTER_EXPORT(recomp_dbgui_selectable);
+        REGISTER_EXPORT(recomp_dbgui_button);
+        REGISTER_EXPORT(recomp_dbgui_begin_main_menu_bar);
+        REGISTER_EXPORT(recomp_dbgui_end_main_menu_bar);
+        REGISTER_EXPORT(recomp_dbgui_begin_menu);
+        REGISTER_EXPORT(recomp_dbgui_end_menu);
+        REGISTER_EXPORT(recomp_dbgui_menu_item);
+        REGISTER_EXPORT(recomp_dbgui_collapsing_header);
+        REGISTER_EXPORT(recomp_dbgui_tree_node);
+        REGISTER_EXPORT(recomp_dbgui_tree_pop);
+        REGISTER_EXPORT(recomp_dbgui_begin_child);
+        REGISTER_EXPORT(recomp_dbgui_end_child);
+        REGISTER_EXPORT(recomp_dbgui_checkbox);
+        REGISTER_EXPORT(recomp_dbgui_input_int);
+        REGISTER_EXPORT(recomp_dbgui_input_float);
+        REGISTER_EXPORT(recomp_dbgui_input_text);
+        REGISTER_EXPORT(recomp_dbgui_set_next_item_width);
+        REGISTER_EXPORT(recomp_dbgui_push_item_width);
+        REGISTER_EXPORT(recomp_dbgui_pop_item_width);
+        REGISTER_EXPORT(recomp_dbgui_begin_tab_bar);
+        REGISTER_EXPORT(recomp_dbgui_end_tab_bar);
+        REGISTER_EXPORT(recomp_dbgui_begin_tab_item);
+        REGISTER_EXPORT(recomp_dbgui_end_tab_item);
+        REGISTER_EXPORT(recomp_dbgui_push_str_id);
+        REGISTER_EXPORT(recomp_dbgui_pop_id);
+        REGISTER_EXPORT(recomp_dbgui_is_item_hovered);
+        REGISTER_EXPORT(recomp_dbgui_get_display_size);
+        REGISTER_EXPORT(recomp_dbgui_color_float4_to_u32);
+        REGISTER_EXPORT(recomp_dbgui_foreground_text);
+        REGISTER_EXPORT(recomp_dbgui_foreground_line);
+        REGISTER_EXPORT(recomp_dbgui_foreground_circle);
+        REGISTER_EXPORT(recomp_dbgui_foreground_circle_filled);
+        REGISTER_EXPORT(recomp_dbgui_foreground_ellipse);
+        REGISTER_EXPORT(recomp_dbgui_foreground_ellipse_filled);
+        REGISTER_EXPORT(recomp_dbgui_foreground_rect);
+        REGISTER_EXPORT(recomp_dbgui_foreground_rect_filled);
+    }
 }

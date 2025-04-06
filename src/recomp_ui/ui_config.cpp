@@ -1,11 +1,12 @@
-#include "recomp_ui.h"
-#include "dino/game.hpp"
-#include "dino/input.hpp"
-#include "dino/config.hpp"
-#include "dino/renderer.hpp"
-#include "dino/sound.hpp"
-#include "dino/debug_ui.hpp"
+#include "recomp_ui.hpp"
+#include "input/input.hpp"
+#include "input/controls.hpp"
+#include "config/config.hpp"
+#include "renderer/renderer.hpp"
+#include "debug_ui/debug_ui.hpp"
 #include "promptfont.h"
+// Needed for linux specific stuff below
+#include "runtime/gfx.hpp" // IWYU pragma: keep
 #include "ultramodern/config.hpp"
 #include "ultramodern/ultramodern.hpp"
 #include "RmlUi/Core.h"
@@ -219,18 +220,13 @@ void close_config_menu_impl() {
 	}
 }
 
-// TODO: Remove once RT64 gets native fullscreen support on Linux
-#if defined(__linux__)
-extern SDL_Window* window;
-#endif
-
 void apply_graphics_config(void) {
 	ultramodern::renderer::set_graphics_config(new_options);
 #if defined(__linux__) // TODO: Remove once RT64 gets native fullscreen support on Linux
 	if (new_options.wm_option == ultramodern::renderer::WindowMode::Fullscreen) {
-		SDL_SetWindowFullscreen(window,SDL_WINDOW_FULLSCREEN_DESKTOP);
+		SDL_SetWindowFullscreen(dino::runtime::get_window(),SDL_WINDOW_FULLSCREEN_DESKTOP);
 	} else {
-		SDL_SetWindowFullscreen(window,0);
+		SDL_SetWindowFullscreen(dino::runtime::get_window(),0);
 	}
 #endif
 }
@@ -426,32 +422,32 @@ struct SoundOptionsContext {
 
 SoundOptionsContext sound_options_context;
 
-void dino::sound::reset_sound_settings() {
+void dino::config::reset_sound_settings() {
 	sound_options_context.reset();
 	if (sound_options_model_handle) {
 		sound_options_model_handle.DirtyAllVariables();
 	}
 }
 
-void dino::sound::set_main_volume(int volume) {
+void dino::config::set_main_volume(int volume) {
 	sound_options_context.main_volume.store(volume);
 	if (sound_options_model_handle) {
 		sound_options_model_handle.DirtyVariable("main_volume");
 	}
 }
 
-int dino::sound::get_main_volume() {
+int dino::config::get_main_volume() {
 	return sound_options_context.main_volume.load();
 }
 
-void dino::sound::set_bgm_volume(int volume) {
+void dino::config::set_bgm_volume(int volume) {
     sound_options_context.bgm_volume.store(volume);
 	if (sound_options_model_handle) {
 		sound_options_model_handle.DirtyVariable("bgm_volume");
 	}
 }
 
-int dino::sound::get_bgm_volume() {
+int dino::config::get_bgm_volume() {
     return sound_options_context.bgm_volume.load();
 }
 

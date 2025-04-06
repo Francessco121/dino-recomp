@@ -1,7 +1,7 @@
 #include "ultramodern/ultramodern.hpp"
 #include "recomp.h"
 #include "librecomp/helpers.hpp"
-#include "dino/config.hpp"
+#include "config/config.hpp"
 
 extern "C" void recomp_puts(uint8_t* rdram, recomp_context* ctx) {
     if (!dino::config::get_debug_stdout_enabled()) {

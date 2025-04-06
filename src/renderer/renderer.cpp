@@ -1,44 +1,18 @@
-#include <memory>
-#include <cstring>
-#include <variant>
-
 #define HLSL_CPU
 #include "hle/rt64_application.h"
-#include "rt64_render_hooks.h"
+#include "renderer.hpp"
 
-#include "ultramodern/ultramodern.hpp"
+#include <memory>
+#include <variant>
+
 #include "ultramodern/config.hpp"
 
-#include "dino/debug_ui.hpp"
-#include "dino/renderer.hpp"
-#include "recomp_ui.h"
+#include "debug_ui/debug_ui.hpp"
+#include "debug_ui/backend.hpp"
+#include "recomp_ui/recomp_ui.hpp"
 #include "concurrentqueue.h"
 
-// Helper class for variant visiting.
-template<class... Ts>
-struct overloaded : Ts... { using Ts::operator()...; };
-template<class... Ts>
-overloaded(Ts...) -> overloaded<Ts...>;
-
-static RT64::UserConfiguration::Antialiasing device_max_msaa = RT64::UserConfiguration::Antialiasing::None;
-static bool sample_positions_supported = false;
-static bool high_precision_fb_enabled = false;
-
-static uint8_t DMEM[0x1000];
-static uint8_t IMEM[0x1000];
-
-struct TexturePackEnableAction {
-    std::filesystem::path path;
-};
-
-struct TexturePackDisableAction {
-    std::filesystem::path path;
-};
-
-using TexturePackAction = std::variant<TexturePackEnableAction, TexturePackDisableAction>;
-
-static moodycamel::ConcurrentQueue<TexturePackAction> texture_pack_action_queue;
-
+// Note: These must be outside of a namespace, N64ModernRuntime references them as global externs
 unsigned int MI_INTR_REG = 0;
 
 unsigned int DPC_START_REG = 0;
@@ -64,6 +38,33 @@ unsigned int VI_V_START_REG = 0;
 unsigned int VI_V_BURST_REG = 0;
 unsigned int VI_X_SCALE_REG = 0;
 unsigned int VI_Y_SCALE_REG = 0;
+
+namespace dino::renderer {
+
+// Helper class for variant visiting.
+template<class... Ts>
+struct overloaded : Ts... { using Ts::operator()...; };
+template<class... Ts>
+overloaded(Ts...) -> overloaded<Ts...>;
+
+static RT64::UserConfiguration::Antialiasing device_max_msaa = RT64::UserConfiguration::Antialiasing::None;
+static bool sample_positions_supported = false;
+static bool high_precision_fb_enabled = false;
+
+static uint8_t DMEM[0x1000];
+static uint8_t IMEM[0x1000];
+
+struct TexturePackEnableAction {
+    std::filesystem::path path;
+};
+
+struct TexturePackDisableAction {
+    std::filesystem::path path;
+};
+
+using TexturePackAction = std::variant<TexturePackEnableAction, TexturePackDisableAction>;
+
+static moodycamel::ConcurrentQueue<TexturePackAction> texture_pack_action_queue;
 
 void dummy_check_interrupts() {}
 
@@ -193,10 +194,10 @@ ultramodern::renderer::SetupResult map_setup_result(RT64::Application::SetupResu
     std::exit(EXIT_FAILURE);
 }
 
-dino::renderer::RT64Context::RT64Context(uint8_t* rdram, ultramodern::renderer::WindowHandle window_handle, bool debug) {
+RT64Context::RT64Context(uint8_t* rdram, ultramodern::renderer::WindowHandle window_handle, bool debug) {
     static unsigned char dummy_rom_header[0x40];
     recompui::set_render_hooks();
-    debug_ui::set_render_hooks();
+    debug_ui::backend::set_render_hooks();
 
     // Set up the RT64 application core fields.
     RT64::Application::Core appCore{};
@@ -302,9 +303,9 @@ dino::renderer::RT64Context::RT64Context(uint8_t* rdram, ultramodern::renderer::
     high_precision_fb_enabled = app->shaderLibrary->usesHDR;
 }
 
-dino::renderer::RT64Context::~RT64Context() = default;
+RT64Context::~RT64Context() = default;
 
-void dino::renderer::RT64Context::send_dl(const OSTask* task) {
+void RT64Context::send_dl(const OSTask* task) {
     bool packs_disabled = false;
     TexturePackAction cur_action;
     while (texture_pack_action_queue.try_dequeue(cur_action)) {
@@ -336,19 +337,19 @@ void dino::renderer::RT64Context::send_dl(const OSTask* task) {
     app->processDisplayLists(app->core.RDRAM, task->t.data_ptr & 0x3FFFFFF, 0, true);
 }
 
-void dino::renderer::RT64Context::update_screen(uint32_t vi_origin) {
+void RT64Context::update_screen(uint32_t vi_origin) {
     VI_ORIGIN_REG = vi_origin;
 
     app->updateScreen();
 }
 
-void dino::renderer::RT64Context::shutdown() {
+void RT64Context::shutdown() {
     if (app != nullptr) {
         app->end();
     }
 }
 
-bool dino::renderer::RT64Context::update_config(const ultramodern::renderer::GraphicsConfig& old_config, const ultramodern::renderer::GraphicsConfig& new_config) {
+bool RT64Context::update_config(const ultramodern::renderer::GraphicsConfig& old_config, const ultramodern::renderer::GraphicsConfig& new_config) {
     if (old_config == new_config) {
         return false;
     }
@@ -367,23 +368,23 @@ bool dino::renderer::RT64Context::update_config(const ultramodern::renderer::Gra
     return true;
 }
 
-void dino::renderer::RT64Context::enable_instant_present() {
+void RT64Context::enable_instant_present() {
     // Enable the present early presentation mode for minimal latency.
     app->enhancementConfig.presentation.mode = RT64::EnhancementConfiguration::Presentation::Mode::PresentEarly;
 
     app->updateEnhancementConfig();
 }
 
-uint32_t dino::renderer::RT64Context::get_display_framerate() const {
+uint32_t RT64Context::get_display_framerate() const {
     return app->presentQueue->ext.sharedResources->swapChainRate;
 }
 
-float dino::renderer::RT64Context::get_resolution_scale() const {
+float RT64Context::get_resolution_scale() const {
     constexpr int ReferenceHeight = 240;
     switch (app->userConfig.resolution) {
         case RT64::UserConfiguration::Resolution::WindowIntegerScale:
             if (app->sharedQueueResources->swapChainHeight > 0) {
-                return std::max(float((app->sharedQueueResources->swapChainHeight + ReferenceHeight - 1) / ReferenceHeight), 1.0f);
+                return float(std::max<int>((app->sharedQueueResources->swapChainHeight + ReferenceHeight - 1) / ReferenceHeight, 1));
             }
             else {
                 return 1.0f;
@@ -396,26 +397,28 @@ float dino::renderer::RT64Context::get_resolution_scale() const {
     }
 }
 
-RT64::UserConfiguration::Antialiasing dino::renderer::RT64MaxMSAA() {
+RT64::UserConfiguration::Antialiasing RT64MaxMSAA() {
     return device_max_msaa;
 }
 
-std::unique_ptr<ultramodern::renderer::RendererContext> dino::renderer::create_render_context(uint8_t* rdram, ultramodern::renderer::WindowHandle window_handle, bool developer_mode) {
-    return std::make_unique<dino::renderer::RT64Context>(rdram, window_handle, developer_mode);
+std::unique_ptr<ultramodern::renderer::RendererContext> create_render_context(uint8_t* rdram, ultramodern::renderer::WindowHandle window_handle, bool developer_mode) {
+    return std::make_unique<RT64Context>(rdram, window_handle, developer_mode);
 }
 
-bool dino::renderer::RT64SamplePositionsSupported() {
+bool RT64SamplePositionsSupported() {
     return sample_positions_supported;
 }
 
-bool dino::renderer::RT64HighPrecisionFBEnabled() {
+bool RT64HighPrecisionFBEnabled() {
     return high_precision_fb_enabled;
 }
 
-void dino::renderer::enable_texture_pack(const recomp::mods::ModHandle& mod) {
+void enable_texture_pack(const recomp::mods::ModHandle& mod) {
     texture_pack_action_queue.enqueue(TexturePackEnableAction{mod.manifest.mod_root_path});
 }
 
-void dino::renderer::disable_texture_pack(const recomp::mods::ModHandle& mod) {
+void disable_texture_pack(const recomp::mods::ModHandle& mod) {
     texture_pack_action_queue.enqueue(TexturePackDisableAction{mod.manifest.mod_root_path});
+}
+
 }

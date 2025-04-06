@@ -74,7 +74,7 @@ RECOMP_PATCH Acmd *n_alAudioFrame(Acmd *cmdList, s32 *cmdLen, s16 *outBuf, s32 o
 
 	_n_collectPVoices(); /* collect free physical voices */
 
-    // Print if the command list overflows its buffer
+    // @recomp: Print if the command list overflows its buffer
     u32 cmdlistSize = (u32)cmdlEnd - D_800AA998[D_8008C8C0];
     last_audio_cmdlist_size = cmdlistSize;
     if (cmdlistSize > 0x4000) {

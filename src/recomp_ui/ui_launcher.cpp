@@ -1,5 +1,5 @@
-#include "recomp_ui.h"
-#include "dino/config.hpp"
+#include "recomp_ui.hpp"
+#include "config/config.hpp"
 #include "librecomp/game.hpp"
 #include "ultramodern/ultramodern.hpp"
 #include "RmlUi/Core.h"

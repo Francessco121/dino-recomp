@@ -1,7 +1,7 @@
 
 #include "RmlUi/Core.h"
 #include "RmlUi/../../Source/Core/PropertyParserColour.h"
-#include "recomp_ui.h"
+#include "recomp_ui.hpp"
 #include <string.h>
 
 using ColourMap = Rml::UnorderedMap<Rml::String, Rml::Colourb>;

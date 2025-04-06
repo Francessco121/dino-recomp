@@ -64,7 +64,7 @@
 						<panel class="config" data-model="sound_options_model">
 							<template src="config-menu__sound" />
 						</panel>
-						<tab class="tab" data-model="debug_model" id="tab_debug">
+						<tab class="tab" id="tab_debug">
 							<div>Debug</div>
 							<div class="tab__indicator"></div>
 						</tab>

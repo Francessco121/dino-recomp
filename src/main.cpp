@@ -1,33 +1,31 @@
-// TODO: trim unused includes
 #include <cstdio>
 #include <cassert>
-#include <unordered_map>
 #include <vector>
-#include <array>
-#include <filesystem>
-#include <numeric>
-#include <stdexcept>
-#include <cinttypes>
 
 #include "nfd.h"
-#include "ultramodern/ultra64.h"
 #include "ultramodern/ultramodern.hpp"
 #include "librecomp/game.hpp"
-#include "librecomp/overlays.hpp"
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #endif
 
-#include "dino/error.hpp"
-#include "dino/init.hpp"
-#include "dino/input.hpp"
-#include "dino/renderer.hpp"
-#include "dino/config.hpp"
-#include "dino/recomp_api.hpp"
-#include "dino_sdl.hpp"
-#include "recomp_ui.h"
+#include "input/input.hpp"
+#include "input/controls.hpp"
+#include "renderer/renderer.hpp"
+#include "config/config.hpp"
+#include "recomp_api/debug_ui_api.hpp"
+#include "common/sdl.hpp"
+#include "recomp_ui/recomp_ui.hpp"
+
+#include "runtime/audio.hpp"
+#include "runtime/gfx.hpp"
+#include "runtime/mods.hpp"
+#include "runtime/overlays.hpp"
+#include "runtime/patches.hpp"
+#include "runtime/rsp.hpp"
+#include "runtime/threads.hpp"
 
 const std::string version_string = "0.1.0";
 
@@ -102,7 +100,7 @@ int main(int argc, char** argv) {
 
     // Initialize SDL audio and set the output frequency.
     SDL_InitSubSystem(SDL_INIT_AUDIO);
-    dino::init::reset_audio(48000);
+    dino::runtime::reset_audio(48000);
 
     // Source controller mappings file
     if (SDL_GameControllerAddMappingsFromFile("gamecontrollerdb.txt") < 0) {
@@ -116,15 +114,15 @@ int main(int argc, char** argv) {
         recomp::register_game(game);
     }
 
-    dino::recomp_api::register_exports();
+    dino::recomp_api::register_debug_ui_exports();
 
-    dino::init::register_overlays();
-    dino::init::register_patches();
+    dino::runtime::register_overlays();
+    dino::runtime::register_patches();
 
     dino::config::load_config();
 
     recomp::rsp::callbacks_t rsp_callbacks{
-        .get_rsp_microcode = dino::init::get_rsp_microcode,
+        .get_rsp_microcode = dino::runtime::get_rsp_microcode,
     };
 
     ultramodern::renderer::callbacks_t renderer_callbacks{
@@ -132,15 +130,15 @@ int main(int argc, char** argv) {
     };
 
     ultramodern::gfx_callbacks_t gfx_callbacks{
-        .create_gfx = dino::init::create_gfx,
-        .create_window = dino::init::create_window,
-        .update_gfx = dino::init::update_gfx,
+        .create_gfx = dino::runtime::create_gfx,
+        .create_window = dino::runtime::create_window,
+        .update_gfx = dino::runtime::update_gfx,
     };
 
     ultramodern::audio_callbacks_t audio_callbacks{
-        .queue_samples = dino::init::queue_samples,
-        .get_frames_remaining = dino::init::get_frames_remaining,
-        .set_frequency = dino::init::set_frequency,
+        .queue_samples = dino::runtime::queue_samples,
+        .get_frames_remaining = dino::runtime::get_frames_remaining,
+        .set_frequency = dino::runtime::set_frequency,
     };
 
     ultramodern::input::callbacks_t input_callbacks{
@@ -160,10 +158,10 @@ int main(int argc, char** argv) {
     };
 
     ultramodern::threads::callbacks_t threads_callbacks{
-        .get_game_thread_name = dino::init::get_game_thread_name,
+        .get_game_thread_name = dino::runtime::get_game_thread_name,
     };
 
-    dino::init::register_mods();
+    dino::runtime::register_mods();
 
     if (cli_args.skip_launcher) {
         recomp::start_game(supported_games[0].game_id);

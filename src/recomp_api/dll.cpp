@@ -2,7 +2,7 @@
 
 #include "ultramodern/ultramodern.hpp"
 #include "recomp.h"
-#include "dino/config.hpp"
+#include "config/config.hpp"
 
 static std::map<int, const char*> dllNames = {
     { 1, "cmdmenu" },

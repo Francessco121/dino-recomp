@@ -1,4 +1,4 @@
-#include "recomp_ui.h"
+#include "recomp_ui.hpp"
 #include "RmlUi/Core.h"
 #include "ui_rml_hacks.hpp"
 
