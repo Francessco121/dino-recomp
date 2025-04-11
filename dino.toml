@@ -32,13 +32,21 @@ renamed = [
 [[patches.hook]]
 before_vram = 0x800137a4
 func = "game_init"
-text = "game_init_hook(rdram, ctx);"
+text = """{
+        recomp_context savedCtx = *ctx;
+        game_init_hook(rdram, ctx);
+        *ctx = savedCtx;
+    }"""
 
 # Hook game_tick
 [[patches.hook]]
 before_vram = 0x80013af0
 func = "game_tick"
-text = "game_tick_hook(rdram, ctx);"
+text = """{
+        recomp_context savedCtx = *ctx;
+        game_tick_hook(rdram, ctx);
+        *ctx = savedCtx;
+    }"""
 
 # Hook DLL loading/unloading up to N64ModernRuntime's overlay system
 [[patches.hook]]
