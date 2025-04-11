@@ -24,6 +24,7 @@
 #include "runtime/mods.hpp"
 #include "runtime/overlays.hpp"
 #include "runtime/patches.hpp"
+#include "runtime/preload.hpp"
 #include "runtime/rsp.hpp"
 #include "runtime/threads.hpp"
 
@@ -72,6 +73,15 @@ int main(int argc, char** argv) {
     if (!recomp::Version::from_string(version_string, project_version)) {
         ultramodern::error_handling::message_box(("Invalid version string: " + version_string).c_str());
         return EXIT_FAILURE;
+    }
+
+    // Map this executable into memory and lock it, which should keep it in physical memory. This ensures
+    // that there are no stutters from the OS having to load new pages of the executable whenever a new code page is run.
+    dino::runtime::PreloadContext preload_context;
+    bool preloaded = preload_executable(preload_context);
+
+    if (!preloaded) {
+        fprintf(stderr, "Failed to preload executable!\n");
     }
 
 #ifdef _WIN32
@@ -182,6 +192,10 @@ int main(int argc, char** argv) {
     );
 
     NFD_Quit();
+
+    if (preloaded) {
+        release_preload(preload_context);
+    }
 
     return EXIT_SUCCESS;
 }
