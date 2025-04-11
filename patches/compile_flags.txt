@@ -20,6 +20,8 @@ mips
 -Wno-unsupported-floating-point-opt
 -nostdinc
 -D_LANGUAGE_C
+-D_MIPS_SZLONG=32
+-DF3DEX_GBI_2
 -DMIPS
 -I
 include
