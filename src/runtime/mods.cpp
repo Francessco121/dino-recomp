@@ -22,7 +22,7 @@ void register_mods() {
     recomp::mods::scan_mods();
 
     printf("Found mods:\n");
-    for (const auto& mod : recomp::mods::get_mod_details("dino-planet")) {
+    for (const auto& mod : recomp::mods::get_all_mod_details("dino-planet")) {
         printf("  %s(%s)\n", mod.mod_id.c_str(), mod.version.to_string().c_str());
         if (!mod.authors.empty()) {
             printf("    Authors: %s", mod.authors[0].c_str());
