@@ -10,6 +10,10 @@ std::string get_game_thread_name(const OSThread* t) {
     std::string name = "[Game] ";
 
     switch (t->id) {
+        case -1:
+            name += "EXCEPTION";
+            break;
+        
         case 0:
             switch (t->priority) {
                 case 150:
@@ -30,52 +34,28 @@ std::string get_game_thread_name(const OSThread* t) {
             name += "IDLE";
             break;
 
-        case 2:
-            switch (t->priority) {
-                case 5:
-                    name += "SLOWLY";
-                    break;
-
-                case 127:
-                    name += "FAULT";
-                    break;
-
-                default:
-                    name += std::to_string(t->id);
-                    break;
-            }
-            break;
-
         case 3:
             name += "MAIN";
             break;
 
         case 4:
-            name += "GRAPH";
+            name += "AUDIO";
             break;
 
         case 5:
             name += "SCHED";
             break;
 
-        case 7:
-            name += "PADMGR";
+        case 98:
+            name += "CONTROLLER";
             break;
-
-        case 10:
-            name += "AUDIOMGR";
+        
+        case 99:
+            name += "ASSET";
             break;
-
-        case 13:
-            name += "FLASHROM";
-            break;
-
-        case 18:
-            name += "DMAMGR";
-            break;
-
-        case 19:
-            name += "IRQMGR";
+        
+        case 100:
+            name += "CRASH";
             break;
 
         default:
