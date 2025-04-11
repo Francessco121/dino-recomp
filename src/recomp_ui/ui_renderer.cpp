@@ -277,7 +277,7 @@ public:
         }
 
         copy_command_queue_ = render_context->device->createCommandQueue(RT64::RenderCommandListType::COPY);
-        copy_command_list_ = render_context->device->createCommandList(RT64::RenderCommandListType::COPY);
+        copy_command_list_ = copy_command_queue_->createCommandList(RT64::RenderCommandListType::COPY);
         copy_command_fence_ = render_context->device->createCommandFence();
     }
 
