@@ -107,7 +107,7 @@ RECOMP_PATCH void func_80002490(Gfx **gdl)
     gDPSetScissor((*gdl)++, 0, ulx, uly, lrx, lry);
 }
 
-RECOMP_PATCH void func_80037A14(Gfx **gdl, UNK_PTR *mtx, u32 param3) {
+RECOMP_PATCH void func_80037A14(Gfx **gdl, UNK_PTR **mtx, s32 param3) {
     s32 resolution;
     s32 resWidth, resHeight;
     s32 ulx, uly, lrx, lry;
