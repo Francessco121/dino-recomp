@@ -185,6 +185,13 @@ else()
     )
 endif()
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    # imgui currently triggers some compiler warnings on clang 19 for function casts which leads to a failed build, so disable that warning on clang 19+
+    if (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 19.0)
+        add_compile_options(-Wno-cast-function-type-mismatch)
+    endif()
+endif()
+
 if (MSVC)
     # Disable identical code folding, since this breaks mod function patching as multiple functions can get merged into one.
     target_link_options(DinosaurPlanetRecompiled PRIVATE /OPT:NOICF)
