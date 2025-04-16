@@ -107,11 +107,11 @@ text = "osFlashReadArray_recomp(rdram, ctx); return;"
 # replace PI_STATUS check with yield
 [[patches.hook]]
 before_vram = 0x800012d8
-func = "func_80001220"
+func = "camera_init"
 text = "yield_self(rdram);"
 [[patches.instruction]]
 vram = 0x800012d8
-func = "func_80001220"
+func = "camera_init"
 value = 0x00001025 # lw v0,0x0(v1) -> or v0,zero,zero
 
 # osAiGetLength got inlined
@@ -127,7 +127,7 @@ value = 0x00000000 # lw t9,0x4(t8) -> nop
 # Patch out ROM read
 [[patches.instruction]]
 vram = 0x80001300
-func = "func_80001220"
+func = "camera_init"
 value = 0x00004825 # lw t1,0x578(t9) -> or t1,zero,zero
 
 # Skip security dongle checks
