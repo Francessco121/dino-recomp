@@ -104,6 +104,17 @@ text = "osFlashWriteArray_recomp(rdram, ctx); return;"
 func = "__dll31_osFlashReadArray"
 text = "osFlashReadArray_recomp(rdram, ctx); return;"
 
+# Yields for crash screen loops
+[[patches.hook]]
+before_vram = 0x80062BCC
+func = "other_crash_print"
+text = "yield_self(rdram);"
+
+[[patches.hook]]
+before_vram = 0x8006272C
+func = "some_crash_print"
+text = "yield_self(rdram);"
+
 # replace PI_STATUS check with yield
 [[patches.hook]]
 before_vram = 0x800012d8
