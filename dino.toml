@@ -28,6 +28,40 @@ renamed = [
     "_itoa"
 ]
 
+# Conditionally disable culling (widescreen support)
+[[patches.hook]]
+before_vram = 0x80045304
+func = "func_800451A0"
+text = """{
+        recomp_context savedCtx = *ctx;
+        recomp_disable_culling(rdram, ctx);
+        int disableCulling = ctx->r2;
+        *ctx = savedCtx;
+        if (disableCulling) { ctx->r2 = 1; }
+    }"""
+
+[[patches.hook]]
+before_vram = 0x8004584C
+func = "func_800456AC"
+text = """{
+        recomp_context savedCtx = *ctx;
+        recomp_disable_culling(rdram, ctx);
+        int disableCulling = ctx->r2;
+        *ctx = savedCtx;
+        if (disableCulling) { ctx->r2 = 1; goto L_80045854; }
+    }"""
+
+[[patches.hook]]
+before_vram = 0x80043C90
+func = "func_80043950"
+text = """{
+        recomp_context savedCtx = *ctx;
+        recomp_disable_culling(rdram, ctx);
+        int disableCulling = ctx->r2;
+        *ctx = savedCtx;
+        if (disableCulling) { ctx->r17 = 1; }
+    }"""
+
 # Hook game_init
 [[patches.hook]]
 before_vram = 0x800137a4
