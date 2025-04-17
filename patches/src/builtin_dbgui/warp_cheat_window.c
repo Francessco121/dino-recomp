@@ -1,5 +1,4 @@
 #include "debug_ui.h"
-#include "common.h"
 
 // TODO: use decomp def
 extern void warpPlayer(s32 warpIndex, s32 param2);

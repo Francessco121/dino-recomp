@@ -1,5 +1,4 @@
 #include "debug_ui.h"
-#include "common.h"
 #include "../audio.h"
 
 void dbgui_audio_window(s32 *open) {

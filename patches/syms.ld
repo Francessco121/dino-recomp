@@ -53,3 +53,7 @@ memcpy_recomp = 0x8F000120;
 ldiv_recomp = 0x8F000124;
 sprintf_recomp = 0x8F000128;
 vsprintf_recomp = 0x8F00012C;
+recomp_dbgui_begin_tab_bar = 0x8F000130;
+recomp_dbgui_end_tab_bar = 0x8F000134;
+recomp_dbgui_begin_tab_item = 0x8F000138;
+recomp_dbgui_end_tab_item = 0x8F00013C;

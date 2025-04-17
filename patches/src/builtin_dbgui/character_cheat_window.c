@@ -1,5 +1,7 @@
 #include "debug_ui.h"
-#include "common.h"
+
+#include "dlls/engine/29_gplay.h"
+#include "dll.h"
 
 static s32 infinite_health = FALSE;
 static s32 infinite_mana = FALSE;
