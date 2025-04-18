@@ -1,6 +1,7 @@
 #include "debug_ui.h"
 #include "patches.h"
 
+#include "game/objects/object.h"
 #include "sys/camera.h"
 #include "sys/gfx/gx.h"
 #include "sys/math.h"
@@ -148,6 +149,10 @@ static void video_tab() {
     recomp_dbgui_textf("Resolution: %dx%d", width, height);
     recomp_dbgui_textf("Other resolution: %dx%d", otherWidth, otherHeight);
     recomp_dbgui_textf("gDisplayHertz: %d", gDisplayHertz);
+    recomp_dbgui_textf("delayByte: %d", delayByte);
+    recomp_dbgui_textf("delayFloat: %f", delayFloat);
+    recomp_dbgui_textf("framerate divisor: %d", D_800BCE34);
+    recomp_dbgui_textf("osViBlack timer: %d", D_800BCE14);
     recomp_dbgui_textf("aspectRatioFloat: %f", aspectRatioFloat);
     recomp_dbgui_textf("gHStartMod: %d", gHStartMod);
     recomp_dbgui_textf("gVScaleMod: %d", gVScaleMod);
@@ -181,6 +186,7 @@ static void video_tab() {
 
 static void enhancements_tab() {
     recomp_dbgui_checkbox("Disable culling (widescreen support)", &recompCullingDisabled);
+    recomp_dbgui_checkbox("30 FPS SnowBike race", &snowbike30FPS);
 }
 
 void dbgui_graphics_window(s32 *open) {

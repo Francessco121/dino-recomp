@@ -5,6 +5,8 @@
 #include "sys/gfx/gx.h"
 #include "sys/memory.h"
 
+s32 snowbike30FPS = TRUE;
+
 RECOMP_PATCH void alloc_frame_buffers(void)
 {   
     // @recomp: Use larger buffer sizes
@@ -25,4 +27,13 @@ RECOMP_PATCH void alloc_frame_buffers(void)
     // vertex buffers ("main:vtx")
     gMainVtx[0] = (s32)malloc(RECOMP_MAIN_VTX_BUF_SIZE * 2, ALLOC_TAG_LISTS_COL, NULL);
     gMainVtx[1] = gMainVtx[0] + RECOMP_MAIN_VTX_BUF_SIZE;
+}
+
+RECOMP_PATCH void func_8005DA00(u32 param1) {
+    // @recomp: Don't let the snowbike race cap the framerate
+    if (snowbike30FPS) {
+        param1 = 1;
+    }
+
+    D_800BCE34 = param1;
 }
