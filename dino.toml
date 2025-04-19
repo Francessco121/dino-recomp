@@ -163,7 +163,7 @@ value = 0x00001025 # lw v0,0x0(v1) -> or v0,zero,zero
 [[patches.hook]]
 before_vram = 0x80011cc0
 func = "func_80011C70"
-text = "ctx->r25 = recomp_osAiGetLength();"
+text = "uint32_t recomp_osAiGetLength(); ctx->r25 = recomp_osAiGetLength();"
 [[patches.instruction]]
 vram = 0x80011CC0
 func = "func_80011C70"
@@ -219,26 +219,38 @@ text = "assert(ctx->r17 == 0x8001c8b8);"
 [[patches.hook]]
 before_vram = 0x8001B4F0
 func = "func_8001B4F0"
-text = "recomp_on_func_8001B4F0_entry();"
+text = "void recomp_on_func_8001B4F0_entry(); recomp_on_func_8001B4F0_entry();"
 
 # Ensure the return routine of func_8001B4F0 doesn't run twice.
 # This can happen as a consequence of how this big asm segment is recompiled.
 [[patches.hook]]
 before_vram = 0x8001C83C
 func = "func_8001C694"
-text = "if (recomp_did_func_8001B4F0_return()) { return; } recomp_on_func_8001B4F0_ret();"
+text = """int recomp_did_func_8001B4F0_return();
+    void recomp_on_func_8001B4F0_ret();
+    if (recomp_did_func_8001B4F0_return()) { return; }
+    recomp_on_func_8001B4F0_ret();"""
 [[patches.hook]]
 before_vram = 0x8001C83C
 func = "func_8001C6C8"
-text = "if (recomp_did_func_8001B4F0_return()) { return; } recomp_on_func_8001B4F0_ret();"
+text = """int recomp_did_func_8001B4F0_return();
+    void recomp_on_func_8001B4F0_ret();
+    if (recomp_did_func_8001B4F0_return()) { return; }
+    recomp_on_func_8001B4F0_ret();"""
 [[patches.hook]]
 before_vram = 0x8001C83C
 func = "func_8001C834"
-text = "if (recomp_did_func_8001B4F0_return()) { return; } recomp_on_func_8001B4F0_ret();"
+text = """int recomp_did_func_8001B4F0_return();
+    void recomp_on_func_8001B4F0_ret();
+    if (recomp_did_func_8001B4F0_return()) { return; }
+    recomp_on_func_8001B4F0_ret();"""
 [[patches.hook]]
 before_vram = 0x8001C83C
 func = "func_8001C83C"
-text = "if (recomp_did_func_8001B4F0_return()) { return; } recomp_on_func_8001B4F0_ret();"
+text = """int recomp_did_func_8001B4F0_return();
+    void recomp_on_func_8001B4F0_ret();
+    if (recomp_did_func_8001B4F0_return()) { return; }
+    recomp_on_func_8001B4F0_ret();"""
 
 # Verify that this is never a function pointer return
 [[patches.hook]]
