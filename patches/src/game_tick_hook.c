@@ -2,15 +2,25 @@
 #include "debug_ui.h"
 #include "builtin_dbgui.h"
 
+RECOMP_DECLARE_EVENT(recomp_on_game_tick_start());
 RECOMP_DECLARE_EVENT(recomp_on_game_tick());
+RECOMP_DECLARE_EVENT(recomp_on_game_tick_end());
 RECOMP_DECLARE_EVENT(recomp_on_dbgui());
 
 static void dbgui();
+
+void game_tick_start_hook() {
+    recomp_on_game_tick_start();
+}
 
 void game_tick_hook() {
     recomp_on_game_tick();
 
     dbgui();
+}
+
+void game_tick_end_hook() {
+    recomp_on_game_tick_end();
 }
 
 static void dbgui() {
