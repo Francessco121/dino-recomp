@@ -1,7 +1,7 @@
 TARGET = patches.elf
 
-CC      = clang
-LD      = ld.lld
+CC      ?= clang
+LD      ?= ld.lld
 
 BUILD_DIR = build
 
