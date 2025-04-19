@@ -102,7 +102,7 @@ if(NOT DEFINED PATCHES_LD)
 endif()
 
 add_custom_target(PatchesBin
-    COMMAND ${CMAKE_COMMAND} -E env CC=${PATCHES_C_COMPILER} LD=${PATCHES_LD} make
+    COMMAND ${CMAKE_COMMAND} -E env make CC=${PATCHES_C_COMPILER} LD=${PATCHES_LD}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/patches
     BYPRODUCTS ${CMAKE_SOURCE_DIR}/patches/build/patches.elf
 )
