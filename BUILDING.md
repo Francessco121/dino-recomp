@@ -30,6 +30,9 @@ In the setup process you'll need to select the following options and tools for i
 - C++ Clang Compiler for Windows
 - C++ CMake tools for Windows
 
+> [!WARNING]
+> If you installed Clang 19 or newer through the Visual Studio Installer you will not be able to build the `patches` library without also installing a build of Clang supporting MIPS. Newer versions of Clang supporting MIPS can be downloaded from [n64recomp-clang](https://github.com/LT-Schmiddy/n64recomp-clang/releases).
+
 > [!NOTE]
 > You do not necessarily need the Visual Studio UI to build/debug the project but the above installation is still required. More on the different build options below. 
 
@@ -75,20 +78,41 @@ Builds will be output to `out/build/x64-[Configuration]`.
 
 ### Visual Studio Code
 
-The extensions [ms-vscode.cpptools](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools) and [ms-vscode.cmake-tools](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools) are needed to build/debug in Visual Studio Code.
-
-1. Add `"cmake.generator": "Ninja"` to your workspace configuration.
-2. (**Windows Only**) Make sure your local CMake Kits contain a kit for "Clang (MSVC CLI)". One of these kits must be used to ensure `clang-cl` on Windows is ran with the correct Visual C++ environment. See https://github.com/microsoft/vscode-cmake-tools/blob/main/docs/kits.md for more information.
-3. In the CMake tab, under Configure, select Clang as the compiler (must be Clang (MSVC CLI) on Windows).
-4. If the CMake extension automatically created a build folder, you may need to delete it and re-configure to ensure Ninja is being used as the generator.
-5. In the CMake tab, under Build (and Debug/Launch), set the build target to `DinosaurPlanetRecompiled`.
-6. Using the CMake extension, you now should be able to build and debug the project!
-
-If you prefer to debug using a `launch.json` file, see https://github.com/microsoft/vscode-cmake-tools/blob/main/docs/debug-launch.md for information on how to set up a launch configuration for the CMake extension.
-
-You also likely want to configure the `.vscode/c_cpp_properties.json` file if the extension didn't do so for you. 
+#### Building
+The extension [ms-vscode.cmake-tools](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools) is needed to build this project in Visual Studio Code.
 
 Builds will be output to `build`.
+
+##### Windows
+1. Add the following to your **workspace** configuration:
+    - `"cmake.generator": "Ninja"`
+        - If the CMake extension automatically configured CMake before adding this, you will need to delete the build folder and reconfigure.
+    - `"cmake.useVsDeveloperEnvironment": "always"`
+        - Allows non-Visual Studio versions of clang-cl to be used.
+    - `"cmake.configureArgs": ["-DPATCHES_C_COMPILER=<path to clang.exe>"]`
+        - Replacing `<path to clang.exe>` with an absolute path to a version of clang with MIPS support. Not necessary if you installed a Clang version earlier than version 19 in the Visual Studio Installer as those versions include MIPS support.
+2. In the CMake tab, under Configure, select clang-cl as the compiler.
+    - Can either be the version included with Visual Studio ("Clang (MSVC CLI)") or another version of clang-cl you have installed.
+3. In the CMake tab, under Build (and Debug/Launch), set the build target to `DinosaurPlanetRecompiled`.
+6. Using the CMake extension, you now should be able to build the project!
+
+##### Linux
+1. Add the following to your **workspace** configuration: `"cmake.generator": "Ninja"`
+    - If the CMake extension automatically configured CMake before adding this, you will need to delete the build folder and reconfigure.
+2. In the CMake tab, under Configure, select Clang as the compiler.
+3. In the CMake tab, under Build (and Debug/Launch), set the build target to `DinosaurPlanetRecompiled`.
+4. Using the CMake extension, you now should be able to build the project!
+
+#### Debugging
+The project can be launched/debugged with your extension of preference, such as [ms-vscode.cpptools](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools) or [vadimcn.vscode-lldb](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb).
+
+To set up a `launch.json` file, see https://github.com/microsoft/vscode-cmake-tools/blob/main/docs/debug-launch.md#debug-using-a-launchjson-file, which explains how to combine the debugger extensions and the CMake extension.
+
+#### Intellisense
+C++ intellisense can be provided by extensions such as [ms-vscode.cpptools](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools) and [llvm-vs-code-extensions.vscode-clangd](https://marketplace.visualstudio.com/items?itemName=llvm-vs-code-extensions.vscode-clangd).
+
+- If using the Microsoft C++ Tools extension, you will likely need to manually configure `.vscode/c_cpp_properties.json` with appropriate include directories and defines.
+- If using the clangd extension, intellisense will work out of the box, **however** if you also have the Microsoft C++ Tools extension installed, you will need to disable the intellisense provided by the Microsoft extension with the following configuration: `"C_Cpp.intelliSenseEngine": "disabled"`.
 
 ### CLI
 
