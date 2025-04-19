@@ -30,6 +30,7 @@
 #define osContGetQuery osContGetQuery_recomp
 
 #define malloc malloc_recomp
+#define free free_recomp
 
 #define sinf __sinf_recomp
 #define cosf __cosf_recomp

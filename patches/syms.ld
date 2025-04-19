@@ -57,3 +57,6 @@ recomp_dbgui_begin_tab_bar = 0x8F000130;
 recomp_dbgui_end_tab_bar = 0x8F000134;
 recomp_dbgui_begin_tab_item = 0x8F000138;
 recomp_dbgui_end_tab_item = 0x8F00013C;
+osRecvMesg_recomp = 0x8F000140;
+osSendMesg_recomp = 0x8F000144;
+free_recomp = 0x8F000148;
