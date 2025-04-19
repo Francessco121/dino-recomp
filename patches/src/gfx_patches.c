@@ -5,7 +5,7 @@
 #include "sys/gfx/gx.h"
 #include "sys/memory.h"
 
-s32 snowbike30FPS = TRUE;
+s32 snowbike30FPS = FALSE;
 
 RECOMP_PATCH void alloc_frame_buffers(void)
 {   
