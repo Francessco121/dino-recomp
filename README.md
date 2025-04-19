@@ -48,7 +48,7 @@ If you would like to create your own mods, please see the following resources:
 - [N64 Recomp Modding documentation](https://hackmd.io/fMDiGEJ9TBSjomuZZOgzNg)
 - [Dinosaur Planet: Recompiled Mod Template](https://github.com/Francessco121/dino-recomp-mod-template)
 - [Dinosaur Planet: Recompiled Mod API](https://github.com/Francessco121/dino-recomp-mod-api)
-- [An example mod](https://github.com/Francessco121/dino-recomp-example-mod)
+- [Example mods](https://github.com/Francessco121/dino-recomp-mods)
 - [N64Recomp](https://github.com/N64Recomp/N64Recomp) for the source code of `RecompModTool`.
 
 ## Building
