@@ -60,3 +60,5 @@ recomp_dbgui_end_tab_item = 0x8F00013C;
 osRecvMesg_recomp = 0x8F000140;
 osSendMesg_recomp = 0x8F000144;
 free_recomp = 0x8F000148;
+recomp_alloc = 0x8F00014C;
+recomp_free = 0x8F000150;

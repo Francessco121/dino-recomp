@@ -77,6 +77,9 @@
         "\t.popsection\n");                   \
     extern u8 identifier[]
 
+void *recomp_alloc(unsigned long size);
+void recomp_free(void *ptr);
+
 int recomp_printf(const char* fmt, ...);
 int recomp_vprintf(const char* fmt, va_list args);
 int recomp_eprintf(const char* fmt, ...);
