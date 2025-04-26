@@ -1,5 +1,5 @@
 [submodule "N64Recomp/N64Recomp"]
-	path = N64Recomp/N64Recomp
+	path = lib/N64Recomp
 	url = https://github.com/Francessco121/N64Recomp.git
 [submodule "lib/N64ModernRuntime"]
 	path = lib/N64ModernRuntime
