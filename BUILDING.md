@@ -129,10 +129,10 @@ cmake --build build-cmake --target DinosaurPlanetRecompiled -j$(nproc) --config 
 > The following *must* be ran from the "x64 Native Tools Command Prompt for VS 2022" (vcvars64.bat). `clang-cl` will not be able to compile the project without a Visual Studio environment. Make sure to `cd` to this repository before running the command!
 
 ```batch
-REM Replace the PATCHES_C_COMPILER path below with a path to your copy
+REM Replace the PATCHES_C_COMPILER path below with a path to your copy of MIPS clang
 REM Also change Release to Debug in both commands if you want to debug
 
-cmake -S . -B build-cmake -DCMAKE_CXX_COMPILER="C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\Llvm\x64\bin\clang-cl.exe" -DCMAKE_C_COMPILER="C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\Llvm\x64\bin\clang-cl.exe" -DPATCHES_C_COMPILER="path\to\clang-mips-20.1.0\bin\clang.exe" -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake -S . -B build-cmake -DCMAKE_CXX_COMPILER="C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\Llvm\x64\bin\clang-cl.exe" -DCMAKE_C_COMPILER="C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\Llvm\x64\bin\clang-cl.exe" -DPATCHES_C_COMPILER="path\to\clang-mips\bin\clang.exe" -G Ninja -DCMAKE_BUILD_TYPE=Release
 
 cmake --build build-cmake --target DinosaurPlanetRecompiled -j%NUMBER_OF_PROCESSORS% --config Release
 ```
