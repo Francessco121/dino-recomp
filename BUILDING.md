@@ -83,6 +83,13 @@ The extension [ms-vscode.cmake-tools](https://marketplace.visualstudio.com/items
 
 Builds will be output to `build`.
 
+##### Linux
+1. Add the following to your **workspace** configuration: `"cmake.generator": "Ninja"`
+    - If the CMake extension automatically configured CMake before adding this, you will need to delete the build folder and reconfigure.
+2. In the CMake tab, under Configure, select Clang as the compiler.
+3. In the CMake tab, under Build (and Debug/Launch), set the build target to `DinosaurPlanetRecompiled`.
+4. Using the CMake extension, you now should be able to build the project!
+
 ##### Windows
 1. Add the following to your **workspace** configuration:
     - `"cmake.generator": "Ninja"`
@@ -95,13 +102,6 @@ Builds will be output to `build`.
     - Can either be the version included with Visual Studio ("Clang (MSVC CLI)") or another version of clang-cl you have installed.
 3. In the CMake tab, under Build (and Debug/Launch), set the build target to `DinosaurPlanetRecompiled`.
 6. Using the CMake extension, you now should be able to build the project!
-
-##### Linux
-1. Add the following to your **workspace** configuration: `"cmake.generator": "Ninja"`
-    - If the CMake extension automatically configured CMake before adding this, you will need to delete the build folder and reconfigure.
-2. In the CMake tab, under Configure, select Clang as the compiler.
-3. In the CMake tab, under Build (and Debug/Launch), set the build target to `DinosaurPlanetRecompiled`.
-4. Using the CMake extension, you now should be able to build the project!
 
 #### Debugging
 The project can be launched/debugged with your extension of preference, such as [ms-vscode.cpptools](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools) or [vadimcn.vscode-lldb](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb).
@@ -116,12 +116,29 @@ C++ intellisense can be provided by extensions such as [ms-vscode.cpptools](http
 
 ### CLI
 
-If you prefer the command line you can build the project using CMake:
+If you prefer the command line you can build the project using CMake directly.
 
+#### Linux
 ```bash
 cmake -S . -B build-cmake -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang -G Ninja -DCMAKE_BUILD_TYPE=Release # or Debug if you want to debug
 cmake --build build-cmake --target DinosaurPlanetRecompiled -j$(nproc) --config Release # or Debug
 ```
+
+#### Windows
+> [!IMPORTANT]  
+> The following *must* be ran from the "x64 Native Tools Command Prompt for VS 2022" (vcvars64.bat). `clang-cl` will not be able to compile the project without a Visual Studio environment. Make sure to `cd` to this repository before running the command!
+
+```batch
+REM Replace the PATCHES_C_COMPILER path below with a path to your copy
+REM Also change Release to Debug in both commands if you want to debug
+
+cmake -S . -B build-cmake -DCMAKE_CXX_COMPILER="C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\Llvm\x64\bin\clang-cl.exe" -DCMAKE_C_COMPILER="C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\Llvm\x64\bin\clang-cl.exe" -DPATCHES_C_COMPILER="path\to\clang-mips-20.1.0\bin\clang.exe" -G Ninja -DCMAKE_BUILD_TYPE=Release
+
+cmake --build build-cmake --target DinosaurPlanetRecompiled -j%NUMBER_OF_PROCESSORS% --config Release
+```
+
+> [!TIP]
+> `clang-cl` from a normal LLVM build can also be used instead of the one bundled with Visual Studio. Just point the `CMAKE_CXX_COMPILER` and `CMAKE_C_COMPILER` paths to the one you want. The command must still be ran from within `vcvars64.bat` however.
 
 Builds will be output to `build-cmake`.
 
