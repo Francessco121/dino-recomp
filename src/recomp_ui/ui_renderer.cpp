@@ -1148,6 +1148,7 @@ void init_hook(RT64::RenderInterface* interface, RT64::RenderDevice* device) {
             {"LatoLatin-Italic.ttf", false},
             {"LatoLatin-Bold.ttf", false},
             {"LatoLatin-BoldItalic.ttf", false},
+            {"DinoFont.otf", false},
             {"NotoEmoji-Regular.ttf", true},
             {"promptfont/promptfont.ttf", false},
         };
