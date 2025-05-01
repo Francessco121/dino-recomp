@@ -155,7 +155,8 @@
                     </div>
 
                     <p data-event-mouseover="set_cur_config_index(-1)" class="experimental-warning">
-                        <b>⚠ EXPERIMENTAL ⚠</b> The options below <i>will cause issues</i> if changed from their defaults.
+                        <b style="padding-bottom: 4px; display: block">⚠ EXPERIMENTAL ⚠</b>
+                        The options below <i>will cause issues</i> if changed from their defaults.
                     </p>
 
                     <!-- Aspect Ratio -->
