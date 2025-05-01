@@ -2,12 +2,12 @@
 
 #include <cassert>
 #include <cstdio>
-#include <cstdlib>
+#include "ultramodern/error_handling.hpp"
 
 template<typename... Ts>
 void exit_error(const char* str, Ts ...args) {
     // TODO pop up an error
     ((void)fprintf(stderr, str, args), ...);
     assert(false);
-    std::quick_exit(EXIT_FAILURE);
+    ultramodern::error_handling::quick_exit(__FILE__, __LINE__, __FUNCTION__);
 }

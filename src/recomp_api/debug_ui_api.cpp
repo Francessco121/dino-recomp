@@ -12,23 +12,6 @@
 #include "config/config.hpp"
 #include "common/recomp_helpers.hpp"
 
-// Strings must be copied out of rdram since their character addresses are effectively
-// reversed in rdram compared to normal ram. The returned pointer MUST be freed by the caller.
-static char *copy_str(PTR(char) str, uint8_t* rdram, recomp_context* ctx) {
-    u32 len = 0;
-    PTR(char) str_ptr = str;
-    while (MEM_B(0, (gpr)str_ptr++) != '\0') {
-        len++;
-    }
-
-    char *copy = (char*)malloc(len + 1);
-    for (size_t i = 0; i <= len; i++) {
-        copy[i] = MEM_B(i, (gpr)str);
-    }
-
-    return copy;
-}
-
 extern "C" void recomp_dbgui_is_open(uint8_t* rdram, recomp_context* ctx) {
     _return<s32>(ctx, dino::debug_ui::is_open());
 }
@@ -49,7 +32,7 @@ extern "C" void recomp_dbgui_begin(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) name_ptr = _arg<0, PTR(char)>(rdram, ctx);
     PTR(s32) open_ptr = _arg<1, PTR(s32)>(rdram, ctx);
 
-    char *name = copy_str(name_ptr, rdram, ctx);
+    char *name = dino::recomp_api::copy_rdram_str(name_ptr, rdram, ctx);
 
     bool expanded = false;
     if ((gpr)open_ptr != 0) {
@@ -73,7 +56,7 @@ extern "C" void recomp_dbgui_end(uint8_t* rdram, recomp_context* ctx) {
 extern "C" void recomp_dbgui_text(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) text_ptr = _arg<0, PTR(char)>(rdram, ctx);
 
-    char *text = copy_str(text_ptr, rdram, ctx);
+    char *text = dino::recomp_api::copy_rdram_str(text_ptr, rdram, ctx);
 
     dino::debug_ui::text(text);
 
@@ -84,8 +67,8 @@ extern "C" void recomp_dbgui_label_text(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
     PTR(char) text_ptr = _arg<1, PTR(char)>(rdram, ctx);
 
-    char *label = copy_str(label_ptr, rdram, ctx);
-    char *text = copy_str(text_ptr, rdram, ctx);
+    char *label = dino::recomp_api::copy_rdram_str(label_ptr, rdram, ctx);
+    char *text = dino::recomp_api::copy_rdram_str(text_ptr, rdram, ctx);
 
     dino::debug_ui::label_text(label, text);
 
@@ -101,8 +84,8 @@ extern "C" void recomp_dbgui_begin_combo(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
     PTR(char) preview_ptr = _arg<1, PTR(char)>(rdram, ctx);
 
-    char *label = copy_str(label_ptr, rdram, ctx);
-    char *preview = copy_str(preview_ptr, rdram, ctx);
+    char *label = dino::recomp_api::copy_rdram_str(label_ptr, rdram, ctx);
+    char *preview = dino::recomp_api::copy_rdram_str(preview_ptr, rdram, ctx);
 
     bool open = dino::debug_ui::begin_combo(label, preview);
 
@@ -120,7 +103,7 @@ extern "C" void recomp_dbgui_selectable(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
     bool selected = _arg<1, s32>(rdram, ctx) != 0;
 
-    char *label = copy_str(label_ptr, rdram, ctx);
+    char *label = dino::recomp_api::copy_rdram_str(label_ptr, rdram, ctx);
 
     bool pressed = dino::debug_ui::selectable(label, &selected);
 
@@ -132,7 +115,7 @@ extern "C" void recomp_dbgui_selectable(uint8_t* rdram, recomp_context* ctx) {
 extern "C" void recomp_dbgui_button(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
 
-    char *label = copy_str(label_ptr, rdram, ctx);
+    char *label = dino::recomp_api::copy_rdram_str(label_ptr, rdram, ctx);
 
     bool pressed = dino::debug_ui::button(label);
 
@@ -154,7 +137,7 @@ extern "C" void recomp_dbgui_end_main_menu_bar(uint8_t* rdram, recomp_context* c
 extern "C" void recomp_dbgui_begin_menu(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
 
-    char *label = copy_str(label_ptr, rdram, ctx);
+    char *label = dino::recomp_api::copy_rdram_str(label_ptr, rdram, ctx);
 
     bool open = dino::debug_ui::begin_menu(label);
 
@@ -171,7 +154,7 @@ extern "C" void recomp_dbgui_menu_item(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
     PTR(s32) selected_ptr = _arg<1, PTR(s32)>(rdram, ctx);
 
-    char *label = copy_str(label_ptr, rdram, ctx);
+    char *label = dino::recomp_api::copy_rdram_str(label_ptr, rdram, ctx);
 
     bool pressed = false;
     if ((gpr)selected_ptr != 0) {
@@ -191,7 +174,7 @@ extern "C" void recomp_dbgui_menu_item(uint8_t* rdram, recomp_context* ctx) {
 extern "C" void recomp_dbgui_collapsing_header(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
 
-    char *label = copy_str(label_ptr, rdram, ctx);
+    char *label = dino::recomp_api::copy_rdram_str(label_ptr, rdram, ctx);
 
     bool open = dino::debug_ui::collapsing_header(label);
 
@@ -203,7 +186,7 @@ extern "C" void recomp_dbgui_collapsing_header(uint8_t* rdram, recomp_context* c
 extern "C" void recomp_dbgui_tree_node(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
 
-    char *label = copy_str(label_ptr, rdram, ctx);
+    char *label = dino::recomp_api::copy_rdram_str(label_ptr, rdram, ctx);
 
     bool open = dino::debug_ui::tree_node(label);
 
@@ -219,7 +202,7 @@ extern "C" void recomp_dbgui_tree_pop(uint8_t* rdram, recomp_context* ctx) {
 extern "C" void recomp_dbgui_begin_child(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) str_id_ptr = _arg<0, PTR(char)>(rdram, ctx);
 
-    char *str_id = copy_str(str_id_ptr, rdram, ctx);
+    char *str_id = dino::recomp_api::copy_rdram_str(str_id_ptr, rdram, ctx);
 
     bool open = dino::debug_ui::begin_child(str_id);
 
@@ -236,7 +219,7 @@ extern "C" void recomp_dbgui_checkbox(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
     PTR(s32) value_ptr = _arg<1, PTR(s32)>(rdram, ctx);
 
-    char *label = copy_str(label_ptr, rdram, ctx);
+    char *label = dino::recomp_api::copy_rdram_str(label_ptr, rdram, ctx);
 
     bool value = MEM_W(0, (gpr)value_ptr) != 0;
 
@@ -253,7 +236,7 @@ extern "C" void recomp_dbgui_input_int(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
     PTR(s32) value_ptr = _arg<1, PTR(s32)>(rdram, ctx);
 
-    char *label = copy_str(label_ptr, rdram, ctx);
+    char *label = dino::recomp_api::copy_rdram_str(label_ptr, rdram, ctx);
 
     s32 value = MEM_W(0, (gpr)value_ptr);
 
@@ -270,7 +253,7 @@ extern "C" void recomp_dbgui_input_float(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
     float *value_ptr = _arg<1, float*>(rdram, ctx);
 
-    char *label = copy_str(label_ptr, rdram, ctx);
+    char *label = dino::recomp_api::copy_rdram_str(label_ptr, rdram, ctx);
 
     bool pressed = dino::debug_ui::input_float(label, value_ptr);
 
@@ -286,7 +269,7 @@ extern "C" void recomp_dbgui_input_text(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) buf_ptr = _arg<1, PTR(char)>(rdram, ctx);
     s32 buf_size = _arg<2, s32>(rdram, ctx);
 
-    char *label = copy_str(label_ptr, rdram, ctx);
+    char *label = dino::recomp_api::copy_rdram_str(label_ptr, rdram, ctx);
 
     text_input_buffer.resize(buf_size);
     for (size_t i = 0; i < buf_size; i++) {
@@ -325,7 +308,7 @@ extern "C" void recomp_dbgui_pop_item_width(uint8_t* rdram, recomp_context* ctx)
 extern "C" void recomp_dbgui_begin_tab_bar(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) id_ptr = _arg<0, PTR(char)>(rdram, ctx);
 
-    char *id = copy_str(id_ptr, rdram, ctx);
+    char *id = dino::recomp_api::copy_rdram_str(id_ptr, rdram, ctx);
 
     bool active = dino::debug_ui::begin_tab_bar(id);
 
@@ -342,7 +325,7 @@ extern "C" void recomp_dbgui_begin_tab_item(uint8_t* rdram, recomp_context* ctx)
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
     PTR(s32) open_ptr = _arg<1, PTR(s32)>(rdram, ctx);
 
-    char *label = copy_str(label_ptr, rdram, ctx);
+    char *label = dino::recomp_api::copy_rdram_str(label_ptr, rdram, ctx);
 
     bool active = false;
     if ((gpr)open_ptr != 0) {
@@ -366,7 +349,7 @@ extern "C" void recomp_dbgui_end_tab_item(uint8_t* rdram, recomp_context* ctx) {
 extern "C" void recomp_dbgui_push_str_id(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) id_ptr = _arg<0, PTR(char)>(rdram, ctx);
 
-    char *id = copy_str(id_ptr, rdram, ctx);
+    char *id = dino::recomp_api::copy_rdram_str(id_ptr, rdram, ctx);
 
     dino::debug_ui::push_str_id(id);
 
@@ -418,7 +401,7 @@ extern "C" void recomp_dbgui_foreground_text(uint8_t* rdram, recomp_context* ctx
         MEM_F32(0x4, pos_ptr)
     );
 
-    char *text = copy_str(text_ptr, rdram, ctx);
+    char *text = dino::recomp_api::copy_rdram_str(text_ptr, rdram, ctx);
 
     dino::debug_ui::foreground_text(pos, color, text);
 

@@ -16,6 +16,7 @@
 #include "renderer/renderer.hpp"
 #include "config/config.hpp"
 #include "recomp_api/debug_ui_api.hpp"
+#include "recomp_api/general_api.hpp"
 #include "common/sdl.hpp"
 #include "recomp_ui/recomp_ui.hpp"
 
@@ -124,6 +125,7 @@ int main(int argc, char** argv) {
         recomp::register_game(game);
     }
 
+    dino::recomp_api::register_general_exports();
     dino::recomp_api::register_debug_ui_exports();
 
     dino::runtime::register_overlays();
