@@ -4,13 +4,13 @@
 
 void dbgui_memory_window(s32 *open) {
     if (recomp_dbgui_begin("Memory Debug", open)) {
-        recomp_dbgui_textf("Total: %.2fk / %fk (%.2f%%)",
+        recomp_dbgui_textf("Total: %.2fk / %.2ffk (%.2f%%)",
             (memMonVal0 + memMonVal1 + memMonVal2) / 1024.0f,
             (gHeapList[0].memAllocated + gHeapList[1].memAllocated + gHeapList[2].memAllocated) / 1024.0f,
             ((f32)(memMonVal0 + memMonVal1 + memMonVal2) / (gHeapList[0].memAllocated + gHeapList[1].memAllocated + gHeapList[2].memAllocated)) * 100.0f);
 
         recomp_dbgui_textf("\nHeap 1:");
-        recomp_dbgui_textf("  Mem: %.2fk / %fk (%.2f%%)", 
+        recomp_dbgui_textf("  Mem: %.2fk / %.2ffk (%.2f%%)", 
             memMonVal0 / 1024.0f, gHeapList[0].memAllocated / 1024.0f, ((f32)memMonVal0 / gHeapList[0].memAllocated) * 100.0f);
         recomp_dbgui_textf("  Blocks: %d / %d (%.2f%%)", gHeapList[0].blockCount, gHeapList[0].maxBlocks,
             ((f32)gHeapList[0].blockCount / gHeapList[0].maxBlocks) * 100.0f);
