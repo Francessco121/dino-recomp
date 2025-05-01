@@ -1,10 +1,11 @@
 #include "debug_ui.h"
 #include "patches.h"
 
-#include "game/objects/object.h"
 #include "sys/camera.h"
 #include "sys/gfx/gx.h"
+#include "sys/main.h"
 #include "sys/math.h"
+#include "types.h"
 #include "variables.h"
 
 #include "../culling.h"
@@ -21,9 +22,15 @@ extern f32 gFarPlane;
 extern Viewport gViewports[4];
 extern Vp gRSPViewports[20];
 
-extern s32* gCurMtx;
-extern s32* gCurVtx;
-extern s32* gCurPol;
+extern Gfx *gMainGfx[2];
+extern Gfx *gCurGfx;
+extern Mtx *gMainMtx[2];
+extern Mtx *gCurMtx;
+extern Vertex *gMainVtx[2];
+extern Vertex *gCurVtx;
+extern Triangle *gMainPol[2];
+extern Triangle *gCurPol;
+extern u8 gFrameBufIdx;
 
 static s32 gCurGfx_overflowed = FALSE;
 static s32 gCurMtx_overflowed = FALSE;
