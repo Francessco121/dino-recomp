@@ -73,10 +73,6 @@
                         </div>
                     </div>
                     
-                    <p data-event-mouseover="set_cur_config_index(-1)" class="experimental-warning">
-                        <b>⚠ EXPERIMENTAL ⚠</b> The options below <i>will cause issues</i> if changed from their defaults.
-                    </p>
-                    
                     <!-- Resolution -->
                     <div class="config-option" data-event-mouseover="set_cur_config_index(2)">
                         <label class="config-option__title">Resolution</label>
@@ -157,6 +153,10 @@
                             <div class="config-option__details">{{ds_info}}</div>
                         </div>
                     </div>
+
+                    <p data-event-mouseover="set_cur_config_index(-1)" class="experimental-warning">
+                        <b>⚠ EXPERIMENTAL ⚠</b> The options below <i>will cause issues</i> if changed from their defaults.
+                    </p>
 
                     <!-- Aspect Ratio -->
                     <div class="config-option" data-event-mouseover="set_cur_config_index(4)">
@@ -290,28 +290,22 @@
                     </p>
 
                     <p data-if="cur_config_index == 2">
-                        <b>EXPERIMENTAL</b><br />This option <i>will visually corrupt the game's menu</i>.
-                        <br />
-                        <br />
                         Sets the output resolution of the game. <b>Original</b> matches the game's original 240p resolution. <b>Original 2x</b> will render at 480p. <b>Auto</b> will scale based on the game window's resolution.
                     </p>
                     <p data-if="cur_config_index == 3">
-                        <b>EXPERIMENTAL</b>
-                        <br />
-                        <br />
                         Renders at a higher resolution and scales it down to the output resolution for increased quality. Only available in <b>Original</b> and <b>Original 2x</b> resolution.
                         <br />
                         <br />
                         Note: <b>4x</b> downsampling quality at <b>Original 2x</b> resolution may cause performance issues on low end devices, as it will cause the game to render <i>at almost 4k internal resolution</i>.
                     </p>
                     <p data-if="cur_config_index == 4">
-                        <b>EXPERIMENTAL</b><br />This option <i>will visually corrupt the game's menu</i>. Certain UI elements <i>may become stretched</i>. Some objects and effects <i>may disappear from view</i> on the left/right sides of the screen. 
+                        <b>EXPERIMENTAL</b><br />Certain UI elements <i>may become stretched</i>. Some objects and effects <i>may disappear from view</i> on the left/right sides of the screen. 
                         <br />
                         <br />
                         Sets the horizontal aspect ratio. <b>Original</b> uses the game's original 4:3 aspect ratio. <b>Expand</b> will adjust to match the game window's aspect ratio.
                     </p>
                     <p data-if="cur_config_index == 5">
-                        <b>EXPERIMENTAL</b><br/>Not fully implemented.
+                        <b>EXPERIMENTAL</b><br/><i>Not fully implemented.</i>
                         <br />
                         <br />
                         Adjusts the placement of HUD elements to fit the selected aspect ratio. <b>Expand</b> will use the aspect ratio of the game's output window.
