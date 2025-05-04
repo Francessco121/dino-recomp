@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "nfd.h"
+#include "runtime/support.hpp"
 #include "ultramodern/ultramodern.hpp"
 #include "librecomp/game.hpp"
 
@@ -18,7 +19,7 @@
 #include "recomp_api/debug_ui_api.hpp"
 #include "recomp_api/general_api.hpp"
 #include "common/sdl.hpp"
-#include "recomp_ui/recomp_ui.hpp"
+#include "ui/recomp_ui.h"
 
 #include "runtime/audio.hpp"
 #include "runtime/gfx.hpp"
@@ -31,10 +32,10 @@
 
 const std::string version_string = "0.1.0";
 
-extern "C" void recomp_entrypoint(uint8_t * rdram, recomp_context * ctx);
+extern "C" void recomp_entrypoint(uint8_t *rdram, recomp_context *ctx);
 gpr get_entrypoint_address();
 
-void dino_thread_create_callback(uint8_t * rdram, recomp_context * ctx) {
+void dino_thread_create_callback(uint8_t *rdram, recomp_context *ctx) {
     // Dinosaur Planet modifies osCreateThread to enable MIPS3 float mode
     const uint32_t SR_FR = 0x04000000;
     cop0_status_write(ctx, SR_FR);
@@ -125,6 +126,7 @@ int main(int argc, char** argv) {
         recomp::register_game(game);
     }
 
+    recompui::register_ui_exports();
     dino::recomp_api::register_general_exports();
     dino::recomp_api::register_debug_ui_exports();
 
@@ -177,7 +179,7 @@ int main(int argc, char** argv) {
 
     if (cli_args.skip_launcher) {
         recomp::start_game(supported_games[0].game_id);
-        recompui::set_current_menu(recompui::Menu::None);
+        recompui::hide_all_contexts();
     }
 
     recomp::start(

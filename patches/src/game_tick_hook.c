@@ -1,6 +1,7 @@
 #include "patches.h"
 #include "debug_ui.h"
 #include "builtin_dbgui.h"
+#include "ui_funcs.h"
 
 RECOMP_DECLARE_EVENT(recomp_on_game_tick_start());
 RECOMP_DECLARE_EVENT(recomp_on_game_tick());
@@ -16,6 +17,7 @@ void game_tick_start_hook() {
 void game_tick_hook() {
     recomp_on_game_tick();
 
+    recomp_run_ui_callbacks();
     dbgui();
 }
 

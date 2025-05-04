@@ -7,10 +7,41 @@
 
 #include "ultramodern/config.hpp"
 
+#include "common/overloaded.h"
 #include "debug_ui/debug_ui.hpp"
 #include "debug_ui/backend.hpp"
-#include "recomp_ui/recomp_ui.hpp"
+#include "ui/recomp_ui.h"
 #include "concurrentqueue.h"
+
+static RT64::UserConfiguration::Antialiasing device_max_msaa = RT64::UserConfiguration::Antialiasing::None;
+static bool sample_positions_supported = false;
+static bool high_precision_fb_enabled = false;
+
+static uint8_t DMEM[0x1000];
+static uint8_t IMEM[0x1000];
+
+struct TexturePackEnableAction {
+    std::string mod_id;
+};
+
+struct TexturePackDisableAction {
+    std::string mod_id;
+};
+
+struct TexturePackSecondaryEnableAction {
+    std::string mod_id;
+};
+
+struct TexturePackSecondaryDisableAction {
+    std::string mod_id;
+};
+
+struct TexturePackUpdateAction {
+};
+
+using TexturePackAction = std::variant<TexturePackEnableAction, TexturePackDisableAction, TexturePackSecondaryEnableAction, TexturePackSecondaryDisableAction, TexturePackUpdateAction>;
+
+static moodycamel::ConcurrentQueue<TexturePackAction> texture_pack_action_queue;
 
 // Note: These must be outside of a namespace, N64ModernRuntime references them as global externs
 unsigned int MI_INTR_REG = 0;
@@ -40,31 +71,6 @@ unsigned int VI_X_SCALE_REG = 0;
 unsigned int VI_Y_SCALE_REG = 0;
 
 namespace dino::renderer {
-
-// Helper class for variant visiting.
-template<class... Ts>
-struct overloaded : Ts... { using Ts::operator()...; };
-template<class... Ts>
-overloaded(Ts...) -> overloaded<Ts...>;
-
-static RT64::UserConfiguration::Antialiasing device_max_msaa = RT64::UserConfiguration::Antialiasing::None;
-static bool sample_positions_supported = false;
-static bool high_precision_fb_enabled = false;
-
-static uint8_t DMEM[0x1000];
-static uint8_t IMEM[0x1000];
-
-struct TexturePackEnableAction {
-    std::filesystem::path path;
-};
-
-struct TexturePackDisableAction {
-    std::filesystem::path path;
-};
-
-using TexturePackAction = std::variant<TexturePackEnableAction, TexturePackDisableAction>;
-
-static moodycamel::ConcurrentQueue<TexturePackAction> texture_pack_action_queue;
 
 void dummy_check_interrupts() {}
 
@@ -173,6 +179,7 @@ void set_application_user_config(RT64::Application* application, const ultramode
     application->userConfig.refreshRate = to_rt64(config.rr_option);
     application->userConfig.refreshRateTarget = config.rr_manual_value;
     application->userConfig.internalColorFormat = to_rt64(config.hpfb_option);
+    application->userConfig.displayBuffering = RT64::UserConfiguration::DisplayBuffering::Triple;
 }
 
 ultramodern::renderer::SetupResult map_setup_result(RT64::Application::SetupResult rt64_result) {
@@ -190,6 +197,23 @@ ultramodern::renderer::SetupResult map_setup_result(RT64::Application::SetupResu
     }
 
     fprintf(stderr, "Unhandled `RT64::Application::SetupResult` ?\n");
+    assert(false);
+    std::exit(EXIT_FAILURE);
+}
+
+ultramodern::renderer::GraphicsApi map_graphics_api(RT64::UserConfiguration::GraphicsAPI api) {
+    switch (api) {
+        case RT64::UserConfiguration::GraphicsAPI::D3D12:
+            return ultramodern::renderer::GraphicsApi::D3D12;
+        case RT64::UserConfiguration::GraphicsAPI::Vulkan:
+            return ultramodern::renderer::GraphicsApi::Vulkan;
+        case RT64::UserConfiguration::GraphicsAPI::Metal:
+            return ultramodern::renderer::GraphicsApi::Metal;
+        case RT64::UserConfiguration::GraphicsAPI::Automatic:
+            return ultramodern::renderer::GraphicsApi::Auto;
+    }
+
+    fprintf(stderr, "Unhandled `RT64::UserConfiguration::GraphicsAPI` ?\n");
     assert(false);
     std::exit(EXIT_FAILURE);
 }
@@ -266,9 +290,11 @@ RT64Context::RT64Context(uint8_t* rdram, ultramodern::renderer::WindowHandle win
         case ultramodern::renderer::GraphicsApi::Vulkan:
             app->userConfig.graphicsAPI = RT64::UserConfiguration::GraphicsAPI::Vulkan;
             break;
-        default:
+        case ultramodern::renderer::GraphicsApi::Metal:
+            app->userConfig.graphicsAPI = RT64::UserConfiguration::GraphicsAPI::Metal;
+            break;
         case ultramodern::renderer::GraphicsApi::Auto:
-            // Don't override if auto is selected.
+            app->userConfig.graphicsAPI = RT64::UserConfiguration::GraphicsAPI::Automatic;
             break;
     }
 
@@ -278,6 +304,8 @@ RT64Context::RT64Context(uint8_t* rdram, ultramodern::renderer::WindowHandle win
     thread_id = window_handle.thread_id;
 #endif
     setup_result = map_setup_result(app->setup(thread_id));
+    // Get the API that RT64 chose.
+    chosen_api = map_graphics_api(app->chosenGraphicsAPI);
     if (setup_result != ultramodern::renderer::SetupResult::Success) {
         app = nullptr;
         return;
@@ -306,32 +334,7 @@ RT64Context::RT64Context(uint8_t* rdram, ultramodern::renderer::WindowHandle win
 RT64Context::~RT64Context() = default;
 
 void RT64Context::send_dl(const OSTask* task) {
-    bool packs_disabled = false;
-    TexturePackAction cur_action;
-    while (texture_pack_action_queue.try_dequeue(cur_action)) {
-        std::visit(overloaded{
-            [&](TexturePackDisableAction& to_disable) {
-                enabled_texture_packs.erase(to_disable.path);
-                packs_disabled = true;
-            },
-            [&](TexturePackEnableAction& to_enable) {
-                enabled_texture_packs.insert(to_enable.path);
-                // Load the pack now if no packs have been disabled.
-                if (!packs_disabled) {
-                    app->textureCache->loadReplacementDirectory(to_enable.path);
-                }
-            }
-        }, cur_action);
-    }
-
-    // If any packs were disabled, unload all packs and load all the active ones.
-    if (packs_disabled) {
-        app->textureCache->clearReplacementDirectories();
-        for (const std::filesystem::path& cur_pack_path : enabled_texture_packs) {
-            app->textureCache->loadReplacementDirectory(cur_pack_path);
-        }
-    }
-
+    check_texture_pack_actions();
     app->state->rsp->reset();
     app->interpreter->loadUCodeGBI(task->t.ucode & 0x3FFFFFF, task->t.ucode_data & 0x3FFFFFF, true);
     app->processDisplayLists(app->core.RDRAM, task->t.data_ptr & 0x3FFFFFF, 0, true);
@@ -384,7 +387,7 @@ float RT64Context::get_resolution_scale() const {
     switch (app->userConfig.resolution) {
         case RT64::UserConfiguration::Resolution::WindowIntegerScale:
             if (app->sharedQueueResources->swapChainHeight > 0) {
-                return float(std::max<int>((app->sharedQueueResources->swapChainHeight + ReferenceHeight - 1) / ReferenceHeight, 1));
+                return std::max(float((app->sharedQueueResources->swapChainHeight + ReferenceHeight - 1) / ReferenceHeight), 1.0f);
             }
             else {
                 return 1.0f;
@@ -394,6 +397,66 @@ float RT64Context::get_resolution_scale() const {
         case RT64::UserConfiguration::Resolution::Original:
         default:
             return 1.0f;
+    }
+}
+
+void RT64Context::check_texture_pack_actions() {
+    bool packs_changed = false;
+    TexturePackAction cur_action;
+    while (texture_pack_action_queue.try_dequeue(cur_action)) {
+        std::visit(overloaded{
+            [&](TexturePackDisableAction &to_disable) {
+                enabled_texture_packs.erase(to_disable.mod_id);
+                packs_changed = true;
+            },
+            [&](TexturePackEnableAction &to_enable) {
+                enabled_texture_packs.insert(to_enable.mod_id);
+                packs_changed = true;
+            },
+            [&](TexturePackSecondaryDisableAction &to_override_disable) {
+                secondary_disabled_texture_packs.insert(to_override_disable.mod_id);
+                packs_changed = true;
+            },
+            [&](TexturePackSecondaryEnableAction &to_override_enable) {
+                secondary_disabled_texture_packs.erase(to_override_enable.mod_id);
+                packs_changed = true;
+            },
+            [&](TexturePackUpdateAction &) {
+                packs_changed = true;
+            }
+        }, cur_action);
+    }
+
+    // If any packs were disabled, unload all packs and load all the active ones.
+    if (packs_changed) {
+        // Sort the enabled texture packs in reverse order so that earlier ones override later ones.
+        std::vector<std::string> sorted_texture_packs{};
+        sorted_texture_packs.reserve(enabled_texture_packs.size());
+        for (const std::string& mod : enabled_texture_packs) {
+            if (!secondary_disabled_texture_packs.contains(mod)) {
+                sorted_texture_packs.emplace_back(mod);
+            }
+        }
+
+        std::sort(sorted_texture_packs.begin(), sorted_texture_packs.end(),
+            [](const std::string& lhs, const std::string& rhs) {
+                return recomp::mods::get_mod_order_index(lhs) > recomp::mods::get_mod_order_index(rhs);
+            }
+        );
+
+        // Build the path list from the sorted mod list.
+        std::vector<RT64::ReplacementDirectory> replacement_directories;
+        replacement_directories.reserve(enabled_texture_packs.size());
+        for (const std::string &mod_id : sorted_texture_packs) {
+            replacement_directories.emplace_back(RT64::ReplacementDirectory(recomp::mods::get_mod_filename(mod_id)));
+        }
+
+        if (!replacement_directories.empty()) {
+            app->textureCache->loadReplacementDirectories(replacement_directories);
+        }
+        else {
+            app->textureCache->clearReplacementDirectories();
+        }
     }
 }
 
@@ -413,12 +476,74 @@ bool RT64HighPrecisionFBEnabled() {
     return high_precision_fb_enabled;
 }
 
-void enable_texture_pack(const recomp::mods::ModHandle& mod) {
-    texture_pack_action_queue.enqueue(TexturePackEnableAction{mod.manifest.mod_root_path});
+void trigger_texture_pack_update() {
+    texture_pack_action_queue.enqueue(TexturePackUpdateAction{});
+}
+
+void enable_texture_pack(const recomp::mods::ModContext& context, const recomp::mods::ModHandle& mod) {
+    texture_pack_action_queue.enqueue(TexturePackEnableAction{mod.manifest.mod_id});
+
+    // Check for the texture pack enabled config option.
+    const recomp::mods::ConfigSchema& config_schema = context.get_mod_config_schema(mod.manifest.mod_id);
+    auto find_it = config_schema.options_by_id.find(special_option_texture_pack_enabled);
+    if (find_it != config_schema.options_by_id.end()) {
+        const recomp::mods::ConfigOption& config_option = config_schema.options[find_it->second];
+
+        if (is_texture_pack_enable_config_option(config_option, false)) {
+            recomp::mods::ConfigValueVariant value_variant = context.get_mod_config_value(mod.manifest.mod_id, config_option.id);
+            uint32_t value;
+            if (uint32_t* value_ptr = std::get_if<uint32_t>(&value_variant)) {
+                value = *value_ptr;
+            }
+            else {
+                value = 0;
+            }
+
+            if (value) {
+                secondary_enable_texture_pack(mod.manifest.mod_id);
+            }
+            else {
+                secondary_disable_texture_pack(mod.manifest.mod_id);
+            }
+        }
+    }
 }
 
 void disable_texture_pack(const recomp::mods::ModHandle& mod) {
-    texture_pack_action_queue.enqueue(TexturePackDisableAction{mod.manifest.mod_root_path});
+    texture_pack_action_queue.enqueue(TexturePackDisableAction{mod.manifest.mod_id});
+}
+
+void secondary_enable_texture_pack(const std::string& mod_id) {
+    texture_pack_action_queue.enqueue(TexturePackSecondaryEnableAction{mod_id});
+}
+
+void secondary_disable_texture_pack(const std::string& mod_id) {
+    texture_pack_action_queue.enqueue(TexturePackSecondaryDisableAction{mod_id});
+}
+
+
+// HD texture enable option. Must be an enum with two options.
+// The first option is treated as disabled and the second option is treated as enabled.
+bool is_texture_pack_enable_config_option(const recomp::mods::ConfigOption& option, bool show_errors) {
+    if (option.id == special_option_texture_pack_enabled) {
+        if (option.type != recomp::mods::ConfigOptionType::Enum) {
+            if (show_errors) {
+                recompui::message_box(("Mod has the special config option id for enabling an HD texture pack (\"" + special_option_texture_pack_enabled + "\"), but the config option is not an enum.").c_str());
+            }
+            return false;
+        }
+
+        const recomp::mods::ConfigOptionEnum &option_enum = std::get<recomp::mods::ConfigOptionEnum>(option.variant);
+        if (option_enum.options.size() != 2) {
+            if (show_errors) {
+                recompui::message_box(("Mod has the special config option id for enabling an HD texture pack (\"" + special_option_texture_pack_enabled + "\"), but the config option doesn't have exactly 2 values.").c_str());
+            }
+            return false;
+        }
+
+        return true;
+    }
+    return false;
 }
 
 }

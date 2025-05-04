@@ -3,7 +3,7 @@
 #include "librecomp/helpers.hpp"
 #include "recomp.h"
 
-#include "recomp_ui/recomp_ui.hpp"
+#include "ui/recomp_ui.h"
 #include "common.hpp"
 
 extern "C" void recomp_get_window_resolution(uint8_t* rdram, recomp_context* ctx) {
