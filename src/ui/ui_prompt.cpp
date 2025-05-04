@@ -164,10 +164,10 @@ void style_button(recompui::Button* button, recompui::ButtonVariant variant) {
 
     switch (variant) {
         case recompui::ButtonVariant::Primary:
-            button_color = { 185, 125, 242, 255 };
+            button_color = { 233, 205, 53, 255 };
             break;
         case recompui::ButtonVariant::Secondary:
-            button_color = { 23, 214, 232, 255 };
+            button_color = { 233, 176, 53, 255 };
             break;
         case recompui::ButtonVariant::Tertiary:
             button_color = { 242, 242, 242, 255 };

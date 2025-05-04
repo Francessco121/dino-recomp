@@ -26,7 +26,7 @@ namespace recompui {
         hover_style.set_color(Color{ 255, 255, 255, 204 });
         checked_style.set_color(Color{ 255, 255, 255, 255 });
         checked_style.set_border_color(Color{ 242, 242, 242, 255 });
-        pulsing_style.set_border_color(Color{ 23, 214, 232, 244 });
+        pulsing_style.set_border_color(Color{ 233, 176, 53, 244 });
 
         add_style(&hover_style, { hover_state });
         add_style(&checked_style, { checked_state });
