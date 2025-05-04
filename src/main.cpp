@@ -18,6 +18,7 @@
 #include "config/config.hpp"
 #include "recomp_api/debug_ui_api.hpp"
 #include "recomp_api/general_api.hpp"
+#include "recomp_api/recomp_data_api.hpp"
 #include "common/sdl.hpp"
 #include "ui/recomp_ui.h"
 
@@ -128,6 +129,7 @@ int main(int argc, char** argv) {
 
     recompui::register_ui_exports();
     dino::recomp_api::register_general_exports();
+    dino::recomp_api::register_data_api_exports();
     dino::recomp_api::register_debug_ui_exports();
 
     dino::runtime::register_overlays();
