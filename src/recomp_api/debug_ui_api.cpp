@@ -12,23 +12,23 @@
 #include "config/config.hpp"
 #include "common/recomp_helpers.hpp"
 
-extern "C" void recomp_dbgui_is_open(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_is_open(uint8_t* rdram, recomp_context* ctx) {
     _return<s32>(ctx, dino::debug_ui::is_open());
 }
 
-extern "C" void recomp_dbgui_is_enabled(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_is_enabled(uint8_t* rdram, recomp_context* ctx) {
     _return<s32>(ctx, dino::config::get_debug_ui_enabled());
 }
 
-extern "C" void recomp_dbgui_ui_frame_begin(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_ui_frame_begin(uint8_t* rdram, recomp_context* ctx) {
     dino::debug_ui::ui_frame_begin();
 }
 
-extern "C" void recomp_dbgui_ui_frame_end(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_ui_frame_end(uint8_t* rdram, recomp_context* ctx) {
     dino::debug_ui::ui_frame_end();
 }
 
-extern "C" void recomp_dbgui_begin(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_begin(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) name_ptr = _arg<0, PTR(char)>(rdram, ctx);
     PTR(s32) open_ptr = _arg<1, PTR(s32)>(rdram, ctx);
 
@@ -49,11 +49,11 @@ extern "C" void recomp_dbgui_begin(uint8_t* rdram, recomp_context* ctx) {
     _return<s32>(ctx, expanded);
 }
 
-extern "C" void recomp_dbgui_end(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_end(uint8_t* rdram, recomp_context* ctx) {
     dino::debug_ui::end();
 }
 
-extern "C" void recomp_dbgui_text(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_text(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) text_ptr = _arg<0, PTR(char)>(rdram, ctx);
 
     char *text = dino::recomp_api::copy_rdram_str(text_ptr, rdram, ctx);
@@ -63,7 +63,7 @@ extern "C" void recomp_dbgui_text(uint8_t* rdram, recomp_context* ctx) {
     free(text);
 }
 
-extern "C" void recomp_dbgui_label_text(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_label_text(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
     PTR(char) text_ptr = _arg<1, PTR(char)>(rdram, ctx);
 
@@ -76,11 +76,11 @@ extern "C" void recomp_dbgui_label_text(uint8_t* rdram, recomp_context* ctx) {
     free(text);
 }
 
-extern "C" void recomp_dbgui_same_line(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_same_line(uint8_t* rdram, recomp_context* ctx) {
     dino::debug_ui::same_line();
 }
 
-extern "C" void recomp_dbgui_begin_combo(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_begin_combo(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
     PTR(char) preview_ptr = _arg<1, PTR(char)>(rdram, ctx);
 
@@ -95,11 +95,11 @@ extern "C" void recomp_dbgui_begin_combo(uint8_t* rdram, recomp_context* ctx) {
     _return<s32>(ctx, open);
 }
 
-extern "C" void recomp_dbgui_end_combo(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_end_combo(uint8_t* rdram, recomp_context* ctx) {
     dino::debug_ui::end_combo();
 }
 
-extern "C" void recomp_dbgui_selectable(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_selectable(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
     bool selected = _arg<1, s32>(rdram, ctx) != 0;
 
@@ -112,7 +112,7 @@ extern "C" void recomp_dbgui_selectable(uint8_t* rdram, recomp_context* ctx) {
     _return<s32>(ctx, pressed);
 }
 
-extern "C" void recomp_dbgui_button(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_button(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
 
     char *label = dino::recomp_api::copy_rdram_str(label_ptr, rdram, ctx);
@@ -124,17 +124,17 @@ extern "C" void recomp_dbgui_button(uint8_t* rdram, recomp_context* ctx) {
     _return<s32>(ctx, pressed);
 }
 
-extern "C" void recomp_dbgui_begin_main_menu_bar(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_begin_main_menu_bar(uint8_t* rdram, recomp_context* ctx) {
     bool expanded = expanded = dino::debug_ui::begin_main_menu_bar();
 
     _return<s32>(ctx, expanded);
 }
 
-extern "C" void recomp_dbgui_end_main_menu_bar(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_end_main_menu_bar(uint8_t* rdram, recomp_context* ctx) {
     dino::debug_ui::end_main_menu_bar();
 }
 
-extern "C" void recomp_dbgui_begin_menu(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_begin_menu(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
 
     char *label = dino::recomp_api::copy_rdram_str(label_ptr, rdram, ctx);
@@ -146,11 +146,11 @@ extern "C" void recomp_dbgui_begin_menu(uint8_t* rdram, recomp_context* ctx) {
     _return<s32>(ctx, open);
 }
 
-extern "C" void recomp_dbgui_end_menu(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_end_menu(uint8_t* rdram, recomp_context* ctx) {
     dino::debug_ui::end_menu();
 }
 
-extern "C" void recomp_dbgui_menu_item(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_menu_item(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
     PTR(s32) selected_ptr = _arg<1, PTR(s32)>(rdram, ctx);
 
@@ -171,7 +171,7 @@ extern "C" void recomp_dbgui_menu_item(uint8_t* rdram, recomp_context* ctx) {
     _return<s32>(ctx, pressed);
 }
 
-extern "C" void recomp_dbgui_collapsing_header(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_collapsing_header(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
 
     char *label = dino::recomp_api::copy_rdram_str(label_ptr, rdram, ctx);
@@ -183,7 +183,7 @@ extern "C" void recomp_dbgui_collapsing_header(uint8_t* rdram, recomp_context* c
     _return<s32>(ctx, open);
 }
 
-extern "C" void recomp_dbgui_tree_node(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_tree_node(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
 
     char *label = dino::recomp_api::copy_rdram_str(label_ptr, rdram, ctx);
@@ -195,11 +195,11 @@ extern "C" void recomp_dbgui_tree_node(uint8_t* rdram, recomp_context* ctx) {
     _return<s32>(ctx, open);
 }
 
-extern "C" void recomp_dbgui_tree_pop(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_tree_pop(uint8_t* rdram, recomp_context* ctx) {
     dino::debug_ui::tree_pop();
 }
 
-extern "C" void recomp_dbgui_begin_child(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_begin_child(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) str_id_ptr = _arg<0, PTR(char)>(rdram, ctx);
 
     char *str_id = dino::recomp_api::copy_rdram_str(str_id_ptr, rdram, ctx);
@@ -211,11 +211,11 @@ extern "C" void recomp_dbgui_begin_child(uint8_t* rdram, recomp_context* ctx) {
     _return<s32>(ctx, open);
 }
 
-extern "C" void recomp_dbgui_end_child(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_end_child(uint8_t* rdram, recomp_context* ctx) {
     dino::debug_ui::end_child();
 }
 
-extern "C" void recomp_dbgui_checkbox(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_checkbox(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
     PTR(s32) value_ptr = _arg<1, PTR(s32)>(rdram, ctx);
 
@@ -232,7 +232,7 @@ extern "C" void recomp_dbgui_checkbox(uint8_t* rdram, recomp_context* ctx) {
     _return<s32>(ctx, pressed);
 }
 
-extern "C" void recomp_dbgui_input_int(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_input_int(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
     PTR(s32) value_ptr = _arg<1, PTR(s32)>(rdram, ctx);
 
@@ -249,7 +249,7 @@ extern "C" void recomp_dbgui_input_int(uint8_t* rdram, recomp_context* ctx) {
     _return<s32>(ctx, pressed);
 }
 
-extern "C" void recomp_dbgui_input_float(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_input_float(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
     float *value_ptr = _arg<1, float*>(rdram, ctx);
 
@@ -264,7 +264,7 @@ extern "C" void recomp_dbgui_input_float(uint8_t* rdram, recomp_context* ctx) {
 
 static std::vector<char> text_input_buffer{};
 
-extern "C" void recomp_dbgui_input_text(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_input_text(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
     PTR(char) buf_ptr = _arg<1, PTR(char)>(rdram, ctx);
     s32 buf_size = _arg<2, s32>(rdram, ctx);
@@ -289,23 +289,23 @@ extern "C" void recomp_dbgui_input_text(uint8_t* rdram, recomp_context* ctx) {
     _return<s32>(ctx, changed);
 }
 
-extern "C" void recomp_dbgui_set_next_item_width(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_set_next_item_width(uint8_t* rdram, recomp_context* ctx) {
     float width = _arg<0, float>(rdram, ctx);
 
     dino::debug_ui::set_next_item_width(width);
 }
 
-extern "C" void recomp_dbgui_push_item_width(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_push_item_width(uint8_t* rdram, recomp_context* ctx) {
     float width = _arg<0, float>(rdram, ctx);
 
     dino::debug_ui::push_item_width(width);
 }
 
-extern "C" void recomp_dbgui_pop_item_width(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_pop_item_width(uint8_t* rdram, recomp_context* ctx) {
     dino::debug_ui::pop_item_width();
 }
 
-extern "C" void recomp_dbgui_begin_tab_bar(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_begin_tab_bar(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) id_ptr = _arg<0, PTR(char)>(rdram, ctx);
 
     char *id = dino::recomp_api::copy_rdram_str(id_ptr, rdram, ctx);
@@ -317,11 +317,11 @@ extern "C" void recomp_dbgui_begin_tab_bar(uint8_t* rdram, recomp_context* ctx) 
     _return<s32>(ctx, active);
 }
 
-extern "C" void recomp_dbgui_end_tab_bar(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_end_tab_bar(uint8_t* rdram, recomp_context* ctx) {
     dino::debug_ui::end_tab_bar();
 }
 
-extern "C" void recomp_dbgui_begin_tab_item(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_begin_tab_item(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
     PTR(s32) open_ptr = _arg<1, PTR(s32)>(rdram, ctx);
 
@@ -342,11 +342,11 @@ extern "C" void recomp_dbgui_begin_tab_item(uint8_t* rdram, recomp_context* ctx)
     _return<s32>(ctx, active);
 }
 
-extern "C" void recomp_dbgui_end_tab_item(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_end_tab_item(uint8_t* rdram, recomp_context* ctx) {
     dino::debug_ui::end_tab_item();
 }
 
-extern "C" void recomp_dbgui_push_str_id(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_push_str_id(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) id_ptr = _arg<0, PTR(char)>(rdram, ctx);
 
     char *id = dino::recomp_api::copy_rdram_str(id_ptr, rdram, ctx);
@@ -356,17 +356,17 @@ extern "C" void recomp_dbgui_push_str_id(uint8_t* rdram, recomp_context* ctx) {
     free(id);
 }
 
-extern "C" void recomp_dbgui_pop_id(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_pop_id(uint8_t* rdram, recomp_context* ctx) {
     dino::debug_ui::pop_id();
 }
 
-extern "C" void recomp_dbgui_is_item_hovered(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_is_item_hovered(uint8_t* rdram, recomp_context* ctx) {
     bool hovered = dino::debug_ui::is_item_hovered();
 
     _return<s32>(ctx, hovered);
 }
 
-extern "C" void recomp_dbgui_get_display_size(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_get_display_size(uint8_t* rdram, recomp_context* ctx) {
     PTR(float) width_ptr = _arg<0, PTR(float)>(rdram, ctx);
     PTR(float) height_ptr = _arg<1, PTR(float)>(rdram, ctx);
 
@@ -376,7 +376,7 @@ extern "C" void recomp_dbgui_get_display_size(uint8_t* rdram, recomp_context* ct
     MEM_F32(0x0, height_ptr) = size.y;
 }
 
-extern "C" void recomp_dbgui_color_float4_to_u32(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_color_float4_to_u32(uint8_t* rdram, recomp_context* ctx) {
     PTR(float) in_ptr = _arg<0, PTR(float)>(rdram, ctx);
     
     ImVec4 in(
@@ -391,7 +391,7 @@ extern "C" void recomp_dbgui_color_float4_to_u32(uint8_t* rdram, recomp_context*
     _return<u32>(ctx, color);
 }
 
-extern "C" void recomp_dbgui_foreground_text(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_foreground_text(uint8_t* rdram, recomp_context* ctx) {
     PTR(float) pos_ptr = _arg<0, PTR(float)>(rdram, ctx);
     u32 color = _arg<1, u32>(rdram, ctx);
     PTR(char) text_ptr = _arg<2, PTR(char)>(rdram, ctx);
@@ -408,7 +408,7 @@ extern "C" void recomp_dbgui_foreground_text(uint8_t* rdram, recomp_context* ctx
     free(text);
 }
 
-extern "C" void recomp_dbgui_foreground_line(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_foreground_line(uint8_t* rdram, recomp_context* ctx) {
     PTR(void) ptr = _arg<0, PTR(void)>(rdram, ctx);
     
     ImVec2 p1(
@@ -425,7 +425,7 @@ extern "C" void recomp_dbgui_foreground_line(uint8_t* rdram, recomp_context* ctx
     dino::debug_ui::foreground_line(p1, p2, color, thickness);
 }
 
-extern "C" void recomp_dbgui_foreground_circle(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_foreground_circle(uint8_t* rdram, recomp_context* ctx) {
     PTR(void) ptr = _arg<0, PTR(void)>(rdram, ctx);
     
     ImVec2 center(
@@ -440,7 +440,7 @@ extern "C" void recomp_dbgui_foreground_circle(uint8_t* rdram, recomp_context* c
     dino::debug_ui::foreground_circle(center, radius, color, num_segments, thickness);
 }
 
-extern "C" void recomp_dbgui_foreground_circle_filled(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_foreground_circle_filled(uint8_t* rdram, recomp_context* ctx) {
     PTR(void) ptr = _arg<0, PTR(void)>(rdram, ctx);
     
     ImVec2 center(
@@ -454,7 +454,7 @@ extern "C" void recomp_dbgui_foreground_circle_filled(uint8_t* rdram, recomp_con
     dino::debug_ui::foreground_circle_filled(center, radius, color, num_segments);
 }
 
-extern "C" void recomp_dbgui_foreground_ellipse(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_foreground_ellipse(uint8_t* rdram, recomp_context* ctx) {
     PTR(void) ptr = _arg<0, PTR(void)>(rdram, ctx);
     
     ImVec2 center(
@@ -471,7 +471,7 @@ extern "C" void recomp_dbgui_foreground_ellipse(uint8_t* rdram, recomp_context* 
     dino::debug_ui::foreground_ellipse(center, radius_x, radius_y, color, rotation, num_segments, thickness);
 }
 
-extern "C" void recomp_dbgui_foreground_ellipse_filled(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_foreground_ellipse_filled(uint8_t* rdram, recomp_context* ctx) {
     PTR(void) ptr = _arg<0, PTR(void)>(rdram, ctx);
     
     ImVec2 center(
@@ -487,7 +487,7 @@ extern "C" void recomp_dbgui_foreground_ellipse_filled(uint8_t* rdram, recomp_co
     dino::debug_ui::foreground_ellipse_filled(center, radius_x, radius_y, color, rotation, num_segments);
 }
 
-extern "C" void recomp_dbgui_foreground_rect(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_foreground_rect(uint8_t* rdram, recomp_context* ctx) {
     PTR(void) ptr = _arg<0, PTR(void)>(rdram, ctx);
     
     ImVec2 pmin(
@@ -504,7 +504,7 @@ extern "C" void recomp_dbgui_foreground_rect(uint8_t* rdram, recomp_context* ctx
     dino::debug_ui::foreground_rect(pmin, pmax, color, thickness);
 }
 
-extern "C" void recomp_dbgui_foreground_rect_filled(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void dbgui_foreground_rect_filled(uint8_t* rdram, recomp_context* ctx) {
     PTR(void) ptr = _arg<0, PTR(void)>(rdram, ctx);
     
     ImVec2 pmin(
@@ -522,50 +522,50 @@ extern "C" void recomp_dbgui_foreground_rect_filled(uint8_t* rdram, recomp_conte
 
 namespace dino::recomp_api {
     void register_debug_ui_exports() {
-        REGISTER_EXPORT(recomp_dbgui_is_open);
-        REGISTER_EXPORT(recomp_dbgui_is_enabled);
-        REGISTER_EXPORT(recomp_dbgui_begin);
-        REGISTER_EXPORT(recomp_dbgui_end);
-        REGISTER_EXPORT(recomp_dbgui_text);
-        REGISTER_EXPORT(recomp_dbgui_label_text);
-        REGISTER_EXPORT(recomp_dbgui_same_line);
-        REGISTER_EXPORT(recomp_dbgui_begin_combo);
-        REGISTER_EXPORT(recomp_dbgui_end_combo);
-        REGISTER_EXPORT(recomp_dbgui_selectable);
-        REGISTER_EXPORT(recomp_dbgui_button);
-        REGISTER_EXPORT(recomp_dbgui_begin_main_menu_bar);
-        REGISTER_EXPORT(recomp_dbgui_end_main_menu_bar);
-        REGISTER_EXPORT(recomp_dbgui_begin_menu);
-        REGISTER_EXPORT(recomp_dbgui_end_menu);
-        REGISTER_EXPORT(recomp_dbgui_menu_item);
-        REGISTER_EXPORT(recomp_dbgui_collapsing_header);
-        REGISTER_EXPORT(recomp_dbgui_tree_node);
-        REGISTER_EXPORT(recomp_dbgui_tree_pop);
-        REGISTER_EXPORT(recomp_dbgui_begin_child);
-        REGISTER_EXPORT(recomp_dbgui_end_child);
-        REGISTER_EXPORT(recomp_dbgui_checkbox);
-        REGISTER_EXPORT(recomp_dbgui_input_int);
-        REGISTER_EXPORT(recomp_dbgui_input_float);
-        REGISTER_EXPORT(recomp_dbgui_input_text);
-        REGISTER_EXPORT(recomp_dbgui_set_next_item_width);
-        REGISTER_EXPORT(recomp_dbgui_push_item_width);
-        REGISTER_EXPORT(recomp_dbgui_pop_item_width);
-        REGISTER_EXPORT(recomp_dbgui_begin_tab_bar);
-        REGISTER_EXPORT(recomp_dbgui_end_tab_bar);
-        REGISTER_EXPORT(recomp_dbgui_begin_tab_item);
-        REGISTER_EXPORT(recomp_dbgui_end_tab_item);
-        REGISTER_EXPORT(recomp_dbgui_push_str_id);
-        REGISTER_EXPORT(recomp_dbgui_pop_id);
-        REGISTER_EXPORT(recomp_dbgui_is_item_hovered);
-        REGISTER_EXPORT(recomp_dbgui_get_display_size);
-        REGISTER_EXPORT(recomp_dbgui_color_float4_to_u32);
-        REGISTER_EXPORT(recomp_dbgui_foreground_text);
-        REGISTER_EXPORT(recomp_dbgui_foreground_line);
-        REGISTER_EXPORT(recomp_dbgui_foreground_circle);
-        REGISTER_EXPORT(recomp_dbgui_foreground_circle_filled);
-        REGISTER_EXPORT(recomp_dbgui_foreground_ellipse);
-        REGISTER_EXPORT(recomp_dbgui_foreground_ellipse_filled);
-        REGISTER_EXPORT(recomp_dbgui_foreground_rect);
-        REGISTER_EXPORT(recomp_dbgui_foreground_rect_filled);
+        REGISTER_EXPORT(dbgui_is_open);
+        REGISTER_EXPORT(dbgui_is_enabled);
+        REGISTER_EXPORT(dbgui_begin);
+        REGISTER_EXPORT(dbgui_end);
+        REGISTER_EXPORT(dbgui_text);
+        REGISTER_EXPORT(dbgui_label_text);
+        REGISTER_EXPORT(dbgui_same_line);
+        REGISTER_EXPORT(dbgui_begin_combo);
+        REGISTER_EXPORT(dbgui_end_combo);
+        REGISTER_EXPORT(dbgui_selectable);
+        REGISTER_EXPORT(dbgui_button);
+        REGISTER_EXPORT(dbgui_begin_main_menu_bar);
+        REGISTER_EXPORT(dbgui_end_main_menu_bar);
+        REGISTER_EXPORT(dbgui_begin_menu);
+        REGISTER_EXPORT(dbgui_end_menu);
+        REGISTER_EXPORT(dbgui_menu_item);
+        REGISTER_EXPORT(dbgui_collapsing_header);
+        REGISTER_EXPORT(dbgui_tree_node);
+        REGISTER_EXPORT(dbgui_tree_pop);
+        REGISTER_EXPORT(dbgui_begin_child);
+        REGISTER_EXPORT(dbgui_end_child);
+        REGISTER_EXPORT(dbgui_checkbox);
+        REGISTER_EXPORT(dbgui_input_int);
+        REGISTER_EXPORT(dbgui_input_float);
+        REGISTER_EXPORT(dbgui_input_text);
+        REGISTER_EXPORT(dbgui_set_next_item_width);
+        REGISTER_EXPORT(dbgui_push_item_width);
+        REGISTER_EXPORT(dbgui_pop_item_width);
+        REGISTER_EXPORT(dbgui_begin_tab_bar);
+        REGISTER_EXPORT(dbgui_end_tab_bar);
+        REGISTER_EXPORT(dbgui_begin_tab_item);
+        REGISTER_EXPORT(dbgui_end_tab_item);
+        REGISTER_EXPORT(dbgui_push_str_id);
+        REGISTER_EXPORT(dbgui_pop_id);
+        REGISTER_EXPORT(dbgui_is_item_hovered);
+        REGISTER_EXPORT(dbgui_get_display_size);
+        REGISTER_EXPORT(dbgui_color_float4_to_u32);
+        REGISTER_EXPORT(dbgui_foreground_text);
+        REGISTER_EXPORT(dbgui_foreground_line);
+        REGISTER_EXPORT(dbgui_foreground_circle);
+        REGISTER_EXPORT(dbgui_foreground_circle_filled);
+        REGISTER_EXPORT(dbgui_foreground_ellipse);
+        REGISTER_EXPORT(dbgui_foreground_ellipse_filled);
+        REGISTER_EXPORT(dbgui_foreground_rect);
+        REGISTER_EXPORT(dbgui_foreground_rect_filled);
     }
 }

@@ -1,5 +1,5 @@
 #include "patches.h"
-#include "debug_ui.h"
+#include "dbgui.h"
 #include "builtin_dbgui.h"
 #include "ui_funcs.h"
 
@@ -26,19 +26,19 @@ void game_tick_end_hook() {
 }
 
 static void dbgui() {
-    recomp_dbgui_ui_frame_begin();
+    dbgui_ui_frame_begin();
     
-    if (recomp_dbgui_is_open()) {
+    if (dbgui_is_open()) {
         builtin_dbgui();
         recomp_on_dbgui();
 
-        if (recomp_dbgui_begin_main_menu_bar()) {
-            recomp_dbgui_text("| Press ` to close debug UI.");
-            recomp_dbgui_end_main_menu_bar();
+        if (dbgui_begin_main_menu_bar()) {
+            dbgui_text("| Press ` to close debug UI.");
+            dbgui_end_main_menu_bar();
         }
     }
 
-    recomp_dbgui_ui_frame_end();
+    dbgui_ui_frame_end();
 
     builtin_dbgui_game_tick();
 }

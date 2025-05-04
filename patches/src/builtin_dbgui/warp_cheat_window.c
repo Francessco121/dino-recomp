@@ -1,4 +1,4 @@
-#include "debug_ui.h"
+#include "dbgui.h"
 
 // TODO: use decomp def
 extern void warpPlayer(s32 warpIndex, s32 param2);
@@ -68,20 +68,20 @@ const u32 WARP_ENTRIES_COUNT = sizeof(warpEntries) / sizeof(struct WarpEntry);
 struct WarpEntry *selectedWarpEntry = &warpEntries[0];
 
 void dbgui_warp_cheat_window(s32 *open) {
-    if (recomp_dbgui_begin("Warp Cheat", open)) {
-        if (recomp_dbgui_begin_combo("Warp Location", selectedWarpEntry->name)) {
+    if (dbgui_begin("Warp Cheat", open)) {
+        if (dbgui_begin_combo("Warp Location", selectedWarpEntry->name)) {
             for (u32 i = 0; i < WARP_ENTRIES_COUNT; i++) {
                 struct WarpEntry *entry = &warpEntries[i];
-                if (recomp_dbgui_selectable(entry->name, entry == selectedWarpEntry)) {
+                if (dbgui_selectable(entry->name, entry == selectedWarpEntry)) {
                     selectedWarpEntry = entry;
                 }
             }
-            recomp_dbgui_end_combo();
+            dbgui_end_combo();
         }
 
-        if (recomp_dbgui_button("Warp")) {
+        if (dbgui_button("Warp")) {
             warpPlayer(selectedWarpEntry->idx, /*fade*/FALSE);
         }
     }
-    recomp_dbgui_end();
+    dbgui_end();
 }

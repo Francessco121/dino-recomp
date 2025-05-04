@@ -1,4 +1,4 @@
-#include "debug_ui.h"
+#include "dbgui.h"
 #include "builtin_dbgui.h"
 
 static s32 dllsOpen = FALSE;
@@ -9,20 +9,20 @@ static s32 warpCheatOpen = FALSE;
 static s32 charCheatOpen = FALSE;
 
 void builtin_dbgui() {
-    if (recomp_dbgui_begin_main_menu_bar()) {
-        if (recomp_dbgui_begin_menu("Debug")) {
-            recomp_dbgui_menu_item("DLLs", &dllsOpen);
-            recomp_dbgui_menu_item("Audio", &audioOpen);
-            recomp_dbgui_menu_item("Graphics", &graphicsOpen);
-            recomp_dbgui_menu_item("Memory", &memoryOpen);
-            recomp_dbgui_end_menu();
+    if (dbgui_begin_main_menu_bar()) {
+        if (dbgui_begin_menu("Debug")) {
+            dbgui_menu_item("DLLs", &dllsOpen);
+            dbgui_menu_item("Audio", &audioOpen);
+            dbgui_menu_item("Graphics", &graphicsOpen);
+            dbgui_menu_item("Memory", &memoryOpen);
+            dbgui_end_menu();
         }
-        if (recomp_dbgui_begin_menu("Cheats")) {
-            recomp_dbgui_menu_item("Warp", &warpCheatOpen);
-            recomp_dbgui_menu_item("Character", &charCheatOpen);
-            recomp_dbgui_end_menu();
+        if (dbgui_begin_menu("Cheats")) {
+            dbgui_menu_item("Warp", &warpCheatOpen);
+            dbgui_menu_item("Character", &charCheatOpen);
+            dbgui_end_menu();
         }
-        recomp_dbgui_end_main_menu_bar();
+        dbgui_end_main_menu_bar();
     }
 
     if (dllsOpen) {
