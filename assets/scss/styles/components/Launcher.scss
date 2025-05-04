@@ -47,6 +47,19 @@
     min-height: 100%;
 }
 
+.game-logo {
+    width: 100%;
+    max-width: 600px;
+}
+
+.game-logo-subtitle {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
 @keyframes slide-mm-bg-over {
 	0% {
 		transform: translateX(space(100));

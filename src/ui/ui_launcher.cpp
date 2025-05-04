@@ -77,15 +77,19 @@ static std::vector<char> read_file(const std::filesystem::path& filepath) {
 class LauncherMenu : public recompui::MenuController {
 public:
     std::string background_filepath = "images/background.png";
+    std::string logo_filepath = "images/DPLogo.png";
 
     LauncherMenu() {
         rom_valid = recomp::is_rom_valid(supported_games[0].game_id);
     }
     ~LauncherMenu() override {
         recompui::release_image(background_filepath);
+        recompui::release_image(logo_filepath);
     }
     void load_document() override {
         recompui::queue_image_from_bytes_file(background_filepath, read_file(dino::runtime::get_asset_path(background_filepath.c_str())));
+        recompui::queue_image_from_bytes_file(logo_filepath, read_file(dino::runtime::get_asset_path(logo_filepath.c_str())));
+
 		launcher_context = recompui::create_context(dino::runtime::get_asset_path("launcher.rml"));
     }
     void register_events(recompui::UiEventListenerInstancer& listener) override {

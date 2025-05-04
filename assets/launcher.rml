@@ -17,7 +17,7 @@
 				<img class="launcher-background" src="images/background.png" />
 				<div class="launcher__vertical-split">
 					<div class="launcher__title-quadrant">
-						<div><h1>Dinosaur Planet: Recompiled</h1></div>
+						<img class="game-logo" src="images/DPLogo.png" />
 					</div>
 					<div class="launcher__content-quadrant"></div>
 				</div>
