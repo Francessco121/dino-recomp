@@ -13,9 +13,6 @@
 [submodule "lib/lunasvg"]
 	path = lib/lunasvg
 	url = https://github.com/sammycage/lunasvg.git
-[submodule "lib/sse2neon"]
-	path = lib/sse2neon
-	url = https://github.com/DLTcollab/sse2neon.git
 [submodule "lib/RmlUi"]
 	path = lib/RmlUi
 	url = https://github.com/mikke89/RmlUi.git
@@ -23,3 +20,6 @@
 	path = lib/dino-recomp-mod-api
 	url = https://github.com/Francessco121/dino-recomp-mod-api.git
 	branch = main
+[submodule "lib/slot_map"]
+	path = lib/slot_map
+	url = https://github.com/SergeyMakeev/slot_map.git

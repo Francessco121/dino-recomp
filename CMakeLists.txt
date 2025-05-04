@@ -1,12 +1,13 @@
 cmake_minimum_required(VERSION 3.20)
-project(DinoRecomp)
+project(DinoRecomp LANGUAGES C CXX)
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_SIMULATE_ID STREQUAL "MSVC")
-#    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-everything /W4")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-everything /W4")
 endif()
 
 # Opt out of constexpr mutex constructor on windows to prevent vcredist issues
@@ -36,9 +37,10 @@ set(BUILD_SHARED_LIBS OFF)
 SET(LUNASVG_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(${CMAKE_SOURCE_DIR}/lib/lunasvg)
 # set(BUILD_SHARED_LIBS "${BUILD_SHARED_LIBS_SAVED}")
-SET(ENABLE_SVG_PLUGIN ON CACHE BOOL "" FORCE)
+SET(RMLUI_SVG_PLUGIN ON CACHE BOOL "" FORCE)
 SET(RMLUI_TESTS_ENABLED OFF CACHE BOOL "" FORCE)
 add_subdirectory(${CMAKE_SOURCE_DIR}/lib/RmlUi)
+target_compile_definitions(rmlui_core PRIVATE LUNASVG_BUILD_STATIC)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/lib/N64ModernRuntime)
 
@@ -120,7 +122,7 @@ add_custom_command(OUTPUT
                        ${CMAKE_SOURCE_DIR}/RecompiledPatches/recomp_overlays.inl
                        ${CMAKE_SOURCE_DIR}/RecompiledPatches/funcs.h
                    # TODO: Look into why modifying patches requires two builds to take
-                   COMMAND ./N64Recomp.exe patches.toml
+                   COMMAND ./N64Recomp patches.toml
                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
                    DEPENDS ${CMAKE_SOURCE_DIR}/patches/build/patches.elf
 )
@@ -164,10 +166,10 @@ target_include_directories(DinosaurPlanetRecompiled PRIVATE
     ${CMAKE_SOURCE_DIR}/lib/rt64/src
     ${CMAKE_SOURCE_DIR}/lib/rt64/src/rhi
     ${CMAKE_SOURCE_DIR}/lib/rt64/src/render
-    ${CMAKE_SOURCE_DIR}/lib/sse2neon
     ${CMAKE_SOURCE_DIR}/lib/freetype-windows-binaries/include
     ${CMAKE_SOURCE_DIR}/lib/rt64/src/contrib/nativefiledialog-extended/src/include
     ${CMAKE_SOURCE_DIR}/lib/promptfont
+    ${CMAKE_SOURCE_DIR}/lib/slot_map/slot_map
     ${CMAKE_BINARY_DIR}/shaders
     ${CMAKE_CURRENT_BINARY_DIR}
 )
@@ -237,6 +239,7 @@ if (WIN32)
     )
 
     target_sources(DinosaurPlanetRecompiled PRIVATE ${CMAKE_SOURCE_DIR}/icons/app.rc)
+    target_link_libraries(DinosaurPlanetRecompiled PRIVATE SDL2)
 endif()
 
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")
@@ -272,7 +275,7 @@ if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     message(STATUS "FREETYPE_LIBRARIES = ${FREETYPE_LIBRARIES}")
 
     include_directories(${FREETYPE_LIBRARIES})
-    target_link_libraries(DinosaurPlanetRecompiled PRIVATE ${FREETYPE_LIBRARIES})
+    target_link_libraries(DinosaurPlanetRecompiled PRIVATE ${FREETYPE_LIBRARIES} SDL2::SDL2)
 
     set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
     set(THREADS_PREFER_PTHREAD_FLAG TRUE)
@@ -284,12 +287,11 @@ endif()
 target_link_libraries(DinosaurPlanetRecompiled PRIVATE
     PatchesLib
     RecompiledFuncs
-    SDL2
     librecomp
     ultramodern
     rt64
-    RmlCore
-    RmlDebugger
+    RmlUi::Core
+    RmlUi::Debugger
     nfd
     lunasvg
 )
@@ -315,9 +317,14 @@ else()
     if (APPLE)
         # Apple's binary is universal, so it'll work on both x86_64 and arm64
         set (DXC "DYLD_LIBRARY_PATH=${PROJECT_SOURCE_DIR}/lib/rt64/src/contrib/dxc/lib/arm64" "${PROJECT_SOURCE_DIR}/lib/rt64/src/contrib/dxc/bin/arm64/dxc-macos")
+        if(CMAKE_SIZEOF_VOID_P EQUAL 8 AND CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|amd64|AMD64")
+            set(SPIRVCROSS "DYLD_LIBRARY_PATH=${PROJECT_SOURCE_DIR}/lib/rt64/src/contrib/spirv-cross/lib/x64" "${PROJECT_SOURCE_DIR}/lib/rt64//src/contrib/spirv-cross/bin/x64/spirv-cross")
+        else()
+            set(SPIRVCROSS "DYLD_LIBRARY_PATH=${PROJECT_SOURCE_DIR}/lib/rt64/src/contrib/spirv-cross/lib/arm64" "${PROJECT_SOURCE_DIR}/lib/rt64//src/contrib/spirv-cross/bin/x64/spirv-cross")
+        endif()
     else()
         if(CMAKE_SIZEOF_VOID_P EQUAL 8 AND CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|amd64|AMD64")
-            set (DXC "LD_LIBRARY_PATH=${PROJECT_SOURCE_DIR}/lib/rt64/src/contrib/dxc/lib/x64" "${PROJECT_SOURCE_DIR}/lib/rt64/src/contrib/dxc/bin/x64/dxc")
+            set (DXC "LD_LIBRARY_PATH=${PROJECT_SOURCE_DIR}/lib/rt64/src/contrib/dxc/lib/x64" "${PROJECT_SOURCE_DIR}/lib/rt64/src/contrib/dxc/bin/x64/dxc-linux")
         else()
             set (DXC "LD_LIBRARY_PATH=${PROJECT_SOURCE_DIR}/lib/rt64/src/contrib/dxc/lib/arm64" "${PROJECT_SOURCE_DIR}/lib/rt64/src/contrib/dxc/bin/arm64/dxc-linux")
         endif()
