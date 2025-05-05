@@ -25,7 +25,9 @@ ignored = [
 renamed = [
     "acos",
     "asin",
-    "_itoa"
+    "_itoa",
+    "strcasecmp",
+    "strncasecmp",
 ]
 
 # Conditionally disable culling (widescreen support)
