@@ -2,6 +2,7 @@
 #include "input/controls.hpp"
 #include "config/config.hpp"
 #include "runtime/support.hpp"
+#include "runtime/gfx.hpp"
 #include "renderer/renderer.hpp"
 
 #include "ui/recomp_ui.h"
@@ -167,18 +168,13 @@ void close_config_menu_impl() {
     }
 }
 
-// TODO: Remove once RT64 gets native fullscreen support on Linux
-#if defined(__linux__)
-extern SDL_Window* window;
-#endif
-
 void apply_graphics_config(void) {
     ultramodern::renderer::set_graphics_config(new_options);
 #if defined(__linux__) // TODO: Remove once RT64 gets native fullscreen support on Linux
     if (new_options.wm_option == ultramodern::renderer::WindowMode::Fullscreen) {
-        SDL_SetWindowFullscreen(window,SDL_WINDOW_FULLSCREEN_DESKTOP);
+        SDL_SetWindowFullscreen(dino::runtime::get_window(),SDL_WINDOW_FULLSCREEN_DESKTOP);
     } else {
-        SDL_SetWindowFullscreen(window,0);
+        SDL_SetWindowFullscreen(dino::runtime::get_window(),0);
     }
 #endif
 }
