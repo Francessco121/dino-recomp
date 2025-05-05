@@ -23,7 +23,7 @@ void select_rom() {
             switch (rom_error) {
                 case recomp::RomValidationError::Good:
                     rom_valid = true;
-                    model_handle.DirtyVariable("mm_rom_valid");
+                    model_handle.DirtyVariable("rom_valid");
                     break;
                 case recomp::RomValidationError::FailedToOpen:
                     recompui::message_box("Failed to open ROM file.");
