@@ -53,8 +53,8 @@ jobs:
           cmake --build cmake-build --config Release --target RSPRecomp -j $cpuCores
 
           # Copy N64Recomp & RSPRecomp to root directory
-          cp cmake-build/N64Recomp/N64Recomp.exe ../..
-          cp cmake-build/N64Recomp/RSPRecomp.exe ../..
+          cp cmake-build/N64Recomp.exe ../..
+          cp cmake-build/RSPRecomp.exe ../..
       - name: Run N64Recomp & RSPRecomp
         run: |
           ./N64Recomp.exe dino.toml
