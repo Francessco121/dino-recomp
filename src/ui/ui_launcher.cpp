@@ -6,7 +6,6 @@
 #include "RmlUi/Core.h"
 #include "nfd.h"
 #include <filesystem>
-#include <fstream>
 
 static std::string version_string;
 
@@ -55,29 +54,10 @@ recompui::ContextId recompui::get_launcher_context_id() {
 	return launcher_context;
 }
 
-static std::vector<char> read_file(const std::filesystem::path& filepath) {
-    std::vector<char> ret{};
-    std::ifstream input_file{ filepath, std::ios::binary };
-
-    if (!input_file) {
-        return ret;
-    }
-
-    input_file.seekg(0, std::ios::end);
-    std::streampos filesize = input_file.tellg();
-    input_file.seekg(0, std::ios::beg);
-
-    ret.resize(filesize);
-
-    input_file.read(ret.data(), filesize);
-
-    return ret;
-}
-
 class LauncherMenu : public recompui::MenuController {
 public:
-    std::string background_filepath = "images/background.png";
-    std::string logo_filepath = "images/DPLogo.png";
+    std::filesystem::path background_filepath = dino::runtime::get_asset_path("images/background.png");
+    std::filesystem::path logo_filepath = dino::runtime::get_asset_path("images/DPLogo.png");
 
     LauncherMenu() {
         rom_valid = recomp::is_rom_valid(supported_games[0].game_id);
@@ -87,8 +67,8 @@ public:
         recompui::release_image(logo_filepath);
     }
     void load_document() override {
-        recompui::queue_image_from_bytes_file(background_filepath, read_file(dino::runtime::get_asset_path(background_filepath.c_str())));
-        recompui::queue_image_from_bytes_file(logo_filepath, read_file(dino::runtime::get_asset_path(logo_filepath.c_str())));
+        recompui::queue_image_from_file(background_filepath);
+        recompui::queue_image_from_file(logo_filepath);
 
 		launcher_context = recompui::create_context(dino::runtime::get_asset_path("launcher.rml"));
     }

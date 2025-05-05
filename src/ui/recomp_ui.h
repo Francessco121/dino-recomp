@@ -138,6 +138,7 @@ namespace recompui {
 
     void queue_image_from_bytes_rgba32(const std::string &src, const std::vector<char> &bytes, uint32_t width, uint32_t height);
     void queue_image_from_bytes_file(const std::string &src, const std::vector<char> &bytes);
+    void queue_image_from_file(const std::filesystem::path& path);
     void release_image(const std::string &src);
 
     void drop_files(const std::list<std::filesystem::path> &file_list);

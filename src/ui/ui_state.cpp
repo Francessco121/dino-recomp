@@ -6,6 +6,8 @@
 #include <SDL2/SDL_video.h>
 #endif
 #include <chrono>
+#include <filesystem>
+#include <fstream>
 
 #include "rt64_render_hooks.h"
 
@@ -30,6 +32,25 @@
 #include "ui_mod_menu.h"
 #include "ui_mod_installer.h"
 #include "ui_renderer.h"
+
+static std::vector<char> read_file(const std::filesystem::path& filepath) {
+    std::vector<char> ret{};
+    std::ifstream input_file{ filepath, std::ios::binary };
+
+    if (!input_file) {
+        return ret;
+    }
+
+    input_file.seekg(0, std::ios::end);
+    std::streampos filesize = input_file.tellg();
+    input_file.seekg(0, std::ios::beg);
+
+    ret.resize(filesize);
+
+    input_file.read(ret.data(), filesize);
+
+    return ret;
+}
 
 bool can_focus(Rml::Element* element) {
     return element->GetOwnerDocument() != nullptr && element->GetProperty(Rml::PropertyId::TabIndex)->Get<Rml::Style::TabIndex>() != Rml::Style::TabIndex::None;
@@ -881,6 +902,12 @@ Rml::ElementDocument* recompui::create_empty_document() {
     std::lock_guard lock{ui_state_mutex};
 
     return ui_state->context->CreateDocument();
+}
+
+void recompui::queue_image_from_file(const std::filesystem::path& path) {
+    std::vector<char> bytes = read_file(path);
+
+    ui_state->render_interface.queue_image_from_bytes_file(path.string(), bytes);
 }
 
 void recompui::queue_image_from_bytes_file(const std::string &src, const std::vector<char> &bytes) {
