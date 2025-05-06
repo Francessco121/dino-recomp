@@ -8,6 +8,61 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
+  # Linux (native)
+  build-linux:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        type: [ RelWithDebInfo ]
+        os: [ ubuntu-latest ]
+    name: ubuntu-latest (${{ matrix.type }})
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.ref }}
+          submodules: recursive
+      - name: Checkout baserom
+        uses: actions/checkout@v2
+        with:
+          repository: Francessco121/dino-recomp-private
+          token: ${{ secrets.PRIVATE_REPO_PAT }}
+          path: baserom
+      - name: Extract baserom
+        run: |
+          unzip baserom/baserom.patched.z64.zip -d ./
+      - name: Install apt packages
+        run: sudo apt-get install cmake ninja-build libsdl2-dev libgtk-3-dev lld llvm clang
+      - name: Build N64Recomp & RSPRecomp
+        run: |
+          cd lib/N64Recomp
+
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_MAKE_PROGRAM=ninja -G Ninja -S . -B cmake-build
+          cmake --build cmake-build --config Release --target N64RecompCLI -j $(nproc)
+          cmake --build cmake-build --config Release --target RSPRecomp -j $(nproc)
+
+          # Copy N64Recomp & RSPRecomp to root directory
+          cp cmake-build/N64Recomp ../..
+          cp cmake-build/RSPRecomp ../..
+      - name: Run N64Recomp & RSPRecomp
+        run: |
+          ./N64Recomp dino.toml
+          ./RSPRecomp aspMain.toml
+      - name: Build DinoRecomp
+        run: |-
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.type }} -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang -DCMAKE_MAKE_PROGRAM=ninja -G Ninja -S . -B cmake-build
+          cmake --build cmake-build --config ${{ matrix.type }} --target DinosaurPlanetRecompiled -j $(nproc)
+      - name: Prepare Archive
+        run: |
+          mv cmake-build/DinosaurPlanetRecompiled DinosaurPlanetRecompiled
+          rm -rf assets/scss
+          tar -czf DinosaurPlanetRecompiled.tar.gz DinosaurPlanetRecompiled assets/ gamecontrollerdb.txt
+      - name: Archive DinoRecomp
+        uses: actions/upload-artifact@v4
+        with:
+          name: DinosaurPlanetRecompiled-${{ runner.os }}-${{ matrix.type }}
+          path: DinosaurPlanetRecompiled.tar.gz
+  # Windows
   build-windows:
     runs-on: windows-latest
     strategy:
