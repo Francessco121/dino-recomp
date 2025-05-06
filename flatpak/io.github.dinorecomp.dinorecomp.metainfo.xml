@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.dinorecomp.dinorecomp</id>
+  
+  <name>Dinosaur Planet: Recompiled</name>
+  <summary>Static recompilation of Dinosaur Planet for PC.</summary>
+  
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0+</project_license>
+  
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+    <control>touch</control>
+    <control>gamepad</control>
+  </supports>
+  
+  <description>
+    <p>
+      Dinosaur Planet: Recompiled is a project that uses N64: Recompiled to statically recompile Dinosaur Planet into a native port with many new features and enhancements. This project uses RT64 as the rendering engine to provide some of these enhancements.
+
+      The original game is required to run this project.
+
+      https://github.com/Francessco121/dino-recomp
+    </p>
+  </description>
+  
+  <launchable type="desktop-id">io.github.dinorecomp.dinorecomp.desktop</launchable>
+</component>

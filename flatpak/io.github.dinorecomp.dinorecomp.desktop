@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Dinosaur Planet: Recompiled
+Exec=/app/bin/DinosaurPlanetRecompiled
+Type=Application
+Icon=io.github.dinorecomp.dinorecomp
+Categories=Game;
+Comment=Static recompilation of Dinosaur Planet for PC.
+MimeType=x-scheme-handler/dinorecomp

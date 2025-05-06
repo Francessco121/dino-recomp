@@ -1,0 +1,56 @@
+{
+  "id": "io.github.dinorecomp.dinorecomp",
+  "runtime": "org.freedesktop.Platform",
+  "runtime-version": "23.08",
+  "sdk": "org.freedesktop.Sdk",
+  "sdk-extensions" : [ "org.freedesktop.Sdk.Extension.llvm18" ],
+  "finish-args": [
+    "--share=network",
+    "--socket=wayland",
+    "--socket=fallback-x11",
+    "--socket=pulseaudio",
+    "--device=all",
+    "--filesystem=host",
+    "--filesystem=/media",
+    "--filesystem=/run/media",
+    "--filesystem=/mnt"
+  ],
+  "modules": [
+    {
+      "name": "DinosaurPlanetRecompiled",
+      "buildsystem": "simple",
+      "build-commands": [
+        "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang -DCMAKE_MAKE_PROGRAM=ninja -G Ninja -S lib/N64Recomp -B lib/N64Recomp/cmake-build",
+        "cmake --build lib/N64Recomp/cmake-build --config Release --target N64Recomp --parallel",
+        "cmake --build lib/N64Recomp/cmake-build --config Release --target RSPRecomp --parallel",
+        "cp lib/N64Recomp/cmake-build/N64Recomp N64Recomp",
+        "cp lib/N64Recomp/cmake-build/RSPRecomp RSPRecomp",
+        "./N64Recomp dino.toml",
+        "./RSPRecomp aspMain.toml",
+        "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang -DCMAKE_MAKE_PROGRAM=ninja -DPATCHES_C_COMPILER=clang -DPATCHES_LD=ld.lld -DRECOMP_FLATPAK=ON -G Ninja -S . -B cmake-build",
+        "cmake --build cmake-build --config Release --target DinosaurPlanetRecompiled --parallel",
+        "rm -rf assets/scss",
+        "mkdir -p /app/bin",
+        "cp cmake-build/DinosaurPlanetRecompiled /app/bin/DinosaurPlanetRecompiled",
+        "cp gamecontrollerdb.txt /app/bin/gamecontrollerdb.txt",
+        "cp -R assets /app/bin/assets",
+        "install -Dm644 icons/32.png /app/share/icons/hicolor/32x32/apps/${FLATPAK_ID}.png",
+        "install -Dm644 flatpak/io.github.dinorecomp.dinorecomp.metainfo.xml /app/share/metainfo/${FLATPAK_ID}.metainfo.xml",
+        "install -Dm644 flatpak/io.github.dinorecomp.dinorecomp.desktop /app/share/applications/${FLATPAK_ID}.desktop"
+      ],
+      "sources": [
+        {
+          "type": "dir",
+          "path": "../"
+        }
+      ],
+      "build-options": {
+        "append-path": "/usr/lib/sdk/llvm18/bin",
+        "prepend-ld-library-path": "/usr/lib/sdk/llvm18/lib",
+        "build-args": [
+          "--share=network"
+        ]
+      }
+    }
+  ]
+}
