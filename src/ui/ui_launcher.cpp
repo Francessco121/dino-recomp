@@ -63,8 +63,8 @@ public:
         rom_valid = recomp::is_rom_valid(supported_games[0].game_id);
     }
     ~LauncherMenu() override {
-        recompui::release_image(background_filepath);
-        recompui::release_image(logo_filepath);
+        recompui::release_image(background_filepath.string());
+        recompui::release_image(logo_filepath.string());
     }
     void load_document() override {
         recompui::queue_image_from_file(background_filepath);

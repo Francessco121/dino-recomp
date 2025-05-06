@@ -15,6 +15,7 @@
 #include "RmlUi/Core/RenderInterfaceCompatibility.h"
 
 #include "ui_renderer.h"
+#include "runtime/support.hpp"
 
 #include "InterfaceVS.hlsl.spirv.h"
 #include "InterfacePS.hlsl.spirv.h"
@@ -419,6 +420,11 @@ public:
         flush_image_from_bytes_queue();
 
         auto it = image_from_bytes_map.find(source);
+        // TODO: On Windows, sources coming from img tags will be relative to the assets directory but on Linux they will have assets prepended
+        // If we can't find the image, try prepending the asset dir path
+        if (it == image_from_bytes_map.end()) {
+            it = image_from_bytes_map.find(dino::runtime::get_asset_path(source.c_str()).string());
+        }
         if (it == image_from_bytes_map.end()) {
             // Return a transparent texture if the image can't be found.
             printf("Texture not found: %s\n", source.c_str());
