@@ -1,3 +1,4 @@
+#include "ultramodern/config.hpp"
 #include "ultramodern/ultramodern.hpp"
 #include "ultramodern/error_handling.hpp"
 #include "librecomp/helpers.hpp"
@@ -15,6 +16,35 @@ extern "C" void recomp_get_window_resolution(uint8_t* rdram, recomp_context* ctx
 
     MEM_W(0, width_out) = (u32)width;
     MEM_W(0, height_out) = (u32)height;
+}
+
+extern "C" void recomp_get_aspect_ratio(uint8_t* rdram, recomp_context* ctx) {
+    int ar = static_cast<int>(ultramodern::renderer::get_graphics_config().ar_option);
+
+    _return(ctx, ar);
+}
+
+extern "C" void recomp_get_hud_ratio(uint8_t* rdram, recomp_context* ctx) {
+    int hr = static_cast<int>(ultramodern::renderer::get_graphics_config().hr_option);
+
+    _return(ctx, hr);
+}
+
+extern "C" void recomp_get_refresh_rate(uint8_t* rdram, recomp_context* ctx) {
+    ultramodern::renderer::RefreshRate rr = ultramodern::renderer::get_graphics_config().rr_option;
+
+    switch (rr) {
+        case ultramodern::renderer::RefreshRate::Display:
+            _return<int>(ctx, ultramodern::get_display_refresh_rate());
+            break;
+        case ultramodern::renderer::RefreshRate::Manual:
+            _return<int>(ctx, ultramodern::renderer::get_graphics_config().rr_manual_value);
+            break;
+        case ultramodern::renderer::RefreshRate::Original:
+        default:
+            _return<int>(ctx, 30);
+            break;
+    }
 }
 
 extern "C" void recomp_error_message_box(uint8_t* rdram, recomp_context* ctx) {

@@ -63,3 +63,7 @@ free_recomp = 0x8F000148;
 recomp_alloc = 0x8F00014C;
 recomp_free = 0x8F000150;
 recomp_run_ui_callbacks = 0x8F000154;
+recomp_get_window_resolution = 0x8F000158;
+recomp_get_aspect_ratio = 0x8F00015C;
+recomp_get_hud_ratio = 0x8F000160;
+recomp_get_refresh_rate = 0x8F000164;
