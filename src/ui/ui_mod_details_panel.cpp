@@ -48,7 +48,8 @@ ModDetailsPanel::ModDetailsPanel(Element *parent) : Element(parent) {
     {
         authors_label = context.create_element<Label>(body_container, LabelStyle::Normal);
         authors_label->set_margin_bottom(16.0f);
-        description_label = context.create_element<Label>(body_container, LabelStyle::Normal);
+        description_label = context.create_element<Label>(body_container, LabelStyle::Small);
+        description_label->set_margin_bottom(16.0f);
     }
     
     buttons_container = context.create_element<Container>(this, FlexDirection::Row, JustifyContent::SpaceAround);
