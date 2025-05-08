@@ -1,5 +1,6 @@
 #include "dbgui.h"
 #include "patches.h"
+#include "recomp_funcs.h"
 
 #include "sys/camera.h"
 #include "sys/gfx/gx.h"
@@ -191,9 +192,48 @@ static void video_tab() {
     }
 }
 
-static void enhancements_tab() {
+static void hacks_tab() {
     dbgui_checkbox("Disable culling (widescreen support)", &recompCullingDisabled);
     dbgui_checkbox("30 FPS SnowBike race", &snowbike30FPS);
+}
+
+static void recomp_tab() {
+    u32 width, height;
+    recomp_get_window_resolution(&width, &height);
+
+    dbgui_textf("Recomp window resolution: %ux%u", width, height);
+
+    const char *recompAspectStr = "Unknown";
+    u32 recompAspect = recomp_get_aspect_ratio();
+    switch (recompAspect) {
+        case RECOMP_ASPECT_ORIGINAL:
+            recompAspectStr = "Original";
+            break;
+        case RECOMP_ASPECT_EXPAND:
+            recompAspectStr = "Expand";
+            break;
+        case RECOMP_ASPECT_MANUAL:
+            recompAspectStr = "Manual";
+            break;
+    }
+    dbgui_textf("Recomp aspect ratio: %s (%u)", recompAspectStr, recompAspect);
+
+    const char *recompHUDStr = "Unknown";
+    u32 recompHUD = recomp_get_hud_ratio();
+    switch (recompHUD) {
+        case RECOMP_HUD_ORIGINAL:
+            recompHUDStr = "Original";
+            break;
+        case RECOMP_HUD_CLAMP16X9:
+            recompHUDStr = "Clamp16x9";
+            break;
+        case RECOMP_HUD_FULL:
+            recompHUDStr = "Full";
+            break;
+    }
+    dbgui_textf("Recomp HUD ratio: %s (%u)", recompHUDStr, recompHUD);
+
+    dbgui_textf("Recomp refresh rate: %d", recomp_get_refresh_rate());
 }
 
 void dbgui_graphics_window(s32 *open) {
@@ -214,8 +254,13 @@ void dbgui_graphics_window(s32 *open) {
                 dbgui_end_tab_item();
             }
 
-            if (dbgui_begin_tab_item("Enhancements", NULL)) {
-                enhancements_tab();
+            if (dbgui_begin_tab_item("Hacks", NULL)) {
+                hacks_tab();
+                dbgui_end_tab_item();
+            }
+
+            if (dbgui_begin_tab_item("Recomp", NULL)) {
+                recomp_tab();
                 dbgui_end_tab_item();
             }
             
