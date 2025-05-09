@@ -1,10 +1,11 @@
-#include "culling.h"
 #include "recomp_funcs.h"
 
 #include "PR/ultratypes.h"
 
-s32 recompCullingDisabled = TRUE;
+f32 recomp_get_frustum_aspect_hack() {
+    f32 recompAspectRatio = recomp_get_aspect_ratio();
 
-s32 recomp_disable_culling() {
-    return recomp_get_aspect_ratio() != RECOMP_ASPECT_ORIGINAL && recompCullingDisabled;
+    // The game usually takes the FOV and divides it by two when creating the culling frustum for 4:3,
+    // so we can use some ratios to plug in any aspect ratio.
+    return 2.0f * ((4.0f / 3.0f) / recompAspectRatio);
 }

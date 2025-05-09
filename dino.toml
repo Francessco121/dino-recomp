@@ -30,39 +30,18 @@ renamed = [
     "strncasecmp",
 ]
 
-# Conditionally disable culling (widescreen support)
+# Patch culling frustum calculation to support the dynamic recomp aspect ratio
 [[patches.hook]]
-before_vram = 0x80045304
-func = "func_800451A0"
-text = """{
+before_vram = 0x80044C4C
+func = "func_80044BEC"
+text = """float _aspectHack;
+    {
         recomp_context savedCtx = *ctx;
-        recomp_disable_culling(rdram, ctx);
-        int disableCulling = ctx->r2;
+        recomp_get_frustum_aspect_hack(rdram, ctx);
+        _aspectHack = ctx->f0.fl;
         *ctx = savedCtx;
-        if (disableCulling) { ctx->r2 = 1; }
-    }"""
-
-[[patches.hook]]
-before_vram = 0x8004584C
-func = "func_800456AC"
-text = """{
-        recomp_context savedCtx = *ctx;
-        recomp_disable_culling(rdram, ctx);
-        int disableCulling = ctx->r2;
-        *ctx = savedCtx;
-        if (disableCulling) { ctx->r2 = 1; goto L_80045854; }
-    }"""
-
-[[patches.hook]]
-before_vram = 0x80043C90
-func = "func_80043950"
-text = """{
-        recomp_context savedCtx = *ctx;
-        recomp_disable_culling(rdram, ctx);
-        int disableCulling = ctx->r2;
-        *ctx = savedCtx;
-        if (disableCulling) { ctx->r17 = 1; }
-    }"""
+    }
+    ctx->f6.fl = 1.0f / _aspectHack;"""
 
 # Hook game_tick
 [[patches.hook]]

@@ -9,7 +9,6 @@
 #include "types.h"
 #include "variables.h"
 
-#include "../culling.h"
 #include "../gfx_patches.h"
 
 extern f32 gFovY;
@@ -66,7 +65,6 @@ static void general_tab() {
 }
 
 static void camera_tab() {
-    dbgui_textf("gFovY: %f", gFovY);
     dbgui_textf("gFovY: %f", gFovY);
     dbgui_textf("gAspect: %f", gAspect);
     dbgui_textf("gNearPlane: %f", gNearPlane);
@@ -193,7 +191,6 @@ static void video_tab() {
 }
 
 static void hacks_tab() {
-    dbgui_checkbox("Disable culling (widescreen support)", &recompCullingDisabled);
     dbgui_checkbox("30 FPS SnowBike race", &snowbike30FPS);
 }
 
@@ -204,7 +201,7 @@ static void recomp_tab() {
     dbgui_textf("Recomp window resolution: %ux%u", width, height);
 
     const char *recompAspectStr = "Unknown";
-    u32 recompAspect = recomp_get_aspect_ratio();
+    u32 recompAspect = recomp_get_aspect_ratio_mode();
     switch (recompAspect) {
         case RECOMP_ASPECT_ORIGINAL:
             recompAspectStr = "Original";
@@ -219,7 +216,7 @@ static void recomp_tab() {
     dbgui_textf("Recomp aspect ratio: %s (%u)", recompAspectStr, recompAspect);
 
     const char *recompHUDStr = "Unknown";
-    u32 recompHUD = recomp_get_hud_ratio();
+    u32 recompHUD = recomp_get_hud_ratio_mode();
     switch (recompHUD) {
         case RECOMP_HUD_ORIGINAL:
             recompHUDStr = "Original";

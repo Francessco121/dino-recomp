@@ -19,6 +19,7 @@ typedef enum {
 } RecompHUDRatio;
 
 DECLARE_FUNC(void, recomp_get_window_resolution, u32 *width, u32 *height);
-DECLARE_FUNC(RecompAspectRatio, recomp_get_aspect_ratio);
-DECLARE_FUNC(RecompHUDRatio, recomp_get_hud_ratio);
+DECLARE_FUNC(RecompAspectRatio, recomp_get_aspect_ratio_mode);
+DECLARE_FUNC(f32, recomp_get_aspect_ratio);
+DECLARE_FUNC(RecompHUDRatio, recomp_get_hud_ratio_mode);
 DECLARE_FUNC(int, recomp_get_refresh_rate);

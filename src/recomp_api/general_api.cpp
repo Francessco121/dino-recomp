@@ -18,13 +18,30 @@ extern "C" void recomp_get_window_resolution(uint8_t* rdram, recomp_context* ctx
     MEM_W(0, height_out) = (u32)height;
 }
 
-extern "C" void recomp_get_aspect_ratio(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void recomp_get_aspect_ratio_mode(uint8_t* rdram, recomp_context* ctx) {
     int ar = static_cast<int>(ultramodern::renderer::get_graphics_config().ar_option);
 
     _return(ctx, ar);
 }
 
-extern "C" void recomp_get_hud_ratio(uint8_t* rdram, recomp_context* ctx) {
+extern "C" void recomp_get_aspect_ratio(uint8_t* rdram, recomp_context* ctx) {
+    ultramodern::renderer::AspectRatio ar = ultramodern::renderer::get_graphics_config().ar_option;
+
+    switch (ar) {
+        case ultramodern::renderer::AspectRatio::Original:
+        default:
+            _return<float>(ctx, 4.0f / 3.0f);
+            break;
+        case ultramodern::renderer::AspectRatio::Expand:
+            int width, height;
+            recompui::get_window_size(width, height);
+
+            _return<float>(ctx, std::max((float)width / (float)height, (4.0f / 3.0f)));
+            break;
+    }
+}
+
+extern "C" void recomp_get_hud_ratio_mode(uint8_t* rdram, recomp_context* ctx) {
     int hr = static_cast<int>(ultramodern::renderer::get_graphics_config().hr_option);
 
     _return(ctx, hr);
@@ -87,6 +104,10 @@ extern "C" void recomp_time_us(uint8_t* rdram, recomp_context* ctx) {
 namespace dino::recomp_api {
     void register_general_exports() {
         REGISTER_EXPORT(recomp_get_window_resolution);
+        REGISTER_EXPORT(recomp_get_aspect_ratio_mode);
+        REGISTER_EXPORT(recomp_get_aspect_ratio);
+        REGISTER_EXPORT(recomp_get_hud_ratio_mode);
+        REGISTER_EXPORT(recomp_get_refresh_rate);
         REGISTER_EXPORT(recomp_error_message_box);
         REGISTER_EXPORT(recomp_exit_with_error);
         REGISTER_EXPORT(recomp_exit);
