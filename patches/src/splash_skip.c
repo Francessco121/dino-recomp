@@ -1,7 +1,6 @@
 #include "patches.h"
 
 #include "PR/os.h"
-#include "PR/sched.h" // TODO: should be in sys/controller.h
 #include "sys/controller.h"
 
 static s32 should_skip_splash() {
