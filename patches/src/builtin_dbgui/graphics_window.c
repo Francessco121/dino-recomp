@@ -32,12 +32,15 @@ extern Triangle *gMainPol[2];
 extern Triangle *gCurPol;
 extern u8 gFrameBufIdx;
 
+extern s16 gRenderListLength;
+
 static s32 gCurGfx_overflowed = FALSE;
 static s32 gCurMtx_overflowed = FALSE;
 static s32 gCurVtx_overflowed = FALSE;
 static s32 gCurPol_overflowed = FALSE;
 
 static void general_tab() {
+    dbgui_textf("gRenderListLength: %d", gRenderListLength);
     dbgui_textf("gWorldX: %f", gWorldX);
     dbgui_textf("gWorldZ: %f", gWorldZ);
 
@@ -213,7 +216,8 @@ static void recomp_tab() {
             recompAspectStr = "Manual";
             break;
     }
-    dbgui_textf("Recomp aspect ratio: %s (%u)", recompAspectStr, recompAspect);
+    dbgui_textf("Recomp aspect ratio mode: %s (%u)", recompAspectStr, recompAspect);
+    dbgui_textf("Recomp aspect ratio: %f", recomp_get_aspect_ratio());
 
     const char *recompHUDStr = "Unknown";
     u32 recompHUD = recomp_get_hud_ratio_mode();
@@ -228,7 +232,7 @@ static void recomp_tab() {
             recompHUDStr = "Full";
             break;
     }
-    dbgui_textf("Recomp HUD ratio: %s (%u)", recompHUDStr, recompHUD);
+    dbgui_textf("Recomp HUD ratio mode: %s (%u)", recompHUDStr, recompHUD);
 
     dbgui_textf("Recomp refresh rate: %d", recomp_get_refresh_rate());
 }
