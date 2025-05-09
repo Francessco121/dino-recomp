@@ -3,7 +3,6 @@
 #include "patches.h"
 
 #include "sys/gfx/gx.h"
-#include "sys/memory.h"
 #include "types.h"
 
 s32 snowbike30FPS = FALSE;
@@ -72,25 +71,31 @@ extern Vertex *gCurVtx;
 extern Triangle *gMainPol[2];
 extern Triangle *gCurPol;
 
+// @recomp: Move graphics buffers into patch memory to save heap memory
+static Gfx recompMainGfx[2][RECOMP_MAIN_GFX_BUF_SIZE / sizeof(Gfx)]; 
+static Mtx recompMainMtx[2][RECOMP_MAIN_MTX_BUF_SIZE / sizeof(Mtx)]; 
+static Vertex recompMainVtx[2][RECOMP_MAIN_VTX_BUF_SIZE / sizeof(Vertex)]; 
+static Triangle recompMainPol[2][RECOMP_MAIN_POL_BUF_SIZE / sizeof(Triangle)]; 
+
 RECOMP_PATCH void alloc_frame_buffers(void) {
     // @recomp: Use larger buffer sizes
 
     // in default.dol these have names as well.
     // alloc graphic display list command buffers. ("main:gfx" in default.dol)
-    gMainGfx[0] = malloc(RECOMP_MAIN_GFX_BUF_SIZE * 2, ALLOC_TAG_LISTS_COL, NULL);
-    gMainGfx[1] = (Gfx*)((u32)gMainGfx[0] + RECOMP_MAIN_GFX_BUF_SIZE);
+    gMainGfx[0] = recompMainGfx[0];
+    gMainGfx[1] = recompMainGfx[1];
 
     // matrix buffers ("main:mtx")
-    gMainMtx[0] = malloc(RECOMP_MAIN_MTX_BUF_SIZE * 2, ALLOC_TAG_LISTS_COL, NULL);
-    gMainMtx[1] = (Mtx*)((u32)gMainMtx[0] + RECOMP_MAIN_MTX_BUF_SIZE);
+    gMainMtx[0] = recompMainMtx[0];
+    gMainMtx[1] = recompMainMtx[1];
 
     // polygon buffers? ("main:pol")
-    gMainPol[0] = malloc(RECOMP_MAIN_POL_BUF_SIZE * 2, ALLOC_TAG_LISTS_COL, NULL);
-    gMainPol[1] = (Triangle*)((u32)gMainPol[0] + RECOMP_MAIN_POL_BUF_SIZE);
+    gMainPol[0] = recompMainPol[0];
+    gMainPol[1] = recompMainPol[1];
 
     // vertex buffers ("main:vtx")
-    gMainVtx[0] = malloc(RECOMP_MAIN_VTX_BUF_SIZE * 2, ALLOC_TAG_LISTS_COL, NULL);
-    gMainVtx[1] = (Vertex*)((u32)gMainVtx[0] + RECOMP_MAIN_VTX_BUF_SIZE);
+    gMainVtx[0] = recompMainVtx[0];
+    gMainVtx[1] = recompMainVtx[1];
 }
 
 RECOMP_PATCH void func_8005DA00(u32 param1) {
