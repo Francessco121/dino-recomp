@@ -7,6 +7,8 @@ extern s32 gCurRSPTaskCounter;
 extern s32 gCurRDPTaskCounter;
 extern u64 gRetraceCounter64;
 
+extern void __scHandleRSP(OSSched *sc);
+
 RECOMP_PATCH void __scHandleRetrace(OSSched *sc) {
     OSScTask *rspTask = NULL;
     OSScClient *client;
@@ -28,6 +30,11 @@ RECOMP_PATCH void __scHandleRetrace(OSSched *sc) {
     // add some prints to at least leave in some insight.
     if ((gCurRSPTaskCounter > 10) && (sc->curRSPTask)) {
         recomp_eprintf("RSP stall! gCurRSPTaskCounter=%d\n", gCurRSPTaskCounter);
+        // @recomp:
+        // HACK: Sometimes opening the recomp controls screen lags hard enough to "stall" the RSP. Running
+        // __scHandleRSP here seems to avoid the hardlock in *most cases*. This is not a perfect fix! 
+        recomp_eprintf("Running __scHandleRSP to avoid hardlock\n");
+        __scHandleRSP(sc);
     }
 
     if ((gCurRDPTaskCounter > 10) && (sc->curRDPTask)) {
