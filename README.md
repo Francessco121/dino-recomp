@@ -1,9 +1,17 @@
 # Dinosaur Planet: Recompiled
-Dinosaur Planet: Recompiled is a static recompilation/native port of [Dinosaur Planet](https://www.rarewiki.com/wiki/Dinosaur_Planet) using the [N64: Recompiled](https://github.com/Mr-Wiseguy/N64Recomp) project.
+Dinosaur Planet: Recompiled is a project that uses [N64: Recompiled](https://github.com/Mr-Wiseguy/N64Recomp) to **statically recompile** [Dinosaur Planet](https://www.rarewiki.com/wiki/Dinosaur_Planet) into a native port with enhancements and extensive mod support. This project uses [RT64](https://github.com/rt64/rt64) as the rendering engine to provide graphical enhancements.
 
-This project **does not use emulation**. Instead, game code is ran natively on your system with graphics rendered by [RT64](https://github.com/rt64/rt64).
+### [Check out the latest release here](https://github.com/Francessco121/dino-recomp/releases).
 
 ### **This repository and its releases do not contain game assets. The original game is required to build or run this project.**
+
+## Table of Contents
+* [System Requirements](#system-requirements)
+* [Known Issues](#known-issues)
+* [FAQ](#faq)
+* [Modding](#modding)
+* [Building](#building)
+* [Credits](#credits)
 
 ## System Requirements
 A GPU supporting Direct3D 12.0 (Shader Model 6) or Vulkan 1.2 is required to run this project. The oldest GPUs that should be supported for each vendor are:
@@ -32,20 +40,28 @@ If you would like to see this recomp improve, consider contributing to the decom
 - Windows: `%LOCALAPPDATA%\DinoPlanetRecompiled\saves`
 - Linux: `~/.config/DinoPlanetRecompiled/saves`
 
-## Modding
-N64 recomp modding (`.nrm`) is fully supported by this project.
+#### How do I choose a different ROM?
+**You don't.** This project is **only** a port of the beta ROM released by Forest of Illusion on Feb. 20, 2021. **It is not an emulator and it cannot run any arbitrary ROM.**
 
-### Installing mods
+If you are looking for game patches commonly used when playing Dinosaur Planet in an emulator or on console, those are instead provided by recomp mods. **You cannot use a patched ROM with this project**. Recomp mods recreating these patches are developed outside of this project and can be downloaded on their respective project pages. These are [installed like any other recomp mod](#modding).
+
+#### Can you run this project as a portable application?
+Yes, if you place a file named `portable.txt` in the same folder as the executable then this project will run in portable mode. In portable mode, the save files, config files, and mods are placed in the same folder as the executable.
+
+## Modding
+Install community made mods and texture packs! Mods can change any part of the game, including adding completely new features and content. You can install mods by either dragging the mod files onto the game window before starting the game, by clicking the **Install Mods** button in the mod menu, or by placing the `.nrm` file [into the mods directory](#where-are-mods-installed-to). Mods can be toggled in the mod menu, and some mods can be configured there as well.
+
 > [!WARNING]
 > Mods do not run in a sandbox! Please only install mods from trusted sources.
 
-Mods can be installed by placing their `.nrm` files in:
+#### Where are mods installed to?
 - Windows: `%LOCALAPPDATA%\DinoPlanetRecompiled\mods`
 - Linux: `~/.config/DinoPlanetRecompiled/mods`
 
-### Creating mods
+#### Creating mods
 If you would like to create your own mods, please see the following resources:
 - [N64 Recomp Modding documentation](https://hackmd.io/fMDiGEJ9TBSjomuZZOgzNg)
+- [RT64 Texture Pack documentation](https://github.com/rt64/rt64/blob/main/TEXTURE-PACKS.md)
 - [Dinosaur Planet: Recompiled Mod Template](https://github.com/Francessco121/dino-recomp-mod-template)
 - [Dinosaur Planet: Recompiled Mod API](https://github.com/Francessco121/dino-recomp-mod-api)
 - [Example mods](https://github.com/Francessco121/dino-recomp-mods)
@@ -65,4 +81,3 @@ For developers, please see [BUILDING.md](./BUILDING.md) for build and developmen
 * [FreeType](https://freetype.org/) for font rendering, used by RmlUi  .
 * [moodycamel::ConcurrentQueue](https://github.com/cameron314/concurrentqueue) for semaphores and fast, lock-free MPMC queues.
 * [Gamepad Motion Helpers](https://github.com/JibbSmart/GamepadMotionHelpers) for sensor fusion and calibration algorithms to implement gyro aiming.
-* [Ares emulator](https://github.com/ares-emulator/ares) for RSP vector instruction reference implementations, used in RSP recompilation.
