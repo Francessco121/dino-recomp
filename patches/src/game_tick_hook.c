@@ -33,7 +33,7 @@ static void dbgui() {
         recomp_on_dbgui();
 
         if (dbgui_begin_main_menu_bar()) {
-            dbgui_text("| Press ` to close debug UI.");
+            dbgui_text("| Press ` or F9 to close debug UI.");
             dbgui_end_main_menu_bar();
         }
     }

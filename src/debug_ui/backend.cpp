@@ -99,7 +99,8 @@ void begin() {
         while (event_queue.try_dequeue(event)) {
             if (dino::config::get_debug_ui_enabled()) {
                 if (event.type == SDL_KEYDOWN && 
-                        event.key.keysym.scancode == SDL_Scancode::SDL_SCANCODE_GRAVE &&
+                        (event.key.keysym.scancode == SDL_Scancode::SDL_SCANCODE_GRAVE || 
+                            event.key.keysym.scancode == SDL_Scancode::SDL_SCANCODE_F9) &&
                         !event.key.repeat) {
                     b_is_open = !b_is_open;
                 }
@@ -117,7 +118,8 @@ void begin() {
     SDL_Event event{};
     while (event_queue.try_dequeue(event)) {
         if (event.type == SDL_KEYDOWN && 
-                event.key.keysym.scancode == SDL_Scancode::SDL_SCANCODE_GRAVE &&
+                (event.key.keysym.scancode == SDL_Scancode::SDL_SCANCODE_GRAVE || 
+                    event.key.keysym.scancode == SDL_Scancode::SDL_SCANCODE_F9) &&
                 !event.key.repeat) {
             b_is_open = !b_is_open;
         }

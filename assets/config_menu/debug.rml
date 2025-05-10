@@ -99,10 +99,7 @@
                 <!-- Descriptions -->
                 <div class="config__wrapper">
                     <p data-if="cur_config_index == 0">
-                        Enables use of the ImGui debug UI. When enabled, this UI can be toggled in-game with the <b>`</b>/<b>~</b> (backquote/tilde) key.
-                        <br/>
-                        <br/>
-                        <b>Note for non-US keyboard users</b>: this will probably be the upper-left most key (under escape).
+                        Enables use of the ImGui debug UI. When enabled, this UI can be toggled in-game with the <b>F9</b> or <b>`</b>/<b>~</b> (backquote/tilde) key.
                     </p>
                     <p data-if="cur_config_index == 1">
                         Whether debug messages from the game should be printed to stdout. 
