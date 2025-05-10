@@ -53,7 +53,7 @@ void text(const char *text) {
     ImGui::Text("%s", text);
 }
 
-void label_text(const char *label, char *text) {
+void label_text(const char *label, const char *text) {
     assert_is_open();
     ImGui::LabelText(label, "%s", text);
 }
@@ -63,7 +63,17 @@ void same_line() {
     ImGui::SameLine();
 }
 
-bool begin_combo(const char *label, char *preview) {
+void new_line() {
+    assert_is_open();
+    ImGui::NewLine();
+}
+
+void separator() {
+    assert_is_open();
+    ImGui::Separator();
+}
+
+bool begin_combo(const char *label, const char *preview) {
     assert_is_open();
     return ImGui::BeginCombo(label, preview);
 }
@@ -140,17 +150,32 @@ bool checkbox(const char *label, bool *v) {
 
 bool input_int(const char *label, int *v) {
     assert_is_open();
-    return ImGui::InputInt(label, v, 1, 100, ImGuiInputTextFlags_EnterReturnsTrue);
+    return ImGui::InputInt(label, v);
+}
+
+bool input_int_ext(const char *label, int *v, int step, int step_fast, ImGuiInputTextFlags flags) {
+    assert_is_open();
+    return ImGui::InputInt(label, v, step, step_fast, flags);
 }
 
 bool input_float(const char *label, float *v) {
     assert_is_open();
-    return ImGui::InputFloat(label, v, 0, 0, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+    return ImGui::InputFloat(label, v);
 }
 
-bool input_text(const char *label, char *buf, int buf_size) {
+bool input_float_ext(const char *label, float *v, float step, float step_fast, const char *format, ImGuiInputTextFlags flags) {
+    assert_is_open();
+    return ImGui::InputFloat(label, v, step, step_fast, format, flags);
+}
+
+bool input_text(const char *label, char *buf, size_t buf_size) {
     assert_is_open();
     return ImGui::InputText(label, buf, buf_size);
+}
+
+bool input_text_ext(const char *label, char *buf, size_t buf_size, ImGuiInputTextFlags flags) {
+    assert_is_open();
+    return ImGui::InputText(label, buf, buf_size, flags);
 }
 
 void set_next_item_width(float width) {

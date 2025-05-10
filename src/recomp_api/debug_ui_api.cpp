@@ -80,6 +80,14 @@ extern "C" void dbgui_same_line(uint8_t* rdram, recomp_context* ctx) {
     dino::debug_ui::same_line();
 }
 
+extern "C" void dbgui_new_line(uint8_t* rdram, recomp_context* ctx) {
+    dino::debug_ui::new_line();
+}
+
+extern "C" void dbgui_separator(uint8_t* rdram, recomp_context* ctx) {
+    dino::debug_ui::separator();
+}
+
 extern "C" void dbgui_begin_combo(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
     PTR(char) preview_ptr = _arg<1, PTR(char)>(rdram, ctx);
@@ -249,6 +257,28 @@ extern "C" void dbgui_input_int(uint8_t* rdram, recomp_context* ctx) {
     _return<s32>(ctx, pressed);
 }
 
+extern "C" void dbgui_input_int_ext(uint8_t* rdram, recomp_context* ctx) {
+    PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
+    PTR(s32) value_ptr = _arg<1, PTR(s32)>(rdram, ctx);
+    PTR(void) options_ptr = _arg<2, PTR(void)>(rdram, ctx);
+
+    char *label = dino::recomp_api::copy_rdram_str(label_ptr, rdram, ctx);
+
+    s32 value = MEM_W(0, (gpr)value_ptr);
+
+    int step = MEM_W(0x0, options_ptr);
+    int step_fast = MEM_W(0x4, options_ptr);
+    int flags = MEM_W(0x8, options_ptr);
+
+    bool pressed = dino::debug_ui::input_int_ext(label, &value, step, step_fast, flags);
+
+    MEM_W(0, (gpr)value_ptr) = value;
+
+    free(label);
+
+    _return<s32>(ctx, pressed);
+}
+
 extern "C" void dbgui_input_float(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
     float *value_ptr = _arg<1, float*>(rdram, ctx);
@@ -262,12 +292,36 @@ extern "C" void dbgui_input_float(uint8_t* rdram, recomp_context* ctx) {
     _return<s32>(ctx, pressed);
 }
 
+extern "C" void dbgui_input_float_ext(uint8_t* rdram, recomp_context* ctx) {
+    PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
+    float *value_ptr = _arg<1, float*>(rdram, ctx);
+    PTR(void) options_ptr = _arg<2, PTR(void)>(rdram, ctx);
+
+    char *label = dino::recomp_api::copy_rdram_str(label_ptr, rdram, ctx);
+
+    float step = MEM_F32(0x0, options_ptr);
+    float step_fast = MEM_F32(0x4, options_ptr);
+    PTR(char) format_ptr = MEM_W(0x8, options_ptr);
+    int flags = MEM_W(0xC, options_ptr);
+
+    char *format = format_ptr == NULL ? nullptr : dino::recomp_api::copy_rdram_str(format_ptr, rdram, ctx);
+
+    bool pressed = dino::debug_ui::input_float_ext(label, value_ptr, step, step_fast, format, flags);
+
+    free(label);
+    if (format != nullptr) {
+        free(format);
+    }
+
+    _return<s32>(ctx, pressed);
+}
+
 static std::vector<char> text_input_buffer{};
 
 extern "C" void dbgui_input_text(uint8_t* rdram, recomp_context* ctx) {
     PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
     PTR(char) buf_ptr = _arg<1, PTR(char)>(rdram, ctx);
-    s32 buf_size = _arg<2, s32>(rdram, ctx);
+    u32 buf_size = _arg<2, u32>(rdram, ctx);
 
     char *label = dino::recomp_api::copy_rdram_str(label_ptr, rdram, ctx);
 
@@ -277,6 +331,32 @@ extern "C" void dbgui_input_text(uint8_t* rdram, recomp_context* ctx) {
     }
 
     bool changed = dino::debug_ui::input_text(label, text_input_buffer.data(), buf_size);
+
+    if (changed) {
+        for (size_t i = 0; i < buf_size; i++) {
+            MEM_B(i, (gpr)buf_ptr) = text_input_buffer.data()[i];
+        }
+    }
+
+    free(label);
+
+    _return<s32>(ctx, changed);
+}
+
+extern "C" void dbgui_input_text_ext(uint8_t* rdram, recomp_context* ctx) {
+    PTR(char) label_ptr = _arg<0, PTR(char)>(rdram, ctx);
+    PTR(char) buf_ptr = _arg<1, PTR(char)>(rdram, ctx);
+    u32 buf_size = _arg<2, u32>(rdram, ctx);
+    u32 flags = _arg<3, u32>(rdram, ctx);
+
+    char *label = dino::recomp_api::copy_rdram_str(label_ptr, rdram, ctx);
+
+    text_input_buffer.resize(buf_size);
+    for (size_t i = 0; i < buf_size; i++) {
+        text_input_buffer.data()[i] = MEM_B(i, (gpr)buf_ptr);
+    }
+
+    bool changed = dino::debug_ui::input_text_ext(label, text_input_buffer.data(), buf_size, flags);
 
     if (changed) {
         for (size_t i = 0; i < buf_size; i++) {
@@ -529,6 +609,8 @@ namespace dino::recomp_api {
         REGISTER_EXPORT(dbgui_text);
         REGISTER_EXPORT(dbgui_label_text);
         REGISTER_EXPORT(dbgui_same_line);
+        REGISTER_EXPORT(dbgui_new_line);
+        REGISTER_EXPORT(dbgui_separator);
         REGISTER_EXPORT(dbgui_begin_combo);
         REGISTER_EXPORT(dbgui_end_combo);
         REGISTER_EXPORT(dbgui_selectable);
@@ -545,8 +627,11 @@ namespace dino::recomp_api {
         REGISTER_EXPORT(dbgui_end_child);
         REGISTER_EXPORT(dbgui_checkbox);
         REGISTER_EXPORT(dbgui_input_int);
+        REGISTER_EXPORT(dbgui_input_int_ext);
         REGISTER_EXPORT(dbgui_input_float);
+        REGISTER_EXPORT(dbgui_input_float_ext);
         REGISTER_EXPORT(dbgui_input_text);
+        REGISTER_EXPORT(dbgui_input_text_ext);
         REGISTER_EXPORT(dbgui_set_next_item_width);
         REGISTER_EXPORT(dbgui_push_item_width);
         REGISTER_EXPORT(dbgui_pop_item_width);

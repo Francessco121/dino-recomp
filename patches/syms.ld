@@ -68,3 +68,7 @@ recomp_get_aspect_ratio_mode = 0x8F00015C;
 recomp_get_hud_ratio_mode = 0x8F000160;
 recomp_get_refresh_rate = 0x8F000164;
 recomp_get_aspect_ratio = 0x8F000168;
+dbgui_input_int_ext = 0x8F00016C;
+dbgui_input_float_ext = 0x8F000170;
+dbgui_same_line = 0x8F000174;
+dbgui_separator = 0x8F000178;

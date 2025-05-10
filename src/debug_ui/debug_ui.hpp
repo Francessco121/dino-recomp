@@ -16,11 +16,13 @@ bool begin(const char *name, bool *open);
 void end();
 
 void text(const char *text);
-void label_text(const char *label, char *text);
+void label_text(const char *label, const char *text);
 
 void same_line();
+void new_line();
+void separator();
 
-bool begin_combo(const char *label, char *preview);
+bool begin_combo(const char *label, const char *preview);
 void end_combo();
 bool selectable(const char *label, bool *selected);
 
@@ -43,8 +45,11 @@ void end_child();
 
 bool checkbox(const char *label, bool *v);
 bool input_int(const char *label, int *v);
+bool input_int_ext(const char *label, int *v, int step, int step_fast, ImGuiInputTextFlags flags);
 bool input_float(const char *label, float *v);
-bool input_text(const char *label, char *buf, int buf_size);
+bool input_float_ext(const char *label, float *v, float step, float step_fast, const char *format, ImGuiInputTextFlags flags);
+bool input_text(const char *label, char *buf, size_t buf_size);
+bool input_text_ext(const char *label, char *buf, size_t buf_size, ImGuiInputTextFlags flags);
 
 void set_next_item_width(float width);
 void push_item_width(float width);
