@@ -262,6 +262,7 @@
                                 data-style-nav-down="rr_option=='Manual' ? '#rr_manual_input' : '#apply_button'"
                             />
                             <label class="config-option__tab-label" for="rr_manual">Manual</label>
+                            <div class="config-option__details" data-if="rr_option!='Original'">Not recommended!</div>
                         </div>
                         <div data-if="rr_option=='Manual'" class="config-option__range-wrapper config-option__list">
                             <label class="config-option__range-label">{{rr_manual_value}}</label>
@@ -300,7 +301,7 @@
                         Note: <b>4x</b> downsampling quality at <b>Original 2x</b> resolution may cause performance issues on low end devices, as it will cause the game to render <i>at almost 4k internal resolution</i>.
                     </p>
                     <p data-if="cur_config_index == 4">
-                        <b>EXPERIMENTAL</b><br />Certain UI elements <i>may become stretched</i>. Some objects and effects <i>may disappear from view</i> on the left/right sides of the screen. 
+                        <b>EXPERIMENTAL</b><br />Certain UI elements <i>may become stretched</i>.
                         <br />
                         <br />
                         Sets the horizontal aspect ratio. <b>Original</b> uses the game's original 4:3 aspect ratio. <b>Expand</b> will adjust to match the game window's aspect ratio.
@@ -313,7 +314,7 @@
                     </p>
                     <p data-if="cur_config_index == 6">
                         <b>EXPERIMENTAL</b>
-                        <br/>Causes many graphical issues including <i>the camera jumping around</i>, various entities and effects <i>disappearing or teleporting</i> for a few frames, and more.
+                        <br/>Causes many graphical issues including <i>the camera jumping around/flickering</i>, various entities and effects <i>disappearing or teleporting</i> for a few frames, <i>intense lag in certain areas</i>, and more.
                         <br />
                         <br /><i>NOT RECOMMENDED</i>
                         <br />
