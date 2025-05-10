@@ -3,7 +3,6 @@
 #include <vector>
 
 #include "nfd.h"
-#include "runtime/support.hpp"
 #include "ultramodern/ultramodern.hpp"
 #include "librecomp/game.hpp"
 
@@ -31,7 +30,7 @@
 #include "runtime/rsp.hpp"
 #include "runtime/threads.hpp"
 
-const std::string version_string = "0.1.0";
+const std::string version_string = "0.1.1";
 
 extern "C" void recomp_entrypoint(uint8_t *rdram, recomp_context *ctx);
 gpr get_entrypoint_address();
