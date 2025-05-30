@@ -1,9 +1,44 @@
 #include "patches.h"
 
+#include "PR/ultratypes.h"
+#include "PR/gbi.h"
+#include "dlls/engine/63_gameselect.h"
+#include "sys/memory.h"
+#include "sys/fonts.h"
+#include "types.h"
+#include "functions.h"
+#include "dll.h"
+
 // @recomp: This file patches out the partial/conditional redraw behavior of the 
 //          menus as it bugs out RT64 when in higher resolutions and/or widescreen. 
 
-#include "recomp/dlls/engine/63_gameselect_internal.h"
+#include "recomp/dlls/engine/63_gameselect_recomp.h"
+
+extern GameSelectSubmenu sSubmenus[];
+extern GameTextChunk *sGameTextChunk;
+extern s8 sSubmenuIdx;
+extern s8 sSelectedSaveIdx;
+extern s8 sCopyDstIdx;
+
+extern GameSelectSaveInfo sSaveGameInfo[3];
+extern s8 sCopyDstOptions[2];
+extern s8 sExitTransitionTimer;
+extern s8 sRedrawFrames;
+extern s16 sSaveGameBoxX;
+extern s16 sSaveGameBoxY;
+extern char sSaveGameTimeStr[10];
+extern char sSpiritCountStr[2];
+extern char sSpellStoneCountStr[2];
+extern u8 sExitToGame;
+extern u8 sExitToMainMenu;
+extern Texture *sBackgroundTexture;
+extern Texture *sLogoTexture;
+extern Texture *sLogoShadowTexture;
+extern char sRecentTaskNumStrs[4][4];
+extern Texture *sSaveGameTextures[4];
+extern Texture *sSaveGameBgTextures[18];
+
+extern void dll_63_draw_save_game_box(Gfx **gdl, s32 x, s32 y, GameSelectSaveInfo *saveInfo);
 
 static char *recent_task_strs[3];
 static s32 num_recent_task_strs = 0;
@@ -137,7 +172,18 @@ RECOMP_PATCH void dll_63_draw(Gfx **gdl, Mtx **mtxs, Vertex **vtxs) {
 }
 
 
-#include "recomp/dlls/engine/64_entername_internal.h"
+#include "recomp/dlls/engine/64_entername_recomp.h"
+
+extern GameTextChunk *sGameTextChunk;
+
+extern Texture *sLetterBgBoxTexture;
+extern u8 sNumNameLetters;
+extern char sNameLetters[10];
+extern s8 sMainRedrawFrames;
+extern s8 sNameLettersRedrawFrames;
+extern Texture *sBackgroundTexture;
+
+extern void dll_64_draw_letters(Gfx **gdl, s32 x, s32 y);
 
 RECOMP_PATCH void dll_64_draw(Gfx **gdl, Mtx **mtxs, Vertex **vtxs) {
     s32 ulx;

@@ -2,13 +2,26 @@
 
 #include "PR/os.h"
 #include "sys/controller.h"
+#include "sys/main.h"
+#include "sys/menu.h"
+#include "dll.h"
 
 static s32 should_skip_splash() {
     return (get_button_presses(0) & A_BUTTON) != 0;
 }
 
 
-#include "recomp/dlls/engine/60_internal.h"
+#include "recomp/dlls/engine/60_recomp.h"
+
+extern u8 data_0;
+extern u8 data_4;
+
+extern f32 bss_0;
+extern s8 bss_4;
+extern s8 bss_6;
+extern f32 bss_8;
+extern f32 bss_C;
+extern f32 bss_10;
 
 RECOMP_PATCH s32 dll_60_update1() {
     if (data_4 == 1) {
@@ -60,7 +73,16 @@ RECOMP_PATCH s32 dll_60_update1() {
 }
 
 
-#include "recomp/dlls/engine/61_internal.h"
+#include "recomp/dlls/engine/61_recomp.h"
+
+extern s32 data_0;
+extern s8 data_4;
+
+extern s8 bss_0;
+extern s8 bss_1;
+extern s8 bss_2;
+extern f32 bss_4;
+extern f32 bss_8;
 
 RECOMP_PATCH s32 dll_61_update1() {
     s32 delay;

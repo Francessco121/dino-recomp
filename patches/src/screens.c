@@ -1,7 +1,17 @@
 #include "patches.h"
 #include "rt64_extended_gbi.h"
 
-#include "recomp/dlls/engine/20_screens_internal.h"
+#include "PR/gbi.h"
+#include "sys/memory.h"
+#include "sys/gfx/map.h"
+#include "functions.h"
+
+#include "recomp/dlls/engine/20_screens_recomp.h"
+
+extern s32 sLoadedScreenNo;
+extern s32 sRenderScreen;
+extern s32 sLoadedScreenByteLength;
+extern u16 *sLoadedScreen;
 
 RECOMP_PATCH void screens_draw(Gfx **gdl) {
     s32 width;
