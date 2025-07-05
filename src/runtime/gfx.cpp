@@ -1,5 +1,6 @@
 #include "gfx.hpp"
 
+#include "nfd.h"
 #include "ultramodern/ultramodern.hpp"
 
 #include "input/input.hpp"
@@ -25,6 +26,10 @@ ultramodern::gfx_callbacks_t::gfx_data_t create_gfx() {
     }
 
     fprintf(stdout, "SDL Video Driver: %s\n", SDL_GetCurrentVideoDriver());
+
+    // Initialize native file dialogs.
+    // Note: NFD suggests that it should only be initialized *after* SDL.
+    NFD_Init();
 
     return {};
 }
