@@ -62,6 +62,55 @@ jobs:
         with:
           name: DinosaurPlanetRecompiled-${{ runner.os }}-${{ matrix.type }}
           path: DinosaurPlanetRecompiled.tar.gz
+  # Linux (Flatpak)
+  build-linux-flatpak:
+    runs-on: ubuntu-latest
+    env:
+      FLATPAK_ID: io.github.francessco121.dino_recomp
+      FREEDESKTOP_VERSION: 24.08
+      LLVM_VERSION: 19
+    strategy:
+      matrix:
+        type: [ RelWithDebInfo ]
+        os: [ ubuntu-latest ]
+    name: ${{ matrix.os }} (x64, ${{ matrix.type }}, Flatpak)
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.ref }}
+          submodules: recursive
+      - name: Checkout baserom
+        uses: actions/checkout@v2
+        with:
+          repository: Francessco121/dino-recomp-private
+          token: ${{ secrets.PRIVATE_REPO_PAT }}
+          path: baserom
+      - name: Extract baserom
+        run: |
+          unzip baserom/baserom.patched.z64.zip -d ./
+      - name: Install Linux Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y flatpak-builder lld
+      - name: Install apt packages
+        run: sudo apt-get install flatpak-builder clang lld
+      - name: Prepare Flatpak
+        run: |
+          flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+          flatpak --user install -y flathub org.freedesktop.Sdk//${{ env.FREEDESKTOP_VERSION }}
+          flatpak --user install -y flathub org.freedesktop.Sdk.Extension.llvm${{ env.LLVM_VERSION }}//${{ env.FREEDESKTOP_VERSION }}
+      - name: Build DinoRecomp
+        run: |-
+          git config --global protocol.file.allow always
+          make -C patches CC=clang LD=ld.lld
+          flatpak-builder --user --force-clean --install-deps-from=flathub --repo=repo ./flatpak/${{ env.FLATPAK_ID }}.yml
+          flatpak build-bundle repo ./${{ env.FLATPAK_ID }}.flatpak ${{ env.FLATPAK_ID }} --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: DinosaurPlanetRecompiled-Flatpak-X64-${{ matrix.type }}
+          path: ./${{ env.FLATPAK_ID }}.flatpak
   # Windows
   build-windows:
     runs-on: windows-latest

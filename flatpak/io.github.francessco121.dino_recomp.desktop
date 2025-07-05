@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+
+Name=Dinosaur Planet: Recompiled
+Comment=A static recompilation/native port of Dinosaur Planet.
+Categories=Game;
+
+Icon=io.github.francessco121.dino_recomp
+Exec=/app/bin/DinosaurPlanetRecompiled
+Terminal=false
