@@ -66,14 +66,14 @@ jobs:
   build-linux-flatpak:
     runs-on: ubuntu-latest
     env:
-      FLATPAK_ID: io.github.francessco121.dino_recomp
+      FLATPAK_ID: "io.github.francessco121.dino_recomp"
       FREEDESKTOP_VERSION: 24.08
       LLVM_VERSION: 19
     strategy:
       matrix:
         type: [ RelWithDebInfo ]
         os: [ ubuntu-latest ]
-    name: ${{ matrix.os }} (x64, ${{ matrix.type }}, Flatpak)
+    name: ${{ matrix.os }} (${{ matrix.type }}, Flatpak)
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -104,13 +104,14 @@ jobs:
         run: |-
           git config --global protocol.file.allow always
           make -C patches CC=clang LD=ld.lld
-          flatpak-builder --user --force-clean --install-deps-from=flathub --repo=repo ./flatpak/${{ env.FLATPAK_ID }}.yml
-          flatpak build-bundle repo ./${{ env.FLATPAK_ID }}.flatpak ${{ env.FLATPAK_ID }} --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
+          cd flatpak
+          flatpak-builder --user --force-clean --install-deps-from=flathub --repo=repo builddir ${{ env.FLATPAK_ID }}.yml
+          flatpak build-bundle repo ${{ env.FLATPAK_ID }}.flatpak ${{ env.FLATPAK_ID }} --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: DinosaurPlanetRecompiled-Flatpak-X64-${{ matrix.type }}
-          path: ./${{ env.FLATPAK_ID }}.flatpak
+          path: ./flatpak/${{ env.FLATPAK_ID }}.flatpak
   # Windows
   build-windows:
     runs-on: windows-latest
