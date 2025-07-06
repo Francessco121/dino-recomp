@@ -7,5 +7,5 @@ Comment=A static recompilation/native port of Dinosaur Planet.
 Categories=Game;
 
 Icon=io.github.francessco121.dino_recomp
-Exec=/app/bin/DinosaurPlanetRecompiled
+Exec=DinosaurPlanetRecompiled
 Terminal=false

@@ -1,5 +1,6 @@
 #include "support.hpp"
 #include <SDL.h>
+#include <cstdlib>
 #include "nfd.h"
 #include "RmlUi/Core.h"
 
@@ -51,7 +52,17 @@ namespace dino::runtime {
 #elif defined(__linux__) && defined(RECOMP_FLATPAK)
         return "/app/bin";
 #else
-        return "";
+        static std::optional<std::filesystem::path> program_path;
+        if (!program_path.has_value()) {
+            if (std::getenv("APPIMAGE") != nullptr) {
+                // Inside of AppImage, program path is based on $APPDIR
+                program_path = std::filesystem::path(std::getenv("APPDIR")) / "usr/bin";
+            } else {
+                program_path = "";
+            }
+        }
+
+        return program_path.value();
 #endif
     }
 

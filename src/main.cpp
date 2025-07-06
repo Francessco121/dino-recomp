@@ -25,6 +25,7 @@
 #include "runtime/gfx.hpp"
 #include "runtime/mods.hpp"
 #include "runtime/overlays.hpp"
+#include "runtime/support.hpp"
 #include "runtime/patches.hpp"
 #include "runtime/preload.hpp"
 #include "runtime/rsp.hpp"
@@ -120,7 +121,8 @@ int main(int argc, char** argv) {
     dino::runtime::reset_audio(48000);
 
     // Source controller mappings file
-    if (SDL_GameControllerAddMappingsFromFile("gamecontrollerdb.txt") < 0) {
+    std::string controller_mappings_path = (dino::runtime::get_program_path() / "gamecontrollerdb.txt").string();
+    if (SDL_GameControllerAddMappingsFromFile(controller_mappings_path.c_str()) < 0) {
         fprintf(stderr, "Failed to load controller mappings: %s\n", SDL_GetError());
     }
 
