@@ -200,6 +200,10 @@ static void rt64_init_hook(RT64::RenderInterface* _interface, RT64::RenderDevice
     ImGuiContext *prev_ctx = ImGui::GetCurrentContext();
 
     dino_imgui_ctx = ImGui::CreateContext();
+    ImGui::SetCurrentContext(dino_imgui_ctx);
+
+    static std::string imgui_ini_path = (dino::config::get_app_folder_path() / "imgui.ini").string();
+    dino_imgui_ctx->IO.IniFilename = imgui_ini_path.c_str();
 
     ImGui_ImplSDL2_InitForOther(dino::runtime::get_window());
 
