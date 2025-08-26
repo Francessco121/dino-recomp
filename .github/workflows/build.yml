@@ -32,7 +32,9 @@ jobs:
         run: |
           unzip baserom/baserom.patched.z64.zip -d ./
       - name: Install apt packages
-        run: sudo apt-get install cmake ninja-build libsdl2-dev libgtk-3-dev lld llvm clang
+        run: |
+          sudo apt-get update
+          sudo apt-get install cmake ninja-build libsdl2-dev libgtk-3-dev lld llvm clang
       - name: Build N64Recomp & RSPRecomp
         run: |
           cd lib/N64Recomp
