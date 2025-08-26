@@ -31,7 +31,7 @@ if (WIN32)
     set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/lib/")
 endif()
 
-# Use native file picker on Linux
+# Use xdg-desktop-portal (instead of GTK) for file dialogs on Linux
 set(NFD_PORTAL TRUE CACHE BOOL "" FORCE)
 
 set(RT64_STATIC TRUE)
