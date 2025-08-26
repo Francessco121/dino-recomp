@@ -20,6 +20,6 @@
 	path = lib/dino-recomp-mod-api
 	url = https://github.com/Francessco121/dino-recomp-mod-api.git
 	branch = main
-[submodule "lib/slot_map"]
-	path = lib/slot_map
-	url = https://github.com/SergeyMakeev/slot_map.git
+[submodule "lib/SlotMap"]
+	path = lib/SlotMap
+	url = https://github.com/SergeyMakeev/SlotMap.git

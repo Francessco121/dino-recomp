@@ -182,7 +182,7 @@ target_include_directories(DinosaurPlanetRecompiled PRIVATE
     ${CMAKE_SOURCE_DIR}/lib/freetype-windows-binaries/include
     ${CMAKE_SOURCE_DIR}/lib/rt64/src/contrib/nativefiledialog-extended/src/include
     ${CMAKE_SOURCE_DIR}/lib/promptfont
-    ${CMAKE_SOURCE_DIR}/lib/slot_map/slot_map
+    ${CMAKE_SOURCE_DIR}/lib/SlotMap/slot_map
     ${CMAKE_BINARY_DIR}/shaders
     ${CMAKE_CURRENT_BINARY_DIR}
 )
