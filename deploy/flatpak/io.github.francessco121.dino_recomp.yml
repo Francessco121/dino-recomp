@@ -27,8 +27,8 @@ modules:
       - "./N64Recomp dino.toml"
       - "./RSPRecomp aspMain.toml"
       # Build DinosaurPlanetRecompiled
-      - "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang -DCMAKE_MAKE_PROGRAM=ninja -DPATCHES_C_COMPILER=clang -DPATCHES_LD=ld.lld -DRECOMP_FLATPAK=ON -G Ninja -S . -B cmake-build"
-      - "cmake --build cmake-build --config Release --target DinosaurPlanetRecompiled --parallel"
+      - "cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang -DCMAKE_MAKE_PROGRAM=ninja -DPATCHES_C_COMPILER=clang -DPATCHES_LD=ld.lld -DRECOMP_FLATPAK=ON -G Ninja -S . -B cmake-build"
+      - "cmake --build cmake-build --config RelWithDebInfo --target DinosaurPlanetRecompiled --parallel"
       # Install
       - "rm -rf assets/scss"
       - "mkdir -p /app/bin"
