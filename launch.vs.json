@@ -7,7 +7,8 @@
       "project": "CMakeLists.txt",
       "projectTarget": "DinosaurPlanetRecompiled.exe",
       "name": "DinosaurPlanetRecompiled",
-      "currentDir": "${workspaceRoot}"
+      "currentDir": "${workspaceRoot}",
+      "args": ["--show-console"]
     }
   ]
 }

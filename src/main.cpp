@@ -59,6 +59,7 @@ std::vector<recomp::GameEntry> supported_games = {
 
 struct CliArgs {
     bool skip_launcher = false;
+    bool show_console = false;
 };
 
 int main(int argc, char** argv) {
@@ -68,6 +69,8 @@ int main(int argc, char** argv) {
         char *arg = argv[i];
         if (strcmp(arg, "--skip-launcher") == 0) {
             cli_args.skip_launcher = true;
+        } else if (strcmp(argv[i], "--show-console") == 0) {
+            cli_args.show_console = true;
         }
     }
 
@@ -88,6 +91,16 @@ int main(int argc, char** argv) {
     }
 
 #ifdef _WIN32
+    // Allocate console on Windows if requested
+    if (cli_args.show_console) {
+        if (GetConsoleWindow() == nullptr) {
+            AllocConsole();
+            freopen("CONIN$", "r", stdin);
+            freopen("CONOUT$", "w", stderr);
+            freopen("CONOUT$", "w", stdout);
+        }
+    }
+
     // Set up console output to accept UTF-8 on windows
     SetConsoleOutputCP(CP_UTF8);
 
