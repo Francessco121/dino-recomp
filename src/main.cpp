@@ -9,6 +9,7 @@
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#include <timeapi.h>
 #endif
 
 #include "input/input.hpp"
@@ -91,6 +92,9 @@ int main(int argc, char** argv) {
     }
 
 #ifdef _WIN32
+    // Set up high resolution timing period.
+    timeBeginPeriod(1);
+
     // Allocate console on Windows if requested
     if (cli_args.show_console) {
         if (GetConsoleWindow() == nullptr) {
@@ -114,9 +118,7 @@ int main(int argc, char** argv) {
     cfi.FontWeight = FW_NORMAL;
     wcscpy_s(cfi.FaceName, L"NSimSun");
     SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
-#endif
 
-#ifdef _WIN32
     // Force wasapi on Windows, as there seems to be some issue with sample queueing with directsound currently.
     SDL_setenv("SDL_AUDIODRIVER", "wasapi", true);
 #endif
@@ -217,6 +219,11 @@ int main(int argc, char** argv) {
         error_handling_callbacks,
         threads_callbacks
     );
+
+#ifdef _WIN32
+    // End high resolution timing period.
+    timeEndPeriod(1);
+#endif
 
     // Note: NFD_Init is done in create_gfx, not main
     NFD_Quit();

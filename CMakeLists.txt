@@ -255,7 +255,7 @@ if (WIN32)
     )
 
     target_sources(DinosaurPlanetRecompiled PRIVATE ${CMAKE_SOURCE_DIR}/icons/app.rc)
-    target_link_libraries(DinosaurPlanetRecompiled PRIVATE SDL2)
+    target_link_libraries(DinosaurPlanetRecompiled PRIVATE SDL2 Winmm.lib)
 endif()
 
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")
