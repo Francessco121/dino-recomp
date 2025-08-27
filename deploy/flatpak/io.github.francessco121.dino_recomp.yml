@@ -6,15 +6,14 @@ sdk-extensions:
   - org.freedesktop.Sdk.Extension.llvm19
 command: DinosaurPlanetRecompiled
 finish-args:
-  - "--share=network"
   - "--socket=wayland"
   - "--socket=fallback-x11"
   - "--socket=pulseaudio"
+  # TODO: switch from all to dri,input when most users are on flatpak >=1.15.6
   - "--device=all"
-  - "--filesystem=host"
-  - "--filesystem=/media"
-  - "--filesystem=/run/media"
-  - "--filesystem=/mnt"
+  #- "--device=dri"
+  #- "--device=input"
+  - "--filesystem=xdg-config"
 modules:
   - name: DinosaurPlanetRecompiled
     buildsystem: simple
