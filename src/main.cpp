@@ -199,6 +199,8 @@ int main(int argc, char** argv) {
     dino::runtime::register_mods();
 
     if (cli_args.skip_launcher) {
+        // HACK: This relies on unsupported behavior in the runtime and requires using a fork
+        //       of the runtime with a hack to avoid an uninitialized VI origin when doing this
         recomp::start_game(supported_games[0].game_id);
         recompui::hide_all_contexts();
     }
