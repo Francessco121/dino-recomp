@@ -7,10 +7,6 @@
 #endif
 #include <SDL_events.h>
 
-#include "ultramodern/renderer_context.hpp"
-
-#include "rt64_render_hooks.h"
-#include "rt64_render_interface_builders.h"
 #include "vulkan/rt64_vulkan.h"
 #include "common/rt64_user_configuration.h"
 
@@ -93,6 +89,8 @@ static RT64::UserConfiguration::GraphicsAPI get_graphics_api() {
 }
 
 void begin() {
+    assert(dino_imgui_ctx->Initialized);
+
     if (!b_is_open) {
         // Still process the event queue but don't send any to ImGui
         SDL_Event event{};
@@ -106,6 +104,11 @@ void begin() {
                 }
             }
         }
+    }
+
+    if (!b_is_open) {
+        // Still not open even after handling key events
+        return;
     }
 
     b_in_ui_frame = true;
@@ -125,6 +128,11 @@ void begin() {
         }
 
         ImGui_ImplSDL2_ProcessEvent(&event);
+    }
+
+    if (!b_is_open) {
+        // Closed after handling key events
+        return;
     }
     
     ImGui_ImplSDL2_NewFrame();
@@ -152,6 +160,8 @@ void begin() {
 }
 
 void end() {
+    assert(dino_imgui_ctx->Initialized);
+
     if (!b_is_open && !b_in_ui_frame) return;
     
     ImGui::Render();
@@ -318,6 +328,8 @@ static void rt64_draw_hook(RT64::RenderCommandList* command_list, RT64::RenderFr
 }
 
 static void rt64_deinit_hook() {
+    const std::lock_guard<std::mutex> frame_lock(frame_mutex);
+
     ImGuiContext *prev_ctx = ImGui::GetCurrentContext();
     ImGui::SetCurrentContext(dino_imgui_ctx);
 

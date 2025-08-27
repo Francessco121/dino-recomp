@@ -321,7 +321,29 @@ void dino::input::handle_events() {
             cursor_visible = false;
         }
 
-        SDL_ShowCursor(cursor_visible ? SDL_ENABLE : SDL_DISABLE);
+        // Restore cursor to the default arrow shape after the UI closes.
+        // RmlUi doesn't restore the cursor when contexts are hidden.
+        static bool was_ui_shown = true;
+        if (was_ui_shown) {
+            if (!recompui::is_any_context_shown()) {
+                static SDL_Cursor *systemArrowCursor = nullptr;
+                if (systemArrowCursor == nullptr) {
+                    systemArrowCursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_ARROW);
+                }
+
+                SDL_SetCursor(systemArrowCursor);
+                was_ui_shown = false;
+            }
+        } else {
+            if (recompui::is_any_context_shown()) {
+                was_ui_shown = true;
+            }
+        }
+
+        // If the debug UI is open, let ImGui have control over the cursor.
+        if (!dino::debug_ui::is_open()) {
+            SDL_ShowCursor(cursor_visible ? SDL_ENABLE : SDL_DISABLE);
+        }
         SDL_SetRelativeMouseMode(cursor_locked ? SDL_TRUE : SDL_FALSE);
     }
 
