@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>io.github.francessco121.dino_recomp</id>
+  <id>io.github.dinosaurplanetrecomp.dino_recomp</id>
   
   <name>Dinosaur Planet: Recompiled</name>
   <summary>A static recompilation/native port of Dinosaur Planet</summary>
@@ -10,10 +10,10 @@
     <release version="0.1.0" date="2025-05-04" />
   </releases>
   
-  <url type="homepage">https://github.com/Francessco121/dino-recomp</url>
-  <url type="faq">https://github.com/Francessco121/dino-recomp?tab=readme-ov-file#faq</url>
-  <url type="vcs-browser">https://github.com/Francessco121/dino-recomp</url>
-  <url type="bugtracker">https://github.com/Francessco121/dino-recomp/issues</url>
+  <url type="homepage">https://github.com/DinosaurPlanetRecomp/dino-recomp</url>
+  <url type="faq">https://github.com/DinosaurPlanetRecomp/dino-recomp?tab=readme-ov-file#faq</url>
+  <url type="vcs-browser">https://github.com/DinosaurPlanetRecomp/dino-recomp</url>
+  <url type="bugtracker">https://github.com/DinosaurPlanetRecomp/dino-recomp/issues</url>
 
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
@@ -38,5 +38,5 @@
     </p>
   </description>
   
-  <launchable type="desktop-id">io.github.francessco121.dino_recomp.desktop</launchable>
+  <launchable type="desktop-id">io.github.dinosaurplanetrecomp.dino_recomp.desktop</launchable>
 </component>

@@ -5,11 +5,11 @@ make -C patches CC=clang LD=ld.lld
 
 Build
 ```sh
-flatpak-builder --force-clean --user --install-deps-from=flathub --repo=repo --install builddir io.github.francessco121.dino_recomp.yml
+flatpak-builder --force-clean --user --install-deps-from=flathub --repo=repo --install builddir io.github.dinosaurplanetrecomp.dino_recomp.yml
 ```
 
 Bundle
 ```sh
-flatpak build-bundle repo io.github.francessco121.dino_recomp.flatpak io.github.francessco121.dino_recomp --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
+flatpak build-bundle repo io.github.dinosaurplanetrecomp.dino_recomp.flatpak io.github.dinosaurplanetrecomp.dino_recomp --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
 ```
 

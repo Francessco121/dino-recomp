@@ -1,7 +1,7 @@
 # Dinosaur Planet: Recompiled
 Dinosaur Planet: Recompiled is a project that uses [N64: Recompiled](https://github.com/Mr-Wiseguy/N64Recomp) to **statically recompile** [Dinosaur Planet](https://www.rarewiki.com/wiki/Dinosaur_Planet) into a native port with enhancements and extensive mod support. This project uses [RT64](https://github.com/rt64/rt64) as the rendering engine to provide graphical enhancements.
 
-### [Check out the latest release here](https://github.com/Francessco121/dino-recomp/releases).
+### [Check out the latest release here](https://github.com/DinosaurPlanetRecomp/dino-recomp/releases).
 
 ### **This repository and its releases do not contain game assets. The original game is required to build or run this project.**
 
@@ -24,7 +24,7 @@ A CPU supporting the SSE4.1 instruction set is also required (Intel Core 2 Penry
 If you have issues with crashes on startup, make sure your graphics drivers are fully up to date. 
 
 ## Known Issues
-Please see [the GitHub issues](https://github.com/Francessco121/dino-recomp/issues) for a list of known issues with the project. Given the early state of Dinosaur Planet reverse engineering and the uniqueness of the game's code, this recomp has some notable issues and missing enhancements compared to other recomp projects.
+Please see [the GitHub issues](https://github.com/DinosaurPlanetRecomp/dino-recomp/issues) for a list of known issues with the project. Given the early state of Dinosaur Planet reverse engineering and the uniqueness of the game's code, this recomp has some notable issues and missing enhancements compared to other recomp projects.
 
 ## FAQ
 
@@ -62,9 +62,9 @@ Install community made mods and texture packs! Mods can change any part of the g
 If you would like to create your own mods, please see the following resources:
 - [N64 Recomp Modding documentation](https://hackmd.io/fMDiGEJ9TBSjomuZZOgzNg)
 - [RT64 Texture Pack documentation](https://github.com/rt64/rt64/blob/main/TEXTURE-PACKS.md)
-- [Dinosaur Planet: Recompiled - Mod Template](https://github.com/Francessco121/dino-recomp-mod-template)
-- [Dinosaur Planet: Recompiled - Mod API](https://github.com/Francessco121/dino-recomp-mod-api)
-- [Dinosaur Planet: Recompiled - Decomp Bridge](https://github.com/Francessco121/dino-recomp-decomp-bridge)
+- [Dinosaur Planet: Recompiled - Mod Template](https://github.com/DinosaurPlanetRecomp/dino-recomp-mod-template)
+- [Dinosaur Planet: Recompiled - Mod API](https://github.com/DinosaurPlanetRecomp/dino-recomp-mod-api)
+- [Dinosaur Planet: Recompiled - Decomp Bridge](https://github.com/DinosaurPlanetRecomp/dino-recomp-decomp-bridge)
 - [Example mods](https://github.com/Francessco121/dino-recomp-mods)
 - [N64Recomp](https://github.com/N64Recomp/N64Recomp) for the source code of `RecompModTool`.
 

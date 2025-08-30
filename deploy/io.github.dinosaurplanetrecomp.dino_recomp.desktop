@@ -6,6 +6,6 @@ Name=Dinosaur Planet: Recompiled
 Comment=A static recompilation/native port of Dinosaur Planet.
 Categories=Game;
 
-Icon=io.github.francessco121.dino_recomp
+Icon=io.github.dinosaurplanetrecomp.dino_recomp
 Exec=DinosaurPlanetRecompiled
 Terminal=false

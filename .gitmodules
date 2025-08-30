@@ -1,9 +1,9 @@
 [submodule "N64Recomp/N64Recomp"]
 	path = lib/N64Recomp
-	url = https://github.com/Francessco121/N64Recomp.git
+	url = https://github.com/DinosaurPlanetRecomp/N64Recomp.git
 [submodule "lib/N64ModernRuntime"]
 	path = lib/N64ModernRuntime
-	url = https://github.com/Francessco121/N64ModernRuntime.git
+	url = https://github.com/DinosaurPlanetRecomp/N64ModernRuntime.git
 [submodule "lib/rt64"]
 	path = lib/rt64
 	url = https://github.com/rt64/rt64.git
@@ -21,4 +21,4 @@
 	url = https://github.com/SergeyMakeev/SlotMap.git
 [submodule "lib/dino-recomp-decomp-bridge"]
 	path = lib/dino-recomp-decomp-bridge
-	url = https://github.com/Francessco121/dino-recomp-decomp-bridge.git
+	url = https://github.com/DinosaurPlanetRecomp/dino-recomp-decomp-bridge.git

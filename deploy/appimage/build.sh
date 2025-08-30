@@ -6,7 +6,7 @@ mkdir -p AppDir/usr/bin/
 mkdir -p AppDir/usr/share/metainfo/
 
 # AppStream Metainfo
-cp ../io.github.francessco121.dino_recomp.metainfo.xml AppDir/usr/share/metainfo/
+cp ../io.github.dinosaurplanetrecomp.dino_recomp.metainfo.xml AppDir/usr/share/metainfo/
 
 # Assets
 cp -R ../../assets/ AppDir/usr/bin/
@@ -17,8 +17,8 @@ cp ../../gamecontrollerdb.txt AppDir/usr/bin/
 
 NO_STRIP=true linuxdeploy.AppImage --appdir AppDir \
     --executable ../../build/DinosaurPlanetRecompiled \
-    --desktop-file ../io.github.francessco121.dino_recomp.desktop \
+    --desktop-file ../io.github.dinosaurplanetrecomp.dino_recomp.desktop \
     --icon-file ../../icons/64.png \
-    --icon-filename io.github.francessco121.dino_recomp \
+    --icon-filename io.github.dinosaurplanetrecomp.dino_recomp \
     --output appimage
 mv Dinosaur_Planet:_Recompiled-x86_64.AppImage DinosaurPlanetRecompiled-x86_64.AppImage

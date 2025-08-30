@@ -20,7 +20,7 @@ jobs:
       - name: Checkout baserom
         uses: actions/checkout@v2
         with:
-          repository: Francessco121/dino-recomp-private
+          repository: DinosaurPlanetRecomp/dino-recomp-private
           token: ${{ secrets.PRIVATE_REPO_PAT }}
           path: baserom
       - name: Extract baserom
@@ -80,7 +80,7 @@ jobs:
           # Set up AppDir (stuff linuxdeploy can't do)
           mkdir -p AppDir/usr/bin/
           mkdir -p AppDir/usr/share/metainfo/
-          cp ../io.github.francessco121.dino_recomp.metainfo.xml AppDir/usr/share/metainfo/
+          cp ../io.github.dinosaurplanetrecomp.dino_recomp.metainfo.xml AppDir/usr/share/metainfo/
           cp -R ../../assets/ AppDir/usr/bin/
           cp ../../gamecontrollerdb.txt AppDir/usr/bin/
 
@@ -88,9 +88,9 @@ jobs:
           NO_STRIP=true ./linuxdeploy-x86_64.AppImage \
             --appdir AppDir \
             --executable ../../cmake-build/DinosaurPlanetRecompiled \
-            --desktop-file ../io.github.francessco121.dino_recomp.desktop \
+            --desktop-file ../io.github.dinosaurplanetrecomp.dino_recomp.desktop \
             --icon-file ../../icons/64.png \
-            --icon-filename io.github.francessco121.dino_recomp \
+            --icon-filename io.github.dinosaurplanetrecomp.dino_recomp \
             --output appimage
           mv Dinosaur_Planet:_Recompiled-x86_64.AppImage DinosaurPlanetRecompiled-x86_64.AppImage
       - name: Archive DinoRecomp (AppImage)
@@ -102,7 +102,7 @@ jobs:
   build-linux-flatpak:
     runs-on: ubuntu-latest
     env:
-      FLATPAK_ID: "io.github.francessco121.dino_recomp"
+      FLATPAK_ID: "io.github.dinosaurplanetrecomp.dino_recomp"
       FREEDESKTOP_VERSION: 24.08
       LLVM_VERSION: 19
     steps:
@@ -114,7 +114,7 @@ jobs:
       - name: Checkout baserom
         uses: actions/checkout@v2
         with:
-          repository: Francessco121/dino-recomp-private
+          repository: DinosaurPlanetRecomp/dino-recomp-private
           token: ${{ secrets.PRIVATE_REPO_PAT }}
           path: baserom
       - name: Extract baserom
@@ -173,7 +173,7 @@ jobs:
       - name: Checkout baserom
         uses: actions/checkout@v2
         with:
-          repository: Francessco121/dino-recomp-private
+          repository: DinosaurPlanetRecomp/dino-recomp-private
           token: ${{ secrets.PRIVATE_REPO_PAT }}
           path: baserom
       - name: Extract baserom
