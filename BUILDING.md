@@ -44,14 +44,11 @@ choco install make
 ## 3. Patching the target ROM
 You will need to patch the ROM (md5: 49f7bb346ade39d1915c22e090ffd748) before running the recompiler.
 
-This can be done by using the `tools/recomp_rom_patcher.py` script found in the [Dinosaur Planet Decompilation repository](https://github.com/zestydevy/dinosaur-planet). You can either clone the repository or use the submodule provided by this repository at `lib/dino-recomp-mod-api/dinosaur-planet`.
-
-> [!IMPORTANT]
-> The Python dependency `capstone` must be installed to run this script.
+This can be done by using the `tools/recomp_rom_patcher.py` script found in the [Dinosaur Planet Decompilation repository](https://github.com/zestydevy/dinosaur-planet). You can either clone the repository or use the submodule provided by this repository at `lib/dino-recomp-decomp-bridge/dinosaur-planet`.
 
 For example, using the decomp submodule, run:
 ```bash
-python3 ./lib/dino-recomp-mod-api/dinosaur-planet/tools/recomp_rom_patcher.py -o baserom.patched.z64 baserom.z64
+python3 ./lib/dino-recomp-decomp-bridge/dinosaur-planet/tools/recomp_rom_patcher.py -o baserom.patched.z64 baserom.z64
 ```
 
 Once done, place the patched ROM in the root of this repository and rename it to `baserom.patched.z64` if necessary.

@@ -28,10 +28,10 @@ include
 -I
 dummy_headers
 -I
-../lib/dino-recomp-mod-api/dinosaur-planet/include
+../lib/dino-recomp-decomp-bridge/dinosaur-planet/include
 -I
-../lib/dino-recomp-mod-api/dinosaur-planet/src
+../lib/dino-recomp-decomp-bridge/dinosaur-planet/src
 -I
-../lib/dino-recomp-mod-api/include
+../lib/dino-recomp-decomp-bridge/include
 -I../lib/rt64/include
 -c

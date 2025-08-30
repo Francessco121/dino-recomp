@@ -33,7 +33,7 @@ RECOMP_PATCH s32 dll_60_update1() {
         if (should_skip_splash()) {
             // Fade in background if we haven't shown it yet
             if (bss_0 <= 240.0f) {
-                gDLL_28_screen_fade->exports->fade_reversed(30, SCREEN_FADE_BLACK);
+                gDLL_28_ScreenFade->vtbl->fade_reversed(30, SCREEN_FADE_BLACK);
             }
             // Let 1 frame render first so the background shows up for the next menu (we render it)
             bss_0 = 720.0f - 0.01f;
@@ -41,10 +41,10 @@ RECOMP_PATCH s32 dll_60_update1() {
         }
 
         if (bss_6 == 0 && bss_0 > 205.0f) {
-            gDLL_28_screen_fade->exports->fade(30, SCREEN_FADE_BLACK);
+            gDLL_28_ScreenFade->vtbl->fade(30, SCREEN_FADE_BLACK);
             bss_6 = 1;
         } else if (bss_6 == 1 && bss_0 > 245.0f) {
-            gDLL_28_screen_fade->exports->fade_reversed(30, SCREEN_FADE_BLACK);
+            gDLL_28_ScreenFade->vtbl->fade_reversed(30, SCREEN_FADE_BLACK);
             bss_6 = 2;
         }
 
@@ -108,7 +108,7 @@ RECOMP_PATCH s32 dll_61_update1() {
     }
 
     if (bss_0 != 0) {
-        gDLL_28_screen_fade->exports->fade(30, SCREEN_FADE_BLACK);
+        gDLL_28_ScreenFade->vtbl->fade(30, SCREEN_FADE_BLACK);
         bss_1 = 45;
         bss_2 = 1;
     }

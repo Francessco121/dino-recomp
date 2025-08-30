@@ -90,7 +90,7 @@ RECOMP_PATCH void dll_63_draw(Gfx **gdl, Mtx **mtxs, Vertex **vtxs) {
                 func_8003825C(gdl, sLogoShadowTexture, 119, 92, 0, 0, 0xFF, 0);
                 func_8003825C(gdl, sLogoTexture, 129, 100, 0, 0, 0xFF, 0);
 
-                numRecentTasks = gDLL_30_task->exports->get_num_recently_completed();
+                numRecentTasks = gDLL_30_Task->vtbl->get_num_recently_completed();
                 if (numRecentTasks > 3) {
                     numRecentTasks = 3;
                 }
@@ -104,7 +104,7 @@ RECOMP_PATCH void dll_63_draw(Gfx **gdl, Mtx **mtxs, Vertex **vtxs) {
                 // @recomp: Fix memory leak with task strings
                 free_recent_task_strs();
                 for (i = 0; i < numRecentTasks; i++) {
-                    recent_task_strs[i] = gDLL_30_task->exports->get_recently_completed_task_text(i);
+                    recent_task_strs[i] = gDLL_30_Task->vtbl->get_recently_completed_task_text(i);
                 }
                 num_recent_task_strs = numRecentTasks;
 
@@ -158,8 +158,8 @@ RECOMP_PATCH void dll_63_draw(Gfx **gdl, Mtx **mtxs, Vertex **vtxs) {
         }
 
         // @recomp: Always redraw all
-        gDLL_picmenu->exports->redraw_all();
-        gDLL_picmenu->exports->draw(gdl);
+        gDLL_74_Picmenu->vtbl->redraw_all();
+        gDLL_74_Picmenu->vtbl->draw(gdl);
 
         font_window_draw(gdl, NULL, NULL, 1);
         font_window_draw(gdl, NULL, NULL, 3);
@@ -223,8 +223,8 @@ RECOMP_PATCH void dll_64_draw(Gfx **gdl, Mtx **mtxs, Vertex **vtxs) {
     }
 
     // @recomp: Always redraw all
-    gDLL_picmenu->exports->redraw_all();
-    gDLL_picmenu->exports->draw(gdl);
+    gDLL_74_Picmenu->vtbl->redraw_all();
+    gDLL_74_Picmenu->vtbl->draw(gdl);
 
     if (sNameLettersRedrawFrames != 0) {
         if (sMainRedrawFrames == 0) {

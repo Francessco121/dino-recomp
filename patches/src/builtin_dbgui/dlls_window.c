@@ -18,7 +18,7 @@ void dbgui_dlls_window(s32 *open) {
                 DLLState *dll = &gLoadedDLLList[i];
                 DLLFile *file = dll->id == DLL_NONE
                     ? NULL
-                    : DLL_EXPORTS_TO_FILE(dll->exports);
+                    : DLL_EXPORTS_TO_FILE(dll->vtblPtr);
                 const char *label = dll->id == DLL_NONE
                     ? recomp_sprintf_helper("<empty slot>##%d", i)
                     : recomp_sprintf_helper("%d##%d", dll->id, i);
@@ -26,9 +26,9 @@ void dbgui_dlls_window(s32 *open) {
                     dbgui_textf("refCount: %d", dll->refCount);
                     dbgui_textf("address: %p", file);
                     if (dll->id != DLL_NONE) {
-                        if (dbgui_tree_node(recomp_sprintf_helper("exports (%d):###exports", file->exportCount))) {
+                        if (dbgui_tree_node(recomp_sprintf_helper("vtable (%d):###vtable", file->exportCount))) {
                             for (u32 k = 0; k < (file->exportCount + 1); k++) {
-                                dbgui_textf("[%d] %p", k, dll->exports[k]);
+                                dbgui_textf("[%d] %p", k, dll->vtblPtr[k]);
                             }
                             dbgui_tree_pop();
                         }

@@ -16,10 +16,9 @@
 [submodule "lib/RmlUi"]
 	path = lib/RmlUi
 	url = https://github.com/mikke89/RmlUi.git
-[submodule "lib/dino-recomp-mod-api"]
-	path = lib/dino-recomp-mod-api
-	url = https://github.com/Francessco121/dino-recomp-mod-api.git
-	branch = main
 [submodule "lib/SlotMap"]
 	path = lib/SlotMap
 	url = https://github.com/SergeyMakeev/SlotMap.git
+[submodule "lib/dino-recomp-decomp-bridge"]
+	path = lib/dino-recomp-decomp-bridge
+	url = https://github.com/Francessco121/dino-recomp-decomp-bridge.git

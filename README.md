@@ -62,8 +62,9 @@ Install community made mods and texture packs! Mods can change any part of the g
 If you would like to create your own mods, please see the following resources:
 - [N64 Recomp Modding documentation](https://hackmd.io/fMDiGEJ9TBSjomuZZOgzNg)
 - [RT64 Texture Pack documentation](https://github.com/rt64/rt64/blob/main/TEXTURE-PACKS.md)
-- [Dinosaur Planet: Recompiled Mod Template](https://github.com/Francessco121/dino-recomp-mod-template)
-- [Dinosaur Planet: Recompiled Mod API](https://github.com/Francessco121/dino-recomp-mod-api)
+- [Dinosaur Planet: Recompiled - Mod Template](https://github.com/Francessco121/dino-recomp-mod-template)
+- [Dinosaur Planet: Recompiled - Mod API](https://github.com/Francessco121/dino-recomp-mod-api)
+- [Dinosaur Planet: Recompiled - Decomp Bridge](https://github.com/Francessco121/dino-recomp-decomp-bridge)
 - [Example mods](https://github.com/Francessco121/dino-recomp-mods)
 - [N64Recomp](https://github.com/N64Recomp/N64Recomp) for the source code of `RecompModTool`.
 
