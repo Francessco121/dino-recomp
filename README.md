@@ -1,9 +1,9 @@
 # Dinosaur Planet: Recompiled
-Dinosaur Planet: Recompiled is a project that uses [N64: Recompiled](https://github.com/Mr-Wiseguy/N64Recomp) to **statically recompile** [Dinosaur Planet](https://www.rarewiki.com/wiki/Dinosaur_Planet) into a native port with enhancements and extensive mod support. This project uses [RT64](https://github.com/rt64/rt64) as the rendering engine to provide graphical enhancements.
+Dinosaur Planet: Recompiled is a project that uses [N64: Recompiled](https://github.com/N64Recomp/N64Recomp) to **statically recompile** [Dinosaur Planet](https://www.rarewiki.com/wiki/Dinosaur_Planet) into a native port with enhancements and extensive mod support. This project uses [RT64](https://github.com/rt64/rt64) as the rendering engine to provide graphical enhancements.
 
-### [Check out the latest release here](https://github.com/DinosaurPlanetRecomp/dino-recomp/releases).
+> **[Check out the latest release here](https://github.com/DinosaurPlanetRecomp/dino-recomp/releases).**
 
-### **This repository and its releases do not contain game assets. The original game is required to build or run this project.**
+> **This repository and its releases do not contain game assets. The original game is required to build or run this project.**
 
 ## Table of Contents
 * [System Requirements](#system-requirements)
@@ -29,7 +29,7 @@ Please see [the GitHub issues](https://github.com/DinosaurPlanetRecomp/dino-reco
 ## FAQ
 
 #### What is static recompilation?
-Static recompilation is the process of automatically translating an application from one platform to another. For more details, check out the full description of how this project's recompilation works here: [N64: Recompiled](https://github.com/Mr-Wiseguy/N64Recomp).
+Static recompilation is the process of automatically translating an application from one platform to another. For more details, check out the full description of how this project's recompilation works here: [N64: Recompiled](https://github.com/N64Recomp/N64Recomp).
 
 #### How is this related to the decompilation project?
 Unlike traditional N64 ports, recompilation projects are not based on the source code of a related decompilation. However, the [Dinosaur Planet decompilation](https://github.com/zestydevy/dinosaur-planet) project plays a very important role in this recomp, by providing symbols, knowledge about game systems, and to a lesser extent actual decompiled code used in some patches.
